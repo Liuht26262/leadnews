@@ -9,23 +9,24 @@
         <module name="heima-leadnews-apis" />
         <module name="leadnews-api" />
         <module name="leadnews-common" />
+        <module name="leadnews-behavior" />
         <module name="leadnews-utils" />
         <module name="leadnews-model" />
         <module name="heima-leadnews-utils" />
+        <module name="leadnews-article" />
         <module name="heima-leadnews-common" />
-        <module name="leadnew-article" />
         <module name="heima-leadnews-model" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="heima-leadnews-tests" target="1.8" />
-      <module name="leadnews-article" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="leadnew-article" options="-parameters" />
       <module name="leadnews-api" options="-parameters" />
+      <module name="leadnews-article" options="-parameters" />
+      <module name="leadnews-behavior" options="-parameters" />
       <module name="leadnews-common" options="-parameters" />
       <module name="leadnews-model" options="-parameters" />
       <module name="leadnews-utils" options="-parameters" />

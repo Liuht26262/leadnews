@@ -30,7 +30,6 @@ import javax.sql.DataSource;
 @ConfigurationProperties(prefix="mysql.core")
 @PropertySource("classpath:mysql-core-jdbc.properties")
 public class TransactionConfig {
-
     String txScanPackage;
 
     /**
