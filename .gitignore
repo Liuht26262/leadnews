@@ -1,0 +1,6 @@
+# Project exclude paths
+/leadnew-article/target/
+/leadnews-api/target/
+/leadnews-common/target/
+/leadnews-model/target/
+/leadnews-utils/target/
