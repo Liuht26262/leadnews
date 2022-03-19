@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tanran.model.mappers.app.ShowBehaviorMapper">
+    <resultMap id="BaseResultMap" type="com.tanran.model.behavior.pojos.ApShowBehavior">
+        <id column="id" property="id" />
+        <result column="entry_id" property="entryId" />
+        <result column="article_id" property="articleId" />
+        <result column="is_click" property="isClick"/>
+        <result column="show_time" property="showTime" />
+        <result column="created_time" property="createdTime" />
+    </resultMap>
+    <sql id="Column_List_Behavior">
+        id,entry_id,article,is_click,show_time,create_time
+    </sql>
+
+    <select id="slelectByEntryAndArticleIds" resultType="com.tanran.model.behavior.pojos.ApShowBehavior">
+        selelct * from ap_show_behavior a where a.entry_id=#{entryId} and article_id in(
+        <foreach item="item" collection="articleIds" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+
+    <insert id="saveBehaviors">
+        insert into ap_show_behavior(id,entry_id,article,is_click,show_time,create_time) values
+        <foreach item="item" collection="articleIds" separator=",">
+            (#{entryId},#{item},now(),now())
+        </foreach>
+    </insert>
+
+
+
+</mapper>

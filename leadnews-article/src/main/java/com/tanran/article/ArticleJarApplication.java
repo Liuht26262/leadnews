@@ -1,4 +1,4 @@
-package com.tanran.api;
+package com.tanran.article;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

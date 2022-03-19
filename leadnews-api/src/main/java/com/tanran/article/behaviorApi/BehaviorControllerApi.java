@@ -1,4 +1,4 @@
-package com.tanran.api.behaviorApi;
+package com.tanran.article.behaviorApi;
 
 import com.tanran.common.result.RespResult;
 import com.tanran.model.behavior.dtos.ShowBehaviorDto;
@@ -12,5 +12,5 @@ import com.tanran.model.behavior.dtos.ShowBehaviorDto;
  * @since 3.0.x 2022/3/18 18:05
  */
 public interface BehaviorControllerApi {
-    RespResult saveUserHavior(ShowBehaviorDto dto);
+    RespResult saveUserBehavior(ShowBehaviorDto dto);
 }

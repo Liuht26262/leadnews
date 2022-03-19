@@ -1,4 +1,4 @@
-package com.tanran.api.service.impl;
+package com.tanran.article.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.tanran.common.constans.ArticleConstans;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
 import com.tanran.utils.threadlocal.AppThreadLocalUtils;
-import com.tanran.api.service.ArticleHomeService;
+import com.tanran.article.service.ArticleHomeService;
 import com.tanran.model.article.pojos.ApArticle;
 import com.tanran.model.mappers.app.ArticleMapper;
 import com.tanran.model.mappers.app.UserArticleListMapper;

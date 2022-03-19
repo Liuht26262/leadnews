@@ -1,4 +1,4 @@
-package com.tanran.api.service;
+package com.tanran.article.service;
 
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;

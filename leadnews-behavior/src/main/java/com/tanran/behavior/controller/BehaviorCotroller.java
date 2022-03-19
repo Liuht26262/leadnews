@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tanran.api.behaviorApi.BehaviorControllerApi;
+import com.tanran.article.behaviorApi.BehaviorControllerApi;
 import com.tanran.behavior.service.BehaviorService;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.behavior.dtos.ShowBehaviorDto;
@@ -27,8 +27,8 @@ public class BehaviorCotroller implements BehaviorControllerApi {
 
     @Override
     @PostMapping("/show_behavior")
-    public RespResult saveUserHavior(ShowBehaviorDto dto) {
+    public RespResult saveUserBehavior(ShowBehaviorDto dto) {
 
-        return behaviorService.saveUserHavior(dto);
+        return behaviorService.saveUserBehavior(dto);
     }
 }

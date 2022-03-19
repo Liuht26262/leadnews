@@ -15,5 +15,7 @@ import com.tanran.model.behavior.pojos.ApShowBehavior;
  * @since 3.0.x 2022/3/18 19:13
  */
 public interface ShowBehaviorMapper {
-    // List<ApShowBehavior> slelectByEntryAndArticleIds(@Param("entryId")Integer entryId,@Param("articleIds")Integer[] articleIds);
+    List<ApShowBehavior> slelectByEntryAndArticleIds(@Param("entryId")Integer entryId,@Param("articleIds")Integer[] articleIds);
+
+    void saveBehaviors(Integer entryId, Integer[] articleIds);
 }

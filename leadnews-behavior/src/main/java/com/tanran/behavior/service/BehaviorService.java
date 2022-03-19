@@ -13,5 +13,5 @@ import com.tanran.model.behavior.dtos.ShowBehaviorDto;
  */
 public interface BehaviorService {
 
-    RespResult saveUserHavior(ShowBehaviorDto dto);
+    RespResult saveUserBehavior(ShowBehaviorDto dto);
 }

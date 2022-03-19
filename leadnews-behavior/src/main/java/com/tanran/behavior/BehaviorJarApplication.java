@@ -1,5 +1,6 @@
 package com.tanran.behavior;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 3.0.x 2022/3/18 18:25
  */
 @SpringBootApplication
+@MapperScan("com.tanran.model.mappers.app")
 public class BehaviorJarApplication {
     public static void main(String[] args) {
         SpringApplication.run(BehaviorJarApplication.class,args);

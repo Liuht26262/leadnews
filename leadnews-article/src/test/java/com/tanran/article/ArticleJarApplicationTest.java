@@ -1,4 +1,4 @@
-package com.tanran.api.test;
+package com.tanran.article;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.tanran.article.service.ArticleHomeService;
 import com.tanran.common.constans.ArticleConstans;
 import com.tanran.common.result.RespResult;
-import com.tanran.api.ArticleJarApplication;
-import com.tanran.api.service.ArticleHomeService;
 import com.tanran.utils.threadlocal.AppThreadLocalUtils;
 import com.tanran.model.user.pojos.ApUser;
 

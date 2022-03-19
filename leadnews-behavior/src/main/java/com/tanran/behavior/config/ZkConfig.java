@@ -1,5 +1,4 @@
-package com.tanran.api.config;
-
+package com.tanran.behavior.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +8,10 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author liuht26262@yunrong.cn
  * @version V3.0
- * @since 3.0.x 2022/3/18 10:14
+ * @description
+ * @since 3.0.x 2022/3/19 17:20
  */
 @Configuration
-@ComponentScan("com.tanran.common.mysql.core")
-public class MysqlConfig {
+@ComponentScan("com.tanran.common.zookeeper")
+public class ZkConfig {
 }

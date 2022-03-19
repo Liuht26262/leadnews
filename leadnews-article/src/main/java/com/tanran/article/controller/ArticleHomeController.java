@@ -1,4 +1,4 @@
-package com.tanran.api.controller;
+package com.tanran.article.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tanran.common.constans.ArticleConstans;
-import com.tanran.api.articleApi.ArticleHomeControllerApi;
+import com.tanran.article.articleApi.ArticleHomeControllerApi;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
-import com.tanran.api.service.ArticleHomeService;
+import com.tanran.article.service.ArticleHomeService;
 
 
 /**
