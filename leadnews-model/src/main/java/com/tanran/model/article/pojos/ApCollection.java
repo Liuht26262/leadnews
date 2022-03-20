@@ -25,14 +25,17 @@ public class ApCollection {
     public enum Type{
         ARTICLE((short)0),DYNAMIC((short)1);
         short code;
+
         Type(short code){
             this.code = code;
         }
+
         public short getCode(){
             return this.code;
         }
     }
 
+    /*判断是否被收藏*/
     public boolean isCollectionArticle(){
         return (this.getType()!=null&&this.getType().equals(Type.ARTICLE));
     }

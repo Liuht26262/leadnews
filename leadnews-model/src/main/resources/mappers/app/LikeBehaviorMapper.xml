@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tanran.model.mappers.app.LikeBehaviorMapper">
+    <resultMap id="Like_BaseResultMap" type="com.tanran.model.behavior.pojos.ApLikesBehavior" >
+        <id column="id" property="id"/>
+        <result column="behavior_entry_id"  property="behaviorEntryId"/>
+        <result column="entry_id" property="entryId" />
+        <result column="type" property="type" />
+        <result column="operation" property="operation"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="burst" property="burst"/>
+    </resultMap>
+
+    <sql id="Like_Base_Column_List" >
+        id, behavior_entry_id, entry_id, type, operation, created_time,burst
+    </sql>
+
+    <resultMap id="UnLike_BaseResultMap" type="com.tanran.model.behavior.pojos.ApUnlikesBehavior" >
+        <id column="id" property="id"/>
+        <result column="entry_id" property="entryId" />
+        <result column="article_id" property="articleId"/>
+        <result column="type" property="type"/>
+        <result column="created_time" property="createdTime" />
+    </resultMap>
+    <sql id="UnLike_Base_Column_List" >
+        id, entry_id, type, created_time
+    </sql>
+
+
+
+    <select id="selectLastLike" resultMap="Like_BaseResultMap">
+        select <include refid="Like_Base_Column_List"/>
+        from ap_likes_behavior
+        where behavior_entry_id=#{objectId}
+          and entry_id=#{entryId}
+          and type=#{type}
+        order by created_time
+        desc limit 1
+    </select>
+    <select id="selectLastUnLike" resultMap="UnLike_BaseResultMap">
+        select <include refid="UnLike_Base_Column_List"/>
+        from ap_unlikes_behavior
+        where entry_id=#{entryId}
+          and article_id=#{articleId}
+        order by created_time
+        desc limit 1
+    </select>
+</mapper>

@@ -7,7 +7,7 @@ import com.tanran.model.behavior.pojos.ApBehaviorEntry;
  *
  * @author liuht26262@yunrong.cn
  * @version V3.0
- * @description
+ * @description 行为实体数据擦汗寻
  * @since 3.0.x 2022/3/19 10:40
  */
 public interface BehaviorEntryMapper {

@@ -5,12 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tanran.common.constans.ArticleConstans;
 import com.tanran.article.articleApi.ArticleHomeControllerApi;
+import com.tanran.article.service.ArticleHomeService;
+import com.tanran.common.constans.ArticleConstans;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
-import com.tanran.article.service.ArticleHomeService;
-
 
 /**
  * TODO
