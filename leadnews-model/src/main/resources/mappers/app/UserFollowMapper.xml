@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tanran.model.mappers.app.UserFollowMapper">
+    <resultMap id="BaseResultMap" type="com.tanran.model.user.pojos.ApUserFollow" >
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="follow_id" property="followId" />
+        <result column="follow_name" property="followName"/>
+        <result column="level" property="level"/>
+        <result column="is_notice" property="isNotice"/>
+        <result column="created_time" property="createdTime" />
+        <result column="burst" property="burst"/>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, user_id, follow_id, follow_name, level, is_notice, created_time
+    </sql>
+    <select id="selectByFollowId" resultMap="BaseResultMap" >
+        select <include refid="Base_Column_List"/>
+        from ap_user_follow where user_id = #{userId} and  follow_id = #{followId}
+    </select>
+</mapper>

@@ -1,0 +1,5 @@
+server:
+  port: ${port.article}
+spring:
+  application:
+    name: ${sn.article}

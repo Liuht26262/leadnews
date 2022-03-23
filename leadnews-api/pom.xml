@@ -24,10 +24,6 @@
             <groupId>com.tanran</groupId>
             <artifactId>leadnews-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.tanran</groupId>
-            <artifactId>leadnews-article</artifactId>
-        </dependency>
     </dependencies>
 
 

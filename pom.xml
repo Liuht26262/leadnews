@@ -13,7 +13,9 @@
         <module>leadnews-utils</module>
         <module>leadnews-api</module>
         <module>leadnews-model</module>
-        <module>leadnew-article</module>
+        <module>leadnews-article</module>
+        <module>leadnews-behavior</module>
+        <module>leadnew-user</module>
     </modules>
 
     <!-- 继承Spring boot工程 -->
