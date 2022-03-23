@@ -2,7 +2,6 @@ package com.tanran.article.service.impl;
 
 import java.util.HashMap;
 
-import org.apache.hadoop.util.ThreadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;

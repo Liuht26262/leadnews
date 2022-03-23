@@ -16,6 +16,7 @@
         <module>leadnews-article</module>
         <module>leadnews-behavior</module>
         <module>leadnew-user</module>
+        <module>leadnews-mybatisGenertator</module>
     </modules>
 
     <!-- 继承Spring boot工程 -->

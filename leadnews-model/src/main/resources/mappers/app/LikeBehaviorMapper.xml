@@ -14,6 +14,9 @@
     <sql id="Like_Base_Column_List" >
         id, behavior_entry_id, entry_id, type, operation, created_time,burst
     </sql>
+    <insert id="saveLikeBehavior" parameterType="com.tanran.model.behavior.dtos.LikesBehaviorDto">
+        insert into ap_like_behavior values(#{id},#{behaviorEntryId},#{entryId},#{type},#{operation},#{createdTime},#{brust})
+    </insert>
 
     <resultMap id="UnLike_BaseResultMap" type="com.tanran.model.behavior.pojos.ApUnlikesBehavior" >
         <id column="id" property="id"/>

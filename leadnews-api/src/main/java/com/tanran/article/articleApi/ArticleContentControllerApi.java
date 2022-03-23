@@ -2,7 +2,6 @@ package com.tanran.article.articleApi;
 
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleInfoDto;
-import com.tanran.model.common.dtos.ResponseResult;
 
 /**
  * TODO

@@ -1,5 +1,6 @@
 package com.tanran.user;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,8 +13,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 3.0.x 2022/3/20 21:23
  */
 @SpringBootApplication
-public class userJarApplication {
+@MapperScan("com.tanran.model.mappers.app")
+public class UserJarApplication {
     public static void main(String[] args) {
-        SpringApplication.run(userJarApplication.class,args);
+        SpringApplication.run(UserJarApplication.class,args);
     }
 }

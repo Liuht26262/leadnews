@@ -2,7 +2,9 @@ package com.tanran.model.mappers.app;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.type.MappedTypes;
 
 import com.tanran.model.behavior.pojos.ApShowBehavior;
 

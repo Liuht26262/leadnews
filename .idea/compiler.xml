@@ -10,6 +10,7 @@
         <module name="leadnews-api" />
         <module name="leadnews-common" />
         <module name="leadnews-behavior" />
+        <module name="leadnews-mybatisGenertator" />
         <module name="leadnews-utils" />
         <module name="leadnews-model" />
         <module name="heima-leadnews-utils" />
@@ -28,6 +29,7 @@
       <module name="leadnews-behavior" options="-parameters" />
       <module name="leadnews-common" options="-parameters" />
       <module name="leadnews-model" options="-parameters" />
+      <module name="leadnews-mybatisGenertator" options="-parameters" />
       <module name="leadnews-utils" options="-parameters" />
     </option>
   </component>

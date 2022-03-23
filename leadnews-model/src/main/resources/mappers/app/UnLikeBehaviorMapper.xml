@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tanran.model.mappers.app.UnLikeBehaviorMapper">
+    <resultMap id="Base_result_map" type="com.tanran.model.behavior.pojos.ApUnlikesBehavior">
+        <id column="id" property="id"/>
+        <result column="entry_id" property="entryId"/>
+        <result column="article_id" property="articleId"/>
+        <result column="type" property="type"/>
+        <result column="create_time" property="createdTime"/>
+    </resultMap>
+
+    <sql id="Base_column_list">
+        id,entry_id,article_id,type,create_time
+    </sql>
+    <insert id="SaveUnLikeBeHaviorMapper" parameterType="com.tanran.model.behavior.pojos.ApUnlikesBehavior">
+        insert into ap_unlikes_behavior (entry_id, article_id,type, created_time)
+            values (#{entryId}, #{articleId},#{type,jdbcType=TINYINT}, #{createdTime})
+    </insert>
+    <delete id="deleteUnLikeBehaviorMapper">
+        delete  from ap_unlike_behavior where entry_id=#{entryId} and article_id=#{article}
+    </delete>
+    <select id="selectUnLikeByEntryId" resultType="com.tanran.model.behavior.pojos.ApUnlikesBehavior">
+        slelect <include refid="Base_column_list"/> from ap_unlike_behavior where entry_id=#{entryId} and article_id=#{article}
+    </select>
+
+
+</mapper>
