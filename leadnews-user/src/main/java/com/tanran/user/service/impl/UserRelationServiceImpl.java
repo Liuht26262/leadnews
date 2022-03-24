@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.tanran.behavior.service.FollowBehaviorService;
+import com.tanran.behavior.service.impl.FollowbehaviorServiceImpl;
 import com.tanran.common.result.RespResult;
 import com.tanran.common.zookeeper.sequence.Sequences;
 import com.tanran.model.article.pojos.ApAuthor;
@@ -44,8 +45,8 @@ public class UserRelationServiceImpl implements UserRelationService {
     private ApUserFollowMapper apUserFollowMapper;
     @Autowired
     private ApUserFanMapper apUserFanMapper;
-    @Autowired
-    private FollowBehaviorService followBehaviorService;
+   /* @Autowired
+    private FollowBehaviorService followBehaviorService;*/
     @Autowired
     private Sequences sequences;
 
@@ -129,8 +130,8 @@ public class UserRelationServiceImpl implements UserRelationService {
             dto.setFollowId(followId);
             dto.setArticleId(article);
 
-            followBehaviorService.save(dto);
-
+            // followBehaviorService.save(dto);
+            new FollowbehaviorServiceImpl().save(dto);
             return RespResult.okResult(result);
 
         }

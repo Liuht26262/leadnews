@@ -47,9 +47,10 @@ public class BehaviorCotroller implements BehaviorControllerApi {
         return likeBehaviorService.saveLikeBehavior(dto);
     }
 
+    /**存储用户阅读文章详情的行为数据*/
     @Override
     @PostMapping("/read_behavior")
-    public RespResult saveReadBehavior(ReadBehaviorDto dto) {
+    public RespResult saveReadBehavior(@RequestBody ReadBehaviorDto dto) {
         return readBehaviorService.saveReadBehavior(dto);
     }
 }
