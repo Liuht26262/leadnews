@@ -13,7 +13,7 @@ import com.tanran.common.zookeeper.ZookeeperClient;
  * @description Sequences封装类，方便获得某个表的主键序列
  * @since 3.0.x 2022/3/19 16:21
  */
-@Component(value = "Sequence")
+@Component
 public class Sequences {
 
     @Autowired

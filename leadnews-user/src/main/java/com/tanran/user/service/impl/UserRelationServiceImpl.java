@@ -45,10 +45,6 @@ public class UserRelationServiceImpl implements UserRelationService {
     private ApUserFollowMapper apUserFollowMapper;
     @Autowired
     private ApUserFanMapper apUserFanMapper;
-   /* @Autowired
-    private FollowBehaviorService followBehaviorService;*/
-    @Autowired
-    private Sequences sequences;
 
     /***
      *
@@ -60,6 +56,8 @@ public class UserRelationServiceImpl implements UserRelationService {
         if(ObjectUtils.isEmpty(userRelationDto)||userRelationDto.getOperation()==null||userRelationDto.getOperation()>1){
             return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE,"Operation参数错误");
         }
+
+
         Integer authorId = userRelationDto.getAuthorId();
         Integer followId = userRelationDto.getUserId();
         if(authorId == null && followId == null){
@@ -95,6 +93,7 @@ public class UserRelationServiceImpl implements UserRelationService {
         if(ObjectUtils.isEmpty(apUser)){
             return RespResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST,"用户不存在");
         }
+        Sequences sequences = new Sequences();
         /*查询用户关注信息表*/
         ApUserFollow apUserFollow = apUserFollowMapper.selectUserFollowByFollowId(user.getId(), followId);
         if(ObjectUtils.isEmpty(apUserFollow)){

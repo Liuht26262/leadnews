@@ -12,4 +12,6 @@ import com.tanran.model.user.pojos.ApUser;
  */
 public interface ApUserMapper {
     public ApUser selectUserById(Long id);
+
+    ApUser selectUserByPhone(String phone);
 }

@@ -21,4 +21,8 @@
     <select id="selectUserById" resultMap="BaseResultMap">
         select  <include refid="Base_Column_List" /> from ap_user where id = #{id}
     </select>
+    <select id="selectUserByPhone" resultType="com.tanran.model.user.pojos.ApUser"
+            parameterType="java.lang.String">
+        select  <include refid="Base_Column_List" /> from ap_user where phone=${phone}
+    </select>
 </mapper>

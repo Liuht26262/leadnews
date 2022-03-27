@@ -1,4 +1,4 @@
-package com.tanran.common.zookeeper.sequence;
+package com.tanran.common.zookeeper;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;

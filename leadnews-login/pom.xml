@@ -37,6 +37,11 @@
             <groupId>com.tanran</groupId>
             <artifactId>leadnews-behavior</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.tanran</groupId>
+            <artifactId>leadnews-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>
