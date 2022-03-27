@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tanran.article.behaviorApi.BehaviorControllerApi;
+import com.tanran.api.behaviorApi.BehaviorControllerApi;
 import com.tanran.behavior.service.BehaviorService;
 import com.tanran.behavior.service.LikeBehaviorService;
 import com.tanran.behavior.service.ReadBehaviorService;

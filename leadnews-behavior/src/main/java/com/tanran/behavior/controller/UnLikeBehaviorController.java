@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tanran.article.behaviorApi.UnLikeBehaviorControllerApi;
+import com.tanran.api.behaviorApi.UnLikeBehaviorControllerApi;
 import com.tanran.behavior.service.UnLikeBehaviorService;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.behavior.dtos.UnLikesBehaviorDto;

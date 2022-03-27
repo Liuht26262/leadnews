@@ -24,7 +24,7 @@ import java.io.IOException;
 @Configuration
 @ConfigurationProperties(prefix = "mysql.core")
 @PropertySource("classpath:mysql-core-jdbc.properties")
-@MapperScan(basePackages = "com.heima.model.mappers", sqlSessionFactoryRef = "mysqlCoreSqlSessionFactory")
+@MapperScan(basePackages = "com.tanran.model.mappers", sqlSessionFactoryRef = "mysqlCoreSqlSessionFactory")
 public class MysqlCoreConfig {
     String jdbcUrl;
     String jdbcUserName;

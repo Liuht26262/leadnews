@@ -45,10 +45,7 @@ public class UserRelationServiceImpl implements UserRelationService {
     private ApUserFollowMapper apUserFollowMapper;
     @Autowired
     private ApUserFanMapper apUserFanMapper;
-   /* @Autowired
-    private FollowBehaviorService followBehaviorService;*/
-    @Autowired
-    private Sequences sequences;
+
 
     /***
      *
@@ -103,7 +100,7 @@ public class UserRelationServiceImpl implements UserRelationService {
             if(ObjectUtils.isEmpty(apUserFan)){
                 ApUserFan userFan = new ApUserFan();
                 /*主键*/
-                userFan.setId(sequences.sequenceApUserFan());
+                userFan.setId(new Sequences().sequenceApUserFan());
                 userFan.setUserId(followId);
                 userFan.setFansId(user.getId());
                 userFan.setFansName(user.getName());
@@ -116,7 +113,7 @@ public class UserRelationServiceImpl implements UserRelationService {
                 apUserFanMapper.insertUserFan(userFan);
             }
             ApUserFollow userFollow = new ApUserFollow();
-            userFollow.setId(sequences.sequenceApUserFollow());
+            userFollow.setId(new Sequences().sequenceApUserFollow());
             userFollow.setFollowId(followId);
             userFollow.setFollowName(apUser.getName());
             userFollow.setUserId(user.getId());
