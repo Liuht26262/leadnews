@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tanran.model.mappers.wemedia.WmUserMapper">
+  <resultMap id="BaseResultMap" type="com.tanran.model.media.pojos.WmUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ap_user_id" jdbcType="INTEGER" property="apUserId" />
+    <result column="ap_author_id" jdbcType="INTEGER" property="apAuthorId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="type" jdbcType="BIT" property="type" />
+    <result column="score" jdbcType="TINYINT" property="score" />
+    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, ap_user_id, ap_author_id, name, password, salt, nickname, image, location, phone, 
+    status, email, type, score, login_time, created_time
+  </sql>
+
+    <select id="selectByName" resultType="com.tanran.model.media.pojos.WmUser"
+        parameterType="java.lang.String">
+    select <include refid="Base_Column_List"/> from wm_user where name=#{name}
+    </select>
+</mapper>

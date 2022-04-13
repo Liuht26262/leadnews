@@ -3,7 +3,7 @@ package com.tanran.common.web.app.security;
 import com.alibaba.fastjson.JSON;
 import com.tanran.common.common.contants.Contants;
 import com.tanran.model.common.dtos.ResponseResult;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.utils.common.UrlSignUtils;
 
 import lombok.extern.log4j.Log4j2;
@@ -33,6 +33,7 @@ public class AppCheckSignFilter extends GenericFilterBean {
     // URL有效果的验签效果
     public final static int URL_TIMEOUT = 2 * 60 * 1000;
 
+    @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         ResponseResult<?> result = checkToken(request);
@@ -66,10 +67,10 @@ public class AppCheckSignFilter extends GenericFilterBean {
             String sign = UrlSignUtils.getUrlSignUtils.getSign(params);
             // 验签不通过
             if (!md.equalsIgnoreCase(sign)) {
-                rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.SIGN_INVALID);
+                rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.SIGN_INVALID);
             }
         } else {
-            rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.SIG_TIMEOUT);
+            rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.SIG_TIMEOUT);
         }
         return rr;
     }

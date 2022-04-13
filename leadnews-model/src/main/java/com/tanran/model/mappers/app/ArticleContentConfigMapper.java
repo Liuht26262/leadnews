@@ -12,4 +12,5 @@ import com.tanran.model.article.pojos.ApArticleConfig;
  */
 public interface ArticleContentConfigMapper {
     public ApArticleConfig selectArticleContentById(Integer articleId);
+    void insertSelective(ApArticleConfig articleConfig);
 }

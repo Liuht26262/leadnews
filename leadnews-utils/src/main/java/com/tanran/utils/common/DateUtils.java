@@ -12,9 +12,8 @@ public class DateUtils {
 
     public static final String DATE_TIME_STAMP_FORMATE = "yyyyMMddHHmmss";
 
-    //2019年07月09日
+
     public static String DATE_FORMAT_CHINESE = "yyyy年M月d日";
-    //2019年07月09日 14:00:32
     public static String DATE_TIME_FORMAT_CHINESE = "yyyy年M月d日 HH:mm:ss";
 
 

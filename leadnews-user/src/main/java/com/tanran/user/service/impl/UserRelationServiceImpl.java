@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.tanran.behavior.service.FollowBehaviorService;
 import com.tanran.behavior.service.impl.FollowbehaviorServiceImpl;
 import com.tanran.common.result.RespResult;
 import com.tanran.common.zookeeper.sequence.Sequences;
 import com.tanran.model.article.pojos.ApAuthor;
 import com.tanran.model.behavior.dtos.FollowBehaviorDto;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.ApUserFanMapper;
 import com.tanran.model.mappers.app.ApUserFollowMapper;
 import com.tanran.model.mappers.app.ApUserMapper;
@@ -55,12 +54,12 @@ public class UserRelationServiceImpl implements UserRelationService {
     @Override
     public RespResult userFollow(UserRelationDto userRelationDto) {
         if(ObjectUtils.isEmpty(userRelationDto)||userRelationDto.getOperation()==null||userRelationDto.getOperation()>1){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE,"Operation参数错误");
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"Operation参数错误");
         }
         Integer authorId = userRelationDto.getAuthorId();
         Integer followId = userRelationDto.getUserId();
         if(authorId == null && followId == null){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE,"followId和authorId不能同时为空");
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"followId和authorId不能同时为空");
         }else if(followId == null){
             ApAuthor apAuthor = authorMapper.selectAuthorById(authorId);
             if(apAuthor != null){
@@ -69,11 +68,11 @@ public class UserRelationServiceImpl implements UserRelationService {
         }
 
         if(followId == null){
-            RespResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST,"用户不存在");
+            RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST,"用户不存在");
         } else{
             ApUser user = AppThreadLocalUtils.getUser();
             if(ObjectUtils.isEmpty(user)){
-                return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE,"用户不存在或者未登录");
+                return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"用户不存在或者未登录");
             }else{
                 if (userRelationDto.getOperation() == 0) {
                     return saveUserFollow(user, authorId, userRelationDto.getArticleId());
@@ -82,7 +81,7 @@ public class UserRelationServiceImpl implements UserRelationService {
                 }
             }
         }
-        return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+        return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
     }
 
     /**用户关注*/
@@ -90,7 +89,7 @@ public class UserRelationServiceImpl implements UserRelationService {
         //判断用户是否存在
         ApUser apUser = apUserMapper.selectUserById(user.getId());
         if(ObjectUtils.isEmpty(apUser)){
-            return RespResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST,"用户不存在");
+            return RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST,"用户不存在");
         }
         /*查询用户关注信息表*/
         ApUserFollow apUserFollow = apUserFollowMapper.selectUserFollowByFollowId(user.getId(), followId);
@@ -132,14 +131,14 @@ public class UserRelationServiceImpl implements UserRelationService {
             return RespResult.okResult(result);
 
         }
-        return RespResult.errorResult(AppHttpCodeEnum.DATA_EXIST,"用户已经关注");
+        return RespResult.errorResult(ErrorCodeEnum.DATA_EXIST,"用户已经关注");
     }
 
     /**取消用户关注*/
     public RespResult deleteUserFollow(ApUser user,Integer followId){
         ApUserFollow apUserFollow = apUserFollowMapper.selectUserFollowByFollowId(user.getId(),followId);
         if(apUserFollow == null){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE,"未关注");
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"未关注");
         }else {
             ApUserFan apUserFan = apUserFanMapper.slectUserFanByFanId(followId, user.getId());
             if(!ObjectUtils.isEmpty(apUserFan)){

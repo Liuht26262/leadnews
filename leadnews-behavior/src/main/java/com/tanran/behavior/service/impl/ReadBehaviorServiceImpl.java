@@ -12,7 +12,7 @@ import com.tanran.common.zookeeper.sequence.Sequences;
 import com.tanran.model.behavior.dtos.ReadBehaviorDto;
 import com.tanran.model.behavior.pojos.ApBehaviorEntry;
 import com.tanran.model.behavior.pojos.ApReadBehavior;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.BehaviorEntryMapper;
 import com.tanran.model.mappers.app.ReadBehaviorMapper;
 import com.tanran.model.user.pojos.ApUser;
@@ -39,7 +39,7 @@ public class ReadBehaviorServiceImpl implements ReadBehaviorService {
     public RespResult saveReadBehavior(ReadBehaviorDto dto) {
         ApUser user = AppThreadLocalUtils.getUser();
         if(ObjectUtils.isEmpty(user)&&dto.getEquipmentId()==null){
-            RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
 
         Long id = null;
@@ -49,7 +49,7 @@ public class ReadBehaviorServiceImpl implements ReadBehaviorService {
 
         ApBehaviorEntry apBehaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(id, dto.getEquipmentId());
         if(ObjectUtils.isEmpty(apBehaviorEntry)){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
 
         ApReadBehavior apReadBehavior = readBehaviorMapper.selectReadBehaviorById(apBehaviorEntry.getEntryId(),

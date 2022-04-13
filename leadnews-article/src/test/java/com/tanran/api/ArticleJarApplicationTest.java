@@ -21,6 +21,7 @@ import com.tanran.api.service.ArticleHomeService;
 import com.tanran.common.constans.ArticleConstans;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleInfoDto;
+import com.tanran.model.article.dtos.UserSearchDto;
 import com.tanran.model.article.pojos.ApArticleConfig;
 import com.tanran.model.user.pojos.ApUser;
 import com.tanran.utils.threadlocal.AppThreadLocalUtils;
@@ -93,6 +94,29 @@ public class ArticleJarApplicationTest {
 
     @Test
     public void Object(){System.out.println(ObjectUtils.isEmpty(null));}
+
+    @Test
+    public void testHotKeywords() throws Exception {
+        UserSearchDto dto = new UserSearchDto();
+               dto.setHotDate("2022-03-31");
+        MockHttpServletRequestBuilder builder =
+            MockMvcRequestBuilders.post("/api/v1/article/search/load_hot_keywords")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsBytes(dto));
+        mockMvc.perform(builder).andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void testAssociateWords() throws Exception {
+        UserSearchDto dto2 = new UserSearchDto();
+        dto2.setPageSize(20);
+        dto2.setSearchWords("今日");
+        MockHttpServletRequestBuilder builders =
+            MockMvcRequestBuilders.post("/api/v1/article/search/associate_search")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsBytes(dto2));
+        mockMvc.perform(builders).andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
+    }
 
 
 }

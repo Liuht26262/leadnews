@@ -15,4 +15,49 @@
     <!-- 通过文章ID查询文章配置 -->
     <select id="selectArticleContentById" resultMap="BaseResultMap" parameterType="int" >
         select <include refid="Base_Column_List" /> from ap_article_config where article_id = #{articleId}
-    </select></mapper>
+    </select>
+
+    <insert id="insertSelective" parameterType="com.tanran.model.article.pojos.ApArticleConfig">
+        insert into ap_article_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="articleId != null">
+                article_id,
+            </if>
+            <if test="isComment != null">
+                is_comment,
+            </if>
+            <if test="isForward != null">
+                is_forward,
+            </if>
+            <if test="isDown != null">
+                is_down,
+            </if>
+            <if test="isDelete != null">
+                is_delete,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="articleId != null">
+                #{articleId,jdbcType=INTEGER},
+            </if>
+            <if test="isComment != null">
+                #{isComment,jdbcType=BIT},
+            </if>
+            <if test="isForward != null">
+                #{isForward,jdbcType=BIT},
+            </if>
+            <if test="isDown != null">
+                #{isDown,jdbcType=BIT},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+</mapper>

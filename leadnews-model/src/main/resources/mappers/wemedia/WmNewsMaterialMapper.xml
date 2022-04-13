@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tanran.model.mappers.wemedia.WmNewsMaterialMapper">
+  <resultMap id="BaseResultMap" type="com.tanran.model.media.pojos.WmNewsMaterial">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="material_id" jdbcType="INTEGER" property="materialId" />
+    <result column="news_id" jdbcType="INTEGER" property="newsId" />
+    <result column="type" jdbcType="BIT" property="type" />
+    <result column="ord" jdbcType="BIT" property="ord" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, material_id, news_id, type, ord
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wm_news_material
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wm_news_material
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.tanran.model.media.pojos.WmNewsMaterial">
+    insert into wm_news_material (id, material_id, news_id, 
+      type, ord)
+    values (#{id,jdbcType=INTEGER}, #{materialId,jdbcType=INTEGER}, #{newsId,jdbcType=INTEGER}, 
+      #{type,jdbcType=BIT}, #{ord,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tanran.model.media.pojos.WmNewsMaterial">
+    insert into wm_news_material
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="materialId != null">
+        material_id,
+      </if>
+      <if test="newsId != null">
+        news_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="ord != null">
+        ord,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="materialId != null">
+        #{materialId,jdbcType=INTEGER},
+      </if>
+      <if test="newsId != null">
+        #{newsId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=BIT},
+      </if>
+      <if test="ord != null">
+        #{ord,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.media.pojos.WmNewsMaterial">
+    update wm_news_material
+    <set>
+      <if test="materialId != null">
+        material_id = #{materialId,jdbcType=INTEGER},
+      </if>
+      <if test="newsId != null">
+        news_id = #{newsId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=BIT},
+      </if>
+      <if test="ord != null">
+        ord = #{ord,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tanran.model.media.pojos.WmNewsMaterial">
+    update wm_news_material
+    set material_id = #{materialId,jdbcType=INTEGER},
+      news_id = #{newsId,jdbcType=INTEGER},
+      type = #{type,jdbcType=BIT},
+      ord = #{ord,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <insert id="saveRelationsByContent">
+        insert into wm_news_material (material_id, news_id, type, ord)
+        values
+        <foreach item="mid" index="ord" collection="materials.entrySet()"
+                 separator="," >
+            (#{mid}, #{newsId}, #{type}, #{ord})
+        </foreach>
+    </insert>
+</mapper>

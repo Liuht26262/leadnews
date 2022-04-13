@@ -11,7 +11,7 @@ import com.tanran.common.result.RespResult;
 import com.tanran.model.behavior.dtos.LikesBehaviorDto;
 import com.tanran.model.behavior.pojos.ApBehaviorEntry;
 import com.tanran.model.behavior.pojos.ApLikesBehavior;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.BehaviorEntryMapper;
 import com.tanran.model.mappers.app.LikeBehaviorMapper;
 import com.tanran.model.user.pojos.ApUser;
@@ -36,7 +36,7 @@ public class LikeBehaviorServiceImpl implements LikeBehaviorService {
     public RespResult saveLikeBehavior(LikesBehaviorDto dto) {
         ApUser user = AppThreadLocalUtils.getUser();
         if(ObjectUtils.isEmpty(user)&&dto.getEntryId()==null){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
         Long id = null;
         if(!ObjectUtils.isEmpty(user)){
@@ -45,7 +45,7 @@ public class LikeBehaviorServiceImpl implements LikeBehaviorService {
 
         ApBehaviorEntry apBehaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(id, dto.getEquipmentId());
         if(ObjectUtils.isEmpty(apBehaviorEntry)){
-            RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
 
         ApLikesBehavior apLikesBehavior = new ApLikesBehavior();

@@ -25,6 +25,10 @@
             <groupId>com.tanran</groupId>
             <artifactId>leadnews-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.tanran</groupId>
+            <artifactId>leadnews-behavior</artifactId>
+        </dependency>
         <!-- Spring boot starter -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

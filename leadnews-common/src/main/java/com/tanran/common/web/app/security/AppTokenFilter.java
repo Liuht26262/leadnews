@@ -3,7 +3,7 @@ package com.tanran.common.web.app.security;
 import com.alibaba.fastjson.JSON;
 import com.tanran.common.common.contants.Contants;
 import com.tanran.model.common.dtos.ResponseResult;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.user.pojos.ApUser;
 import com.tanran.utils.jwt.AppJwtUtil;
 import com.tanran.utils.threadlocal.AppThreadLocalUtils;
@@ -22,6 +22,7 @@ import java.io.IOException;
 @WebFilter(filterName = "appTokenFilter" ,urlPatterns = "/*")
 public class AppTokenFilter extends GenericFilterBean {
 
+    @Override
     public  void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException{
         HttpServletRequest request = (HttpServletRequest)req;
         ResponseResult<?> result = checkToken(request);
@@ -57,17 +58,17 @@ public class AppTokenFilter extends GenericFilterBean {
                     //验证成功 发送用户刷新消息
                     sendUserRefresh(user);
                 }else{
-                    rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.TOKEN_INVALID);
+                    rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.TOKEN_INVALID);
                 }
             }else if(result==1){
                 // 过期
-                rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.TOKEN_EXPIRE);
+                rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.TOKEN_EXPIRE);
             }else if(result==2){
                 // TOKEN错误
-                rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.TOKEN_INVALID);
+                rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.TOKEN_INVALID);
             }
         }else{
-            rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.TOKEN_REQUIRE);
+            rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.TOKEN_REQUIRE);
         }
         return rr;
     }

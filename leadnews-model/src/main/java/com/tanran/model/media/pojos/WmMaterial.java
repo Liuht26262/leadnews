@@ -8,11 +8,36 @@ import java.util.Date;
 
 @Data
 public class WmMaterial {
+    /**
+     * 主键
+     */
     private Integer id;
+
+    /**
+     * 自媒体用户ID
+     */
     @IdEncrypt
-    private Long userId;
+    private Integer userId;
+
+    /**
+     * 图片地址
+     */
     private String url;
-    private short type;
+
+    /**
+     * 素材类型
+     0 图片
+     1 视频
+     */
+    private Short type;
+
+    /**
+     * 是否收藏
+     */
     private Short isCollection;
+
+    /**
+     * 创建时间
+     */
     private Date createdTime;
 }

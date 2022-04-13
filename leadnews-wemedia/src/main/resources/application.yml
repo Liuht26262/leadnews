@@ -1,0 +1,5 @@
+server:
+  port: ${port.wemedia}
+spring:
+  application:
+    name: ${sn.wemedia}

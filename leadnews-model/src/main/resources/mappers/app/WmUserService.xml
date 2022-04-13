@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tanran.model.mappers.app.ArticleMapper">
+
+    <resultMap id="resultMap" type="com.tanran.model.article.pojos.ApArticle">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="author_id" property="authorId"/>
+        <result column="author_name" property="authorName"/>
+        <result column="channel_id" property="channelId"/>
+        <result column="channel_name" property="channelName"/>
+        <result column="layout" property="layout"/>
+        <result column="flag" property="flag"/>
+        <result column="images" property="images"/>
+        <result column="labels" property="labels"/>
+        <result column="likes" property="likes"/>
+        <result column="collection" property="collection"/>
+        <result column="comment" property="comment"/>
+        <result column="views" property="views"/>
+        <result column="province_id" property="provinceId"/>
+        <result column="city_id" property="cityId"/>
+        <result column="county_id" property="countyId"/>
+        <result column="created_time" property="createdTime"/>
+        <result column="publish_time" property="publishTime"/>
+        <result column="sync_status" property="syncStatus"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, title, author_id, author_name, channel_id, channel_name, layout, flag, images,
+    labels, likes, collection, comment, views, province_id, city_id, county_id, created_time,
+    publish_time,sync_status
+    </sql>
+    <insert id="insert" parameterType="com.tanran.model.article.pojos.ApArticle">
+        insert into ap_article (id, title, author_id,
+                                author_name, channel_id, channel_name,
+                                layout, flag, images, labels,
+                                likes, collection, comment,
+                                views, province_id, city_id,
+                                county_id, created_time, publish_time,
+                                sync_status, origin)
+        values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{authorId,jdbcType=INTEGER},
+                #{authorName,jdbcType=VARCHAR}, #{channelId,jdbcType=INTEGER}, #{channelName,jdbcType=VARCHAR},
+                #{layout,jdbcType=BIT}, #{flag,jdbcType=TINYINT}, #{images,jdbcType=VARCHAR}, #{labels,jdbcType=VARCHAR},
+                #{likes,jdbcType=INTEGER}, #{collection,jdbcType=INTEGER}, #{comment,jdbcType=INTEGER},
+                #{views,jdbcType=INTEGER}, #{provinceId,jdbcType=INTEGER}, #{cityId,jdbcType=INTEGER},
+                #{countyId,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}, #{publishTime,jdbcType=TIMESTAMP},
+                #{syncStatus,jdbcType=BIT}},null)
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.tanran.model.article.pojos.ApArticle">
+        insert into ap_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="authorId != null">
+                author_id,
+            </if>
+            <if test="authorName != null">
+                author_name,
+            </if>
+            <if test="channelId != null">
+                channel_id,
+            </if>
+            <if test="channelName != null">
+                channel_name,
+            </if>
+            <if test="layout != null">
+                layout,
+            </if>
+            <if test="flag != null">
+                flag,
+            </if>
+            <if test="images != null">
+                images,
+            </if>
+            <if test="labels != null">
+                labels,
+            </if>
+            <if test="likes != null">
+                likes,
+            </if>
+            <if test="collection != null">
+                collection,
+            </if>
+            <if test="comment != null">
+                comment,
+            </if>
+            <if test="views != null">
+                views,
+            </if>
+            <if test="provinceId != null">
+                province_id,
+            </if>
+            <if test="cityId != null">
+                city_id,
+            </if>
+            <if test="countyId != null">
+                county_id,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+            <if test="publishTime != null">
+                publish_time,
+            </if>
+            <if test="syncStatus != null">
+                sync_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="authorId != null">
+                #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="authorName != null">
+                #{authorName,jdbcType=VARCHAR},
+            </if>
+            <if test="channelId != null">
+                #{channelId,jdbcType=INTEGER},
+            </if>
+            <if test="channelName != null">
+                #{channelName,jdbcType=VARCHAR},
+            </if>
+            <if test="layout != null">
+                #{layout,jdbcType=BIT},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=TINYINT},
+            </if>
+            <if test="images != null">
+                #{images,jdbcType=VARCHAR},
+            </if>
+            <if test="labels != null">
+                #{labels,jdbcType=VARCHAR},
+            </if>
+            <if test="likes != null">
+                #{likes,jdbcType=INTEGER},
+            </if>
+            <if test="collection != null">
+                #{collection,jdbcType=INTEGER},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=INTEGER},
+            </if>
+            <if test="views != null">
+                #{views,jdbcType=INTEGER},
+            </if>
+            <if test="provinceId != null">
+                #{provinceId,jdbcType=INTEGER},
+            </if>
+            <if test="cityId != null">
+                #{cityId,jdbcType=INTEGER},
+            </if>
+            <if test="countyId != null">
+                #{countyId,jdbcType=INTEGER},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="publishTime != null">
+                #{publishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="syncStatus != null">
+                #{syncStatus,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="loadArticleListByLocation" resultMap="resultMap">
+        select <include refid="Base_Column_List"/>
+        from ap_article  aa
+        <where>
+            <if test="dto.provinceId != null">
+                and aa.province_id = #{dto.provinceId}
+            </if>
+            <if test="dto.cityId != null">
+                and aa.city_id = #{dto.cityId}
+            </if>
+            <if test="dto.countyId != null">
+                and aa.county_id = #{dto.countyId}
+            </if>
+            <if test="type != null and type ==1">
+                and aa.publish_time <![CDATA[<]]>  #{dto.minBehotTime}
+            </if>
+
+            <if test="type != null and type ==2">
+                and aa.publish_time <![CDATA[>]]>  #{dto.maxBehotTime}
+            </if>
+
+            <if test="dto.tag!= '__all__'">
+                and aa.channel_id = #{dto.tag}
+            </if>
+
+        </where>
+        limit #{dto.size}
+    </select>
+
+    <select id="loadArticleListByIdList" resultMap="resultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ap_article
+        where id in (
+        <trim suffix="" suffixOverrides=",">
+            <foreach collection="list" item="item" separator=",">
+                #{item.articleId}
+            </foreach>
+        </trim>
+        )
+    </select>
+    <select id="selectArticleById" resultType="com.tanran.model.article.pojos.ApArticle"
+            parameterType="java.lang.Long">
+        select <include refid="Base_Column_List"/> from ap_article where id = #{id}
+    </select>
+</mapper>

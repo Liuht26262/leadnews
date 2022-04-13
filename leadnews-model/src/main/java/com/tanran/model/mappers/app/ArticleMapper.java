@@ -26,7 +26,7 @@ public interface ArticleMapper {
      * @param type 加载方向
      * @return
      */
-    List<ApArticle> loadArticleListByLocation(@Param("dto") ArticleHomeDto dto, @Param("type") short type);
+    List<ApArticle> loadArticleListByLocation(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
 
     /**
      * 依据文章IDS来获取文章详细内容
@@ -36,6 +36,9 @@ public interface ArticleMapper {
      */
     List<ApArticle> loadArticleListByIdList(@Param("list") List<ApUserArticleList> list);
 
+    ApArticle selectArticleById(Long id);
 
+    void insert(ApArticle article);
 
+    void insertSelective(ApArticle article);
 }

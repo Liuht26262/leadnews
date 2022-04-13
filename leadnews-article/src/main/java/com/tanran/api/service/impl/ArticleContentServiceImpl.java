@@ -10,7 +10,7 @@ import com.tanran.api.service.ArticleContentService;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.pojos.ApArticleConfig;
 import com.tanran.model.article.pojos.ApArticleContent;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.ArticleContentConfigMapper;
 import com.tanran.model.mappers.app.ArticleContentMapper;
 
@@ -34,7 +34,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     @Override
     public RespResult getArticleContent(Integer articleId) {
         if(articleId==null || articleId < 1){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
 
         /*返回方式为Map*/
@@ -42,7 +42,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
 
         ApArticleConfig apArticleConfig = articleContentConfigMapper.selectArticleContentById(articleId);
         if(ObjectUtils.isEmpty(apArticleConfig)){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }else if(!apArticleConfig.getIsDelete()){
             /*查询文章状态,只有文章没有被删除才会返回文章详情数据*/
             ApArticleContent apArticleContent = articleContentMapper.selectArticleContentById(articleId);

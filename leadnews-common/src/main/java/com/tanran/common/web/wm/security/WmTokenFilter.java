@@ -3,7 +3,7 @@ package com.tanran.common.web.wm.security;
 import com.alibaba.fastjson.JSON;
 import com.tanran.common.common.contants.Contants;
 import com.tanran.model.common.dtos.ResponseResult;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.media.pojos.WmUser;
 import com.tanran.utils.jwt.AppJwtUtil;
 import com.tanran.utils.threadlocal.WmThreadLocalUtils;
@@ -60,7 +60,7 @@ public class WmTokenFilter extends GenericFilterBean {
             // 有效的token
             if (result == 0||result==-1) {
                 WmUser user = new WmUser();
-                user.setId(Long.valueOf((Integer)claims.get("id")));
+                user.setId(Integer.valueOf((Integer)claims.get("id")));
                 user = findUser(user);
                 logger.info("find userid:[{}] from uri:{}",user.getId(),request.getRequestURI());
                 if(user.getId()!=null) {
@@ -70,17 +70,17 @@ public class WmTokenFilter extends GenericFilterBean {
                     }
                     WmThreadLocalUtils.setUser(user);
                 }else{
-                    rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.TOKEN_INVALID);
+                    rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.TOKEN_INVALID);
                 }
             }else if(result==1){
                 // 过期
-                rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.TOKEN_EXPIRE);
+                rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.TOKEN_EXPIRE);
             }else if(result==2){
                 // TOKEN错误
-                rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.TOKEN_INVALID);
+                rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.TOKEN_INVALID);
             }
         }else{
-            rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.TOKEN_REQUIRE);
+            rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.TOKEN_REQUIRE);
         }
         return rr;
     }

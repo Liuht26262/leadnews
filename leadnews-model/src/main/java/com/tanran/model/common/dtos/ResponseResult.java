@@ -1,6 +1,6 @@
 package com.tanran.model.common.dtos;
 
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 
 import java.io.Serializable;
 
@@ -49,26 +49,26 @@ public class ResponseResult<T> implements Serializable {
     }
 
     public static ResponseResult okResult(Object data) {
-        ResponseResult result = setAppHttpCodeEnum(AppHttpCodeEnum.SUCCESS, AppHttpCodeEnum.SUCCESS.getErrorMessage());
+        ResponseResult result = setAppHttpCodeEnum(ErrorCodeEnum.SUCCESS, ErrorCodeEnum.SUCCESS.getErrorMessage());
         if(data!=null) {
             result.setData(data);
         }
         return result;
     }
 
-    public static ResponseResult errorResult(AppHttpCodeEnum enums){
+    public static ResponseResult errorResult(ErrorCodeEnum enums){
         return setAppHttpCodeEnum(enums,enums.getErrorMessage());
     }
 
-    public static ResponseResult errorResult(AppHttpCodeEnum enums, String errorMessage){
+    public static ResponseResult errorResult(ErrorCodeEnum enums, String errorMessage){
         return setAppHttpCodeEnum(enums,errorMessage);
     }
 
-    public static ResponseResult setAppHttpCodeEnum(AppHttpCodeEnum enums){
+    public static ResponseResult setAppHttpCodeEnum(ErrorCodeEnum enums){
         return okResult(enums.getCode(),enums.getErrorMessage());
     }
 
-    private static ResponseResult setAppHttpCodeEnum(AppHttpCodeEnum enums, String errorMessage){
+    private static ResponseResult setAppHttpCodeEnum(ErrorCodeEnum enums, String errorMessage){
         return okResult(enums.getCode(),errorMessage);
     }
 

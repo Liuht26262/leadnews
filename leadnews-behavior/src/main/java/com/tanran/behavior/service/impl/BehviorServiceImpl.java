@@ -13,7 +13,7 @@ import com.tanran.common.result.RespResult;
 import com.tanran.model.behavior.dtos.ShowBehaviorDto;
 import com.tanran.model.behavior.pojos.ApBehaviorEntry;
 import com.tanran.model.behavior.pojos.ApShowBehavior;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.BehaviorEntryMapper;
 import com.tanran.model.mappers.app.ShowBehaviorMapper;
 import com.tanran.model.user.pojos.ApUser;
@@ -50,7 +50,7 @@ public class BehviorServiceImpl implements BehaviorService {
         ApUser user = AppThreadLocalUtils.getUser();
         /**设备和用户不能同时为空*/
         if(ObjectUtils.isEmpty(user)&&(dto.getArticleIds()==null||dto.getArticleIds().isEmpty())){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
         Long userId = null;
         if(user != null){
@@ -59,7 +59,7 @@ public class BehviorServiceImpl implements BehaviorService {
 
         ApBehaviorEntry apBehaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(userId,dto.getEquipmentId());
         if (ObjectUtils.isEmpty(apBehaviorEntry)) {
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
 
         //获取文章id列表

@@ -34,5 +34,4 @@ public class ApArticle {
     @DateConvert("yyyyMMddHHmmss")
     private Date publishTime;
     private Boolean syncStatus;
-
 }

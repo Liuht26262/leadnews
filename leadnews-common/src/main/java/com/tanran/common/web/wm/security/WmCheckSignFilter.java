@@ -3,7 +3,7 @@ package com.tanran.common.web.wm.security;
 import com.alibaba.fastjson.JSON;
 import com.tanran.common.common.contants.Contants;
 import com.tanran.model.common.dtos.ResponseResult;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.utils.common.UrlSignUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -66,10 +66,10 @@ public class WmCheckSignFilter extends GenericFilterBean {
             String sign = UrlSignUtils.getUrlSignUtils.getSign(params);
             // 验签不通过
             if (!md.equalsIgnoreCase(sign)) {
-                rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.SIGN_INVALID);
+                rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.SIGN_INVALID);
             }
         } else {
-            rr = ResponseResult.setAppHttpCodeEnum(AppHttpCodeEnum.SIG_TIMEOUT);
+            rr = ResponseResult.setAppHttpCodeEnum(ErrorCodeEnum.SIG_TIMEOUT);
         }
         return rr;
     }

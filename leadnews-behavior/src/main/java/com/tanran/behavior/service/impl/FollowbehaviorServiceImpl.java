@@ -11,7 +11,7 @@ import com.tanran.common.result.RespResult;
 import com.tanran.model.behavior.dtos.FollowBehaviorDto;
 import com.tanran.model.behavior.pojos.ApBehaviorEntry;
 import com.tanran.model.behavior.pojos.ApFollowBehavior;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.BehaviorEntryMapper;
 import com.tanran.model.mappers.app.FollowBehaviorMapper;
 import com.tanran.model.user.pojos.ApUser;
@@ -37,7 +37,7 @@ public class FollowbehaviorServiceImpl implements FollowBehaviorService {
     public RespResult save(FollowBehaviorDto dto) {
         ApUser user = AppThreadLocalUtils.getUser();
         if(user==null &&dto.getEquipmentId()==null){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
         Long userId = null;
         if(user!=null){
@@ -45,7 +45,7 @@ public class FollowbehaviorServiceImpl implements FollowBehaviorService {
         }
         ApBehaviorEntry apBehaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(userId, dto.getEquipmentId());
         if(apBehaviorEntry==null){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
 
         //保存行为

@@ -14,7 +14,7 @@ import com.tanran.model.article.pojos.ApCollection;
 import com.tanran.model.behavior.pojos.ApBehaviorEntry;
 import com.tanran.model.behavior.pojos.ApLikesBehavior;
 import com.tanran.model.behavior.pojos.ApUnlikesBehavior;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.AuthorMapper;
 import com.tanran.model.mappers.app.BehaviorEntryMapper;
 import com.tanran.model.mappers.app.CollectionMapper;
@@ -52,7 +52,7 @@ public class LoadArticleBehaviorServiceImpl implements LoadArticleBehaviorServic
         ApUser user = AppThreadLocalUtils.getUser();
         //用户和设备不能同时为空，否则就返回参数错误
         if(ObjectUtils.isEmpty(user)&&dto.getEquipmentId()==null){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
         Long userId = null;
         if(user!=null){
@@ -62,7 +62,7 @@ public class LoadArticleBehaviorServiceImpl implements LoadArticleBehaviorServic
         /*查询用户行为实体*/
         ApBehaviorEntry behaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(userId, dto.getEquipmentId());
         if(ObjectUtils.isEmpty(behaviorEntry)){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
 
         /*定义标签数据*/

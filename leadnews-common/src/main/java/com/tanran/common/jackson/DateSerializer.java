@@ -9,6 +9,7 @@ import java.util.Date;
 
 public class DateSerializer extends JsonSerializer<Object> {
 
+    @Override
     public  void serialize(Object value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException {
         try {
             if (value != null) {

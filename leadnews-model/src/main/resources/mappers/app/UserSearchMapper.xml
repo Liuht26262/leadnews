@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tanran.model.mappers.app.UserSearchMapper">
+    <resultMap id="BaseResultMap" type="com.tanran.model.user.pojos.ApUserSearch">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="entry_id" jdbcType="INTEGER" property="entryId" />
+        <result column="keyword" jdbcType="VARCHAR" property="keyword" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, entry_id, keyword, status, created_time
+    </sql>
+
+
+    <select id="selectUserSearch" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from ap_user_search where entry_id=#{entryId} and status=1 order by created_time desc  limit #{pageSize}
+    </select>
+    <update id="deleteUserSearch">
+        update from ap_user_search set status=0 where entry_id=#{entryId} and id in (
+            <foreach item="item" collection="idList" separator=",">
+                #{item}
+            </foreach>
+        )
+    </update>
+    <delete id="clearUserSearch" parameterType="java.lang.Integer">
+        delete from ap_user_search where entry_id=#{entryId}
+    </delete>
+    <insert id="saveUserSearch" parameterType="com.tanran.model.user.pojos.ApUserSearch" >
+        insert into ap_user_search (entry_id, keyword, status,created_time)
+        values (#{entryId}, #{keyword}, #{status},#{createdTime})
+    </insert>
+    <select id="checkSearch" resultType="java.lang.Integer">
+        select
+            count(1)
+        from ap_user_search
+        where entry_id = #{entryId} and keyword = #{keyword} and status = 1
+    </select>
+
+</mapper>

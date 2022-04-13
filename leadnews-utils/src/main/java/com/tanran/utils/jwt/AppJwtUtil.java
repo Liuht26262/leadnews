@@ -14,7 +14,7 @@ import com.tanran.model.user.pojos.ApUser;
 public class AppJwtUtil {
 
     // TOKEN的有效期一天（S）
-    private static final int TOKEN_TIME_OUT = 3_600;
+    private static final int TOKEN_TIME_OUT = 3600;
     // 加密KEY
     private static final String TOKEN_ENCRY_KEY = "MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY";
     // 最小刷新间隔(S)
@@ -47,7 +47,7 @@ public class AppJwtUtil {
      * @return
      */
     public static String getToken(WmUser user) {
-        return getToken(user.getId());
+        return getToken(Long.valueOf(user.getId()));
     }
 
     // 生产ID
@@ -59,7 +59,7 @@ public class AppJwtUtil {
                 .setId(UUID.randomUUID().toString())
                 .setIssuedAt(new Date(currentTime))  //签发时间
                 .setSubject("system")  //说明
-                .setIssuer("heima") //签发者信息
+                .setIssuer("tanran") //签发者信息
                 .setAudience("app")  //接收用户
                 .compressWith(CompressionCodecs.GZIP)  //数据压缩方式
                 .signWith(SignatureAlgorithm.HS512, generalKey()) //加密方式
@@ -143,7 +143,7 @@ public class AppJwtUtil {
 
     public static void main(String[] args) {
         ApUser user = new ApUser();
-        user.setId(1l);
+        user.setId(1L);
         System.out.println(AppJwtUtil.getToken(user));
     }
 

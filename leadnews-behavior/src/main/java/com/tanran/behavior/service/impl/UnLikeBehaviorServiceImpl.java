@@ -8,11 +8,10 @@ import org.springframework.util.ObjectUtils;
 
 import com.tanran.behavior.service.UnLikeBehaviorService;
 import com.tanran.common.result.RespResult;
-import com.tanran.model.behavior.dtos.ShowBehaviorDto;
 import com.tanran.model.behavior.dtos.UnLikesBehaviorDto;
 import com.tanran.model.behavior.pojos.ApBehaviorEntry;
 import com.tanran.model.behavior.pojos.ApUnlikesBehavior;
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.BehaviorEntryMapper;
 import com.tanran.model.mappers.app.UnLikeBehaviorMapper;
 import com.tanran.model.user.pojos.ApUser;
@@ -37,7 +36,7 @@ public class UnLikeBehaviorServiceImpl implements UnLikeBehaviorService {
     public RespResult SaveUnLikeBehavior(UnLikesBehaviorDto dto) {
         ApUser user = AppThreadLocalUtils.getUser();
         if(ObjectUtils.isEmpty(user)&&dto.getEquipmentId()==null){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE,"缺少参数");
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"缺少参数");
         }
         Long id = null;
         if(!ObjectUtils.isEmpty(user)){
@@ -45,7 +44,7 @@ public class UnLikeBehaviorServiceImpl implements UnLikeBehaviorService {
         }
         ApBehaviorEntry apBehaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(id, dto.getEquipmentId());
         if(apBehaviorEntry==null){
-            RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
 
         //存入数据
@@ -65,7 +64,7 @@ public class UnLikeBehaviorServiceImpl implements UnLikeBehaviorService {
     public RespResult deleteUsweBehavior(UnLikesBehaviorDto dto) {
         ApUser user = AppThreadLocalUtils.getUser();
         if(ObjectUtils.isEmpty(user)&&dto.getEquipmentId()==null){
-            return RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE,"缺少参数");
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"缺少参数");
         }
         Long id = null;
         if(!ObjectUtils.isEmpty(user)){
@@ -73,7 +72,7 @@ public class UnLikeBehaviorServiceImpl implements UnLikeBehaviorService {
         }
         ApBehaviorEntry apBehaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(id, dto.getEquipmentId());
         if(apBehaviorEntry==null){
-            RespResult.errorResult(AppHttpCodeEnum.PARAM_REQUIRE);
+            RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
         }
 
         ApUnlikesBehavior apUnlikesBehavior = unLikeBehaviorMapper.selectUnLikeByEntryId(apBehaviorEntry.getEntryId(),
@@ -83,7 +82,7 @@ public class UnLikeBehaviorServiceImpl implements UnLikeBehaviorService {
             int result = unLikeBehaviorMapper.deleteUnLikeBehaviorMapper(apBehaviorEntry.getEntryId(), dto.getArticleId());
             return RespResult.okResult(result);
         }else {
-            return RespResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST);
+            return RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST);
         }
 
 

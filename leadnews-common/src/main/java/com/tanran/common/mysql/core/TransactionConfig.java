@@ -32,11 +32,12 @@ import javax.sql.DataSource;
 public class TransactionConfig {
     String txScanPackage;
 
-    /**
+/**
      * 初始化事务管理器
      * @param dataSource
      * @return
      */
+
     @Bean
     public DataSourceTransactionManager mysqlCoreDataSourceTransactionManager(@Qualifier("mysqlCoreDataSource") DataSource dataSource){
         DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
@@ -44,11 +45,14 @@ public class TransactionConfig {
         return dataSourceTransactionManager;
     }
 
-    /**
+/*
+*
      * 设置事务拦截器
      * @param dataSourceTransactionManager
      * @return
-     */
+
+*/
+
     @Bean
     public TransactionInterceptor mysqlCoreDataSourceTxAdvice(@Qualifier("mysqlCoreDataSourceTransactionManager") DataSourceTransactionManager dataSourceTransactionManager) {
         // 默认事务

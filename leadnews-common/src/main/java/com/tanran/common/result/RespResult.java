@@ -2,7 +2,7 @@ package com.tanran.common.result;
 
 import java.io.Serializable;
 
-import com.tanran.model.common.enums.AppHttpCodeEnum;
+import com.tanran.model.common.enums.ErrorCodeEnum;
 
 import lombok.Data;
 
@@ -56,33 +56,33 @@ public class RespResult<T> implements Serializable {
         return new RespResult(code,null,msg);
     }
 
-    public static RespResult errorResult(AppHttpCodeEnum enums){
+    public static RespResult errorResult(ErrorCodeEnum enums){
         return setAppHttpCodeEnum(enums,enums.getErrorMessage());
     }
 
-    public static RespResult errorResult(AppHttpCodeEnum enums, String errorMessage){
+    public static RespResult errorResult(ErrorCodeEnum enums, String errorMessage){
         return setAppHttpCodeEnum(enums,errorMessage);
     }
 
-    public static RespResult setAppHttpCodeEnum(AppHttpCodeEnum enums){
+    public static RespResult setAppHttpCodeEnum(ErrorCodeEnum enums){
         return okResult(enums.getCode(),enums.getErrorMessage());
     }
 
-    private static RespResult setAppHttpCodeEnum(AppHttpCodeEnum enums, String errorMessage){
+    private static RespResult setAppHttpCodeEnum(ErrorCodeEnum enums, String errorMessage){
         return okResult(enums.getCode(),errorMessage);
     }
 
 
     public static RespResult okResult(Object data) {
-        RespResult result = setAppHttpCodeEnum(AppHttpCodeEnum.SUCCESS, AppHttpCodeEnum.SUCCESS.getErrorMessage());
+        RespResult result = setAppHttpCodeEnum(ErrorCodeEnum.SUCCESS, ErrorCodeEnum.SUCCESS.getErrorMessage());
         if(data!=null) {
             result.setData(data);
         }
         return result;
     }
 
-    public static  RespResult okResult(AppHttpCodeEnum appHttpCodeEnum){
-        return new RespResult(appHttpCodeEnum.getCode(),appHttpCodeEnum.getErrorMessage());
+    public static  RespResult okResult(ErrorCodeEnum errorCodeEnum){
+        return new RespResult(errorCodeEnum.getCode(), errorCodeEnum.getErrorMessage());
     }
 
 
