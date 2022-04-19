@@ -1,12 +1,15 @@
 package com.tanran.common.jackson;
 
+import java.io.IOException;
+import java.util.Date;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
-import java.io.IOException;
-import java.util.Date;
-
+/**
+ * 用于处理日期输入反序列化
+ */
 public class DateDeserializer extends JsonDeserializer<Object> {
 
     JsonDeserializer<Object>  deserializer = null;

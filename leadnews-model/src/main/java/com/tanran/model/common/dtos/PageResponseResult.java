@@ -1,9 +1,13 @@
 package com.tanran.model.common.dtos;
 
+import org.apache.coyote.Response;
+
 public class PageResponseResult extends ResponseResult {
     private Integer currentPage;
     private Integer size;
     private Integer total;
+
+    public PageResponseResult(){};
 
     public PageResponseResult(Integer currentPage, Integer size, Integer total) {
         this.currentPage = currentPage;

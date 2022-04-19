@@ -19,6 +19,7 @@
         <module>leadnews-mybatisGenertator</module>
         <module>leadnews-login</module>
         <module>leadnews-wemedia</module>
+        <module>leadnews-admin</module>
     </modules>
 
     <!-- 继承Spring boot工程 -->
@@ -132,6 +133,14 @@
                 <artifactId>leadnews-wemedia</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
+
+
+            <!--集成redis-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+            </dependency>
+
             <!-- Spring boot 特殊处理包 -->
             <dependency>
                 <groupId>org.springframework.security</groupId>

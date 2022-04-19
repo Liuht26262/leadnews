@@ -1,7 +1,9 @@
 package com.tanran.api.wmediaApi;
 
 import com.tanran.common.result.RespResult;
+import com.tanran.model.common.dtos.PageResponseResult;
 import com.tanran.model.media.dtos.WmNewsDto;
+import com.tanran.model.media.dtos.WmNewsPageReqDto;
 
 /**
  * TODO
@@ -14,4 +16,11 @@ import com.tanran.model.media.dtos.WmNewsDto;
 public interface WmNews {
     RespResult saveNews(WmNewsDto dto);
 
+    RespResult saveDraftNews(WmNewsDto dto);
+
+    PageResponseResult selectAllNew(WmNewsPageReqDto reqDto);
+
+    RespResult deleteNews(WmNewsDto dto);
+
+    RespResult selectNewById(WmNewsDto dto);
 }

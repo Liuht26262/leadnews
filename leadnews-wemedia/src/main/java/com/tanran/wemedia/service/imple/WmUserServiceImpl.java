@@ -12,6 +12,7 @@ import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.wemedia.WmUserMapper;
 import com.tanran.model.media.pojos.WmUser;
 import com.tanran.utils.jwt.AppJwtUtil;
+import com.tanran.utils.threadlocal.WmThreadLocalUtils;
 import com.tanran.wemedia.service.WmUserService;
 
 /**
@@ -34,9 +35,14 @@ public class WmUserServiceImpl implements WmUserService {
         if(StringUtils.isEmpty(user.getName())&&StringUtils.isEmpty(user.getPassword())){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"账号及密码不能为空");
         }
+
         WmUser wmUser = wmUserMapper.selectByName(user.getName());
+        System.out.println("******************************************************");
+        System.out.println("用户信息:"+wmUser);
+        System.out.println("******************************************************");
         if (!Objects.isNull(wmUser)){
            if(user.getPassword().equals(wmUser.getPassword())){
+               System.out.println("已设定用户");
                //登陆成功后将密码制空返回，保证安全
                wmUser.setPassword("");
                wmUser.setSalt("");
@@ -48,5 +54,12 @@ public class WmUserServiceImpl implements WmUserService {
            }
         }
         return RespResult.errorResult(ErrorCodeEnum.USER_NOT_EXIT);
+    }
+
+    @Override
+    public RespResult getUserFile() {
+        WmUser user = WmThreadLocalUtils.getUser();
+        WmUser wmUser = wmUserMapper.selectByPrimaryKey(user.getId());
+        return RespResult.okResult(wmUser);
     }
 }

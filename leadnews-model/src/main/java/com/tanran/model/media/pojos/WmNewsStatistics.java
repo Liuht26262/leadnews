@@ -28,5 +28,4 @@ public class WmNewsStatistics {
     private Integer unlikes;
     private Integer unfollow;
     private Date createdTime;
-    private String burst;
 }

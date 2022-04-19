@@ -1,6 +1,7 @@
 package com.tanran.api.LoginApi;
 
 import com.tanran.common.result.RespResult;
+import com.tanran.model.admin.pojos.AdUser;
 import com.tanran.model.user.pojos.ApUser;
 
 /**
@@ -13,4 +14,6 @@ import com.tanran.model.user.pojos.ApUser;
  */
 public interface LoginControllerApi {
     RespResult UserLogin(ApUser user);
+
+
 }

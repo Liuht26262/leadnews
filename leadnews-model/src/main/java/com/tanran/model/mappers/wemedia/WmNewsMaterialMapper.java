@@ -1,5 +1,6 @@
 package com.tanran.model.mappers.wemedia;
 
+import java.util.List;
 import java.util.Map;
 
 import com.tanran.model.media.pojos.WmNewsMaterial;
@@ -27,4 +28,8 @@ public interface WmNewsMaterialMapper {
     int updateByPrimaryKeySelective(WmNewsMaterial record);
 
     int updateByPrimaryKey(WmNewsMaterial record);
+
+    List<WmNewsMaterial> selectWmByMaterialId(Integer MaterialId);
+
+    int deleteByUserId(Integer NewsId);
 }

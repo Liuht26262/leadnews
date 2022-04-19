@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 
+import com.tanran.model.media.dtos.WmMaterialListDto;
 import com.tanran.model.media.pojos.WmMaterial;
 
 /**
@@ -21,6 +23,20 @@ public interface WmMaterialMapper {
      */
     List<WmMaterial> findMaterialByUidAndimgUrls(Long uid, Collection<Object> values);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(WmMaterial record);
+
+    int insertSelective(WmMaterial record);
+
+    WmMaterial selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(WmMaterial record);
+
+    int updateByPrimaryKey(WmMaterial record);
+
+    List<WmMaterial> findListByUidAndStatus(WmMaterialListDto dto, Long uid);
+
+    int countListByUidAndStatus(WmMaterialListDto dto, Long uid);
 
 }

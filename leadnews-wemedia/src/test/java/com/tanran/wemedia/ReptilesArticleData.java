@@ -8,11 +8,14 @@ package com.tanran.wemedia;
  * @description
  * @since 2022/4/13 17:08
  */
+import java.net.MalformedURLException;
 import java.util.*;
 import com.alibaba.fastjson.JSON;
+import com.tanran.common.fastdfs.FastDfsClient;
 import com.tanran.model.article.pojos.ApArticle;
 import com.tanran.model.article.pojos.ApArticleConfig;
 import com.tanran.model.article.pojos.ApArticleContent;
+import com.tanran.model.common.constants.WmMediaConstans;
 import com.tanran.model.mappers.app.ArticleContentConfigMapper;
 import com.tanran.model.mappers.app.ArticleContentMapper;
 import com.tanran.model.mappers.app.ArticleMapper;
@@ -20,6 +23,7 @@ import com.tanran.model.mappers.wemedia.WmMaterialMapper;
 import com.tanran.model.media.dtos.WmNewsDto;
 import com.tanran.model.media.pojos.WmMaterial;
 import com.tanran.model.media.pojos.WmUser;
+import com.tanran.utils.common.PictureGetBytesByUrlUtil;
 import com.tanran.utils.threadlocal.WmThreadLocalUtils;
 import com.tanran.wemedia.service.WmNewsService;
 
@@ -32,6 +36,8 @@ import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -41,8 +47,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 爬取新闻数据  用于app端演示
@@ -62,12 +66,14 @@ public class ReptilesArticleData {
     ArticleContentMapper articleContentMapper;
     @Autowired
     ArticleContentConfigMapper articleContentConfigMapper;
-    // @Autowired
-    // FileStorageService fileStorageService;
-    // @Value("${file.oss.web-site}")
-    // String webSite;
+    @Qualifier("fastDfsClient")
+    private FastDfsClient fastDfsClient;
+
+    @Value("${FILE_SERVER_URL}")
+    private String wenSit;
+
     @Test
-    public void reptilesData() throws IOException {
+    public void reptilesData() throws Exception {
         // 模拟当前自媒体登录用户
         WmUser wmUser = new WmUser();
         wmUser.setId(1102);
@@ -98,6 +104,9 @@ public class ReptilesArticleData {
             Element newsPic = aElement.getElementsByClass("news-pic").get(0);
             // 获取封面图片元素集合
             Elements imgList = newsPic.getElementsByTag("img");
+            System.out.println("******************************************");
+            System.out.println(imgList);
+            System.out.println("******************************************");
             // 封装WmNewsDto对象
             WmNewsDto wmNewsDto = new WmNewsDto();
             // 解析单个文章详情
@@ -106,22 +115,28 @@ public class ReptilesArticleData {
             int i = 0;
             // 封面图片集合
             List<String> urlList = new ArrayList<>();
-            // for (Element imgEle : imgList) {
-            //     String src = imgEle.attr("src");
-            //     System.out.println("封面图片url==>"+src);
-            //     String fileName = uploadPic(src);
-            //     if(StringUtils.isNotBlank(fileName)){
-            //         // 如果上传图片路径不为空  创建素材信息
-            //         WmMaterial wmMaterial = new WmMaterial();
-            //         wmMaterial.setUserId(WmThreadLocalUtils.getUser().getId());
-            //         wmMaterial.setUrl(fileName);
-            //         wmMaterial.setType((short)0);
-            //         wmMaterial.setIsCollection((short)0);
-            //         wmMaterial.setCreatedTime(new Date());
-            //         wmMaterialMapper.insert(wmMaterial);
-            //         urlList.add(fileName);
-            //     }
-            // }
+
+            for (Element imgEle : imgList) {
+                String src = imgEle.attr("src");
+                System.out.println("封面图片url==>" + src);
+
+                if (!StringUtils.isEmpty(src)) {
+                    String fileName = uploadPic(src);
+                    if (StringUtils.isNotBlank(fileName)) {
+                        // 如果上传图片路径不为空  创建素材信息
+                        WmMaterial wmMaterial = WmMaterial.builder()
+                            .build();
+                        wmMaterial.setUserId(WmThreadLocalUtils.getUser()
+                            .getId());
+                        wmMaterial.setUrl(fileName);
+                        wmMaterial.setType((short) 0);
+                        wmMaterial.setIsCollection((short) 0);
+                        wmMaterial.setCreatedTime(new Date());
+                        wmMaterialMapper.insert(wmMaterial);
+                        urlList.add(fileName);
+                    }
+                }
+            }
             wmNewsDto.setTitle(title);
             wmNewsDto.setType((short) urlList.size());
             if(urlList.size()>0){
@@ -139,7 +154,7 @@ public class ReptilesArticleData {
             System.out.println("-----------------------------------------------------------");
             System.out.println(wmNewsDto);
             System.out.println("-----------------------------------------------------------");
-            wmNewsService.saveNews(wmNewsDto);
+            wmNewsService.saveNews(wmNewsDto, WmMediaConstans.WM_NEWS_SUMMIT_STATUS);
             //控制爬取的文章数据
             if(i == 10){
                 return;
@@ -253,18 +268,20 @@ public class ReptilesArticleData {
 
 
 
-
-
-    public String uploadPic(String imgUrl){
+    public String uploadPic(String imgUrl) throws Exception {
+        System.out.println("*****************************************************");
+        System.out.println(imgUrl);
+        System.out.println("*****************************************************");
         String url = imgUrl.split("\\?")[0];
         String uuid = UUID.randomUUID().toString().replace("-", "");
         String suffix = url.substring(url.lastIndexOf("."));
-        InputStream in = getInputStreamByUrl("http:"+url);
-        // if(in!=null){
-        //     String fileName = fileStorageService.store("material", uuid+suffix, in);
-        //     System.out.println("上传文件名称: "+fileName);
-        //     return fileName;
-        // }
+        InputStream in = getInputStreamByUrl("http:" + url);
+        byte[] imgBytes = PictureGetBytesByUrlUtil.getImageFromURL("http" + imgUrl);
+        if(imgBytes.length!=0){
+            String fileName = fastDfsClient.uploadFile(imgBytes);
+            System.out.println("上传文件名称: "+fileName);
+            return fileName;
+        }
         return null;
     }
     /**
@@ -337,6 +354,8 @@ public class ReptilesArticleData {
         }
         return contentMap;
     }
+
+
 
 
     @Test

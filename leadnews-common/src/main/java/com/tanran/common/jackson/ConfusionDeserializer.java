@@ -1,13 +1,16 @@
 package com.tanran.common.jackson;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.tanran.utils.common.IdsUtils;
 
-import java.io.IOException;
-
+/**
+ * 用于反序列化自增数字的混淆解密
+ */
 public class ConfusionDeserializer extends JsonDeserializer<Object> {
 
     JsonDeserializer<Object>  deserializer = null;

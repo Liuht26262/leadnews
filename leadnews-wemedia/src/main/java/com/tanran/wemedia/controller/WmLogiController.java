@@ -21,15 +21,22 @@ import com.tanran.wemedia.service.WmUserService;
  * @since 2022/4/12 13:59
  */
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/v1/user")
 public class WmLogiController implements WmLogin {
 
     @Autowired
     private WmUserService wmService;
 
     @Override
-    @PostMapping("/in")
+    @PostMapping("/login/in")
     public RespResult LoginWmUser(@RequestBody WmUser user){
         return wmService.LoginWmUser(user);
     }
+
+    @Override
+    @PostMapping("/profile")
+    public RespResult userProfile() {
+        return wmService.getUserFile();
+    }
+
 }

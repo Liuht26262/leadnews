@@ -13,4 +13,6 @@ import com.tanran.model.media.pojos.WmUser;
  */
 public interface WmLogin {
     RespResult LoginWmUser(WmUser user);
+
+    RespResult userProfile();
 }

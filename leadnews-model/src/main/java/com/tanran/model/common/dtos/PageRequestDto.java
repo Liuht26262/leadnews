@@ -9,6 +9,8 @@ public class PageRequestDto {
 
     protected Integer size;
     protected Integer page;
+    protected Integer total;
+
 
     public void checkParam() {
         if (this.page == null || this.page < 0) {

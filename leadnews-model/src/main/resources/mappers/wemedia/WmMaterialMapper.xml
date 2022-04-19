@@ -14,7 +14,7 @@
         id, user_id, url, type, is_collection, created_time
     </sql>
     <select id="findMaterialByUidAndimgUrls" resultType="com.tanran.model.media.pojos.WmMaterial">
-        select <include refid="Base_Column_List"/> from id=#{uid} and url in
+        select <include refid="Base_Column_List"/> from wm_material where user_id=#{uid} and url in
         <foreach item="item" collection="values" index="index" open="(" separator="," close=")">
            #{item}
         </foreach>
@@ -29,5 +29,109 @@
                 #{type,jdbcType=BIT}, #{isCollection,jdbcType=BIT}, #{createdTime,jdbcType=TIMESTAMP}
                )
     </insert>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wm_material
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from wm_material
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.tanran.model.media.pojos.WmMaterial">
+        insert into wm_material
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="isCollection != null">
+                is_collection,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=BIT},
+            </if>
+            <if test="isCollection != null">
+                #{isCollection,jdbcType=BIT},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.media.pojos.WmMaterial">
+        update wm_material
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=BIT},
+            </if>
+            <if test="isCollection != null">
+                is_collection = #{isCollection,jdbcType=BIT},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tanran.model.media.pojos.WmMaterial">
+        update wm_material
+        set user_id = #{userId,jdbcType=INTEGER},
+            url = #{url,jdbcType=VARCHAR},
+            type = #{type,jdbcType=BIT},
+            is_collection = #{isCollection,jdbcType=BIT},
+            created_time = #{createdTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="findListByUidAndStatus"
+            resultType="com.tanran.model.media.pojos.WmMaterial">
+        select
+        <include refid="Base_Column_List" />
+        from wm_material
+        where user_id = #{uid}
+        <if test="dto.isCollected == 1">
+            and is_collection = #{dto.isCollected}
+        </if>
+        limit ${(dto.page - 1) * dto.size}, ${dto.size}
+    </select>
+    <select id="countListByUidAndStatus" resultType="java.lang.Integer">
+        select count(0) from wm_material where user_id = #{uid}
+        <if test="dto.isCollected == 1">
+            and is_collection = #{dto.isCollected}
+        </if>
+    </select>
 
 </mapper>

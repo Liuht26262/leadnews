@@ -37,7 +37,7 @@
 
     <sql id="Base_Column_List" >
 
-        id, user_id,content, title, type, channel_id, labels, created_time, submited_time, status,enable,
+        id, user_id,content, title, type, channel_id, labels, created_time, submited_time, status,
 publish_time, reason, article_id, images
     </sql>
     <update id="updateByPrimaryKey" parameterType="com.tanran.model.media.pojos.WmNews" >
@@ -58,6 +58,28 @@ publish_time, reason, article_id, images
             images = #{images}
         where id = #{id}
     </update>
+    <select id="selectAllNews" resultType="com.tanran.model.media.pojos.WmNews">
+        select <include refid="Base_Column_List"/> from wm_news
+        <where>
+            user_id = #{uid}
+            <if test="dto.status != null and dto.status != -1" >
+                and status = #{dto.status}
+            </if>
+            <if test="dto.channelId != null" >
+                and channel_id = #{dto.channelId}
+            </if>
+            <if test="dto.keyWord != null" >
+                and title like concat('%', #{dto.keyWord}, '%')
+            </if>
+            <if test="dto.beginPubdate != null" >
+                and publish_time <![CDATA[>]]> #{dto.beginPubdate}
+            </if>
+            <if test="dto.endPubdate != null">
+                and publish_time <![CDATA[<]]> #{dto.endPubdate}
+            </if>
+        </where>
+        limit  ${(dto.page - 1) * dto.size}, ${dto.size}
+    </select>
     <insert id="insertNewsForEdit" useGeneratedKeys="true" keyProperty="id">
         insert  into wm_news(
             user_id, title, type, channel_id, labels, created_time, submited_time, status,
@@ -69,6 +91,195 @@ publish_time, reason, article_id, images
                )
     </insert>
 
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wm_news
+        where id = #{id,jdbcType=INTEGER}
+    </select>
 
+    <select id="countSelectBySelective" resultType="java.lang.Integer">
+        select
+        count(1)
+        from wm_news
+        <where>
+            user_id = #{uid}
+            <if test="dto.status != null and dto.status != -1" >
+                and status = #{dto.status}
+            </if>
+            <if test="dto.channelId != null" >
+                and channel_id = #{dto.channelId}
+            </if>
+            <if test="dto.keyWord != null" >
+                and title like concat('%', #{dto.keyWord}, '%')
+            </if>
+            <if test="dto.beginPubdate != null" >
+                and publish_time <![CDATA[>]]> #{dto.beginPubdate}
+            </if>
+            <if test="dto.endPubdate != null">
+                and publish_time <![CDATA[<]]> #{dto.endPubdate}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from wm_news
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insertSelective" parameterType="com.tanran.model.media.pojos.WmNews">
+        insert into wm_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="channelId != null">
+                channel_id,
+            </if>
+            <if test="labels != null">
+                labels,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+            <if test="submitedTime != null">
+                submited_time,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="publishTime != null">
+                publish_time,
+            </if>
+            <if test="reason != null">
+                reason,
+            </if>
+            <if test="articleId != null">
+                article_id,
+            </if>
+            <if test="images != null">
+                images,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=BIT},
+            </if>
+            <if test="channelId != null">
+                #{channelId,jdbcType=INTEGER},
+            </if>
+            <if test="labels != null">
+                #{labels,jdbcType=VARCHAR},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitedTime != null">
+                #{submitedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="publishTime != null">
+                #{publishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reason != null">
+                #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="articleId != null">
+                #{articleId,jdbcType=INTEGER},
+            </if>
+            <if test="images != null">
+                #{images,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.media.pojos.WmNews">
+        update wm_news
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=BIT},
+            </if>
+            <if test="channelId != null">
+                channel_id = #{channelId,jdbcType=INTEGER},
+            </if>
+            <if test="labels != null">
+                labels = #{labels,jdbcType=VARCHAR},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitedTime != null">
+                submited_time = #{submitedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="publishTime != null">
+                publish_time = #{publishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="reason != null">
+                reason = #{reason,jdbcType=VARCHAR},
+            </if>
+            <if test="articleId != null">
+                article_id = #{articleId,jdbcType=INTEGER},
+            </if>
+            <if test="images != null">
+                images = #{images,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tanran.model.media.pojos.WmNews">
+        update wm_news
+        set user_id = #{userId,jdbcType=INTEGER},
+            title = #{title,jdbcType=VARCHAR},
+            type = #{type,jdbcType=BIT},
+            channel_id = #{channelId,jdbcType=INTEGER},
+            labels = #{labels,jdbcType=VARCHAR},
+            created_time = #{createdTime,jdbcType=TIMESTAMP},
+            submited_time = #{submitedTime,jdbcType=TIMESTAMP},
+            status = #{status,jdbcType=TINYINT},
+            publish_time = #{publishTime,jdbcType=TIMESTAMP},
+            reason = #{reason,jdbcType=VARCHAR},
+            article_id = #{articleId,jdbcType=INTEGER},
+            images = #{images,jdbcType=VARCHAR},
+            content = #{content,jdbcType=LONGVARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 
 </mapper>

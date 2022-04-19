@@ -35,6 +35,10 @@
         from ap_user_fan
         where user_id=#{userId} and fans_id=#{fansId}
     </select>
+    <select id="selectUserFanById" resultType="com.tanran.model.user.pojos.ApUserFan"
+            parameterType="java.lang.Integer">
+        select <include refid="Base_Column_List"/> from ap_user_fan where user_id=#{userId}
+    </select>
 
 
 </mapper>

@@ -1,7 +1,8 @@
 package com.tanran.model.mappers.wemedia;
 
+
+
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import com.tanran.model.media.pojos.WmUser;
 
@@ -17,5 +18,17 @@ import com.tanran.model.media.pojos.WmUser;
 public interface WmUserMapper {
 
     WmUser selectByName(@Param("name") String name);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(WmUser record);
+
+    int insertSelective(WmUser record);
+
+    WmUser selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(WmUser record);
+
+    int updateByPrimaryKey(WmUser record);
 
 }

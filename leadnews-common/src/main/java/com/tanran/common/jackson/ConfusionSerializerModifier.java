@@ -1,14 +1,17 @@
 package com.tanran.common.jackson;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import com.tanran.model.annotation.IdEncrypt;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * 用于过滤序列化时处理的字段
+ */
 public class ConfusionSerializerModifier extends BeanSerializerModifier {
 
     @Override
@@ -24,7 +27,7 @@ public class ConfusionSerializerModifier extends BeanSerializerModifier {
             } else if (name.contains("Date")) {
                 writer.assignSerializer(new DateSerializer());
                 newWriter.add(writer);
-            } else {
+            } else {//id  和 有idEncrypt注解的属性都会走这个逻辑  都会进行加密混淆
                 writer.assignSerializer(new ConfusionSerializer());
                 newWriter.add(writer);
             }

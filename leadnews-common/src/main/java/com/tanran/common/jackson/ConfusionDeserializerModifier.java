@@ -1,5 +1,7 @@
 package com.tanran.common.jackson;
 
+import java.util.Iterator;
+
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -8,8 +10,9 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty;
 import com.tanran.model.annotation.IdEncrypt;
 
-import java.util.Iterator;
-
+/**
+ * 用于过滤反序列化时处理的字段
+ */
 public class ConfusionDeserializerModifier extends BeanDeserializerModifier {
 
     @Override

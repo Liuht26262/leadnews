@@ -7,6 +7,7 @@ public class WmThreadLocalUtils {
 
     private final  static ThreadLocal<WmUser> userThreadLocal = new ThreadLocal<>();
 
+
     /**
      * 设置当前线程中的用户
      * @param user

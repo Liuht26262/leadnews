@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tanran.model.mappers.wemedia.NewsStatisticsMapper">
+  <resultMap id="BaseResultMap" type="com.tanran.model.media.pojos.WmNewsStatistics">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="article" jdbcType="INTEGER" property="article" />
+    <result column="read_count" jdbcType="INTEGER" property="readCount" />
+    <result column="comment" jdbcType="INTEGER" property="comment" />
+    <result column="follow" jdbcType="INTEGER" property="follow" />
+    <result column="collection" jdbcType="INTEGER" property="collection" />
+    <result column="forward" jdbcType="INTEGER" property="forward" />
+    <result column="likes" jdbcType="INTEGER" property="likes" />
+    <result column="unlikes" jdbcType="INTEGER" property="unlikes" />
+    <result column="unfollow" jdbcType="INTEGER" property="unfollow" />
+    <result column="created_time" jdbcType="DATE" property="createdTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, article, read_count, comment, follow, collection, forward, likes, unlikes, 
+    unfollow,  created_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wm_news_statistics
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectNewStatistics" resultType="com.tanran.model.media.pojos.WmNewsStatistics"
+            parameterType="com.tanran.model.media.dtos.StatisticDto">
+        select <include refid="Base_Column_List"/>
+        from wm_news_statistics
+        <where> 1=1
+        <if test="type == 0">
+            and date(created_time) = CURDATE()
+        </if>
+        <if test="type != 0 and stime != null">
+            and date(created_time) <![CDATA[ >= ]]> date(#{stime})
+        </if>
+        <if test="type != 0 and etime != null">
+            and date(created_time) <![CDATA[ <= ]]> date(#{etime})
+        </if>
+        </where>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wm_news_statistics
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tanran.model.media.pojos.WmNewsStatistics">
+    insert into wm_news_statistics (id, user_id, article, 
+      read_count, comment, follow, 
+      collection, forward, likes, 
+      unlikes, unfollow, burst, 
+      created_time)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{article,jdbcType=INTEGER}, 
+      #{readCount,jdbcType=INTEGER}, #{comment,jdbcType=INTEGER}, #{follow,jdbcType=INTEGER}, 
+      #{collection,jdbcType=INTEGER}, #{forward,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, 
+      #{unlikes,jdbcType=INTEGER}, #{unfollow,jdbcType=INTEGER}, #{burst,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tanran.model.media.pojos.WmNewsStatistics">
+    insert into wm_news_statistics
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="article != null">
+        article,
+      </if>
+      <if test="readCount != null">
+        read_count,
+      </if>
+      <if test="comment != null">
+        comment,
+      </if>
+      <if test="follow != null">
+        follow,
+      </if>
+      <if test="collection != null">
+        collection,
+      </if>
+      <if test="forward != null">
+        forward,
+      </if>
+      <if test="likes != null">
+        likes,
+      </if>
+      <if test="unlikes != null">
+        unlikes,
+      </if>
+      <if test="unfollow != null">
+        unfollow,
+      </if>
+      <if test="burst != null">
+        burst,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="article != null">
+        #{article,jdbcType=INTEGER},
+      </if>
+      <if test="readCount != null">
+        #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null">
+        #{comment,jdbcType=INTEGER},
+      </if>
+      <if test="follow != null">
+        #{follow,jdbcType=INTEGER},
+      </if>
+      <if test="collection != null">
+        #{collection,jdbcType=INTEGER},
+      </if>
+      <if test="forward != null">
+        #{forward,jdbcType=INTEGER},
+      </if>
+      <if test="likes != null">
+        #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="unlikes != null">
+        #{unlikes,jdbcType=INTEGER},
+      </if>
+      <if test="unfollow != null">
+        #{unfollow,jdbcType=INTEGER},
+      </if>
+      <if test="burst != null">
+        #{burst,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.media.pojos.WmNewsStatistics">
+    update wm_news_statistics
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="article != null">
+        article = #{article,jdbcType=INTEGER},
+      </if>
+      <if test="readCount != null">
+        read_count = #{readCount,jdbcType=INTEGER},
+      </if>
+      <if test="comment != null">
+        comment = #{comment,jdbcType=INTEGER},
+      </if>
+      <if test="follow != null">
+        follow = #{follow,jdbcType=INTEGER},
+      </if>
+      <if test="collection != null">
+        collection = #{collection,jdbcType=INTEGER},
+      </if>
+      <if test="forward != null">
+        forward = #{forward,jdbcType=INTEGER},
+      </if>
+      <if test="likes != null">
+        likes = #{likes,jdbcType=INTEGER},
+      </if>
+      <if test="unlikes != null">
+        unlikes = #{unlikes,jdbcType=INTEGER},
+      </if>
+      <if test="unfollow != null">
+        unfollow = #{unfollow,jdbcType=INTEGER},
+      </if>
+      <if test="burst != null">
+        burst = #{burst,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tanran.model.media.pojos.WmNewsStatistics">
+    update wm_news_statistics
+    set user_id = #{userId,jdbcType=INTEGER},
+      article = #{article,jdbcType=INTEGER},
+      read_count = #{readCount,jdbcType=INTEGER},
+      comment = #{comment,jdbcType=INTEGER},
+      follow = #{follow,jdbcType=INTEGER},
+      collection = #{collection,jdbcType=INTEGER},
+      forward = #{forward,jdbcType=INTEGER},
+      likes = #{likes,jdbcType=INTEGER},
+      unlikes = #{unlikes,jdbcType=INTEGER},
+      unfollow = #{unfollow,jdbcType=INTEGER},
+      burst = #{burst,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

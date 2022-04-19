@@ -24,8 +24,209 @@
     status, email, type, score, login_time, created_time
   </sql>
 
-    <select id="selectByName" resultType="com.tanran.model.media.pojos.WmUser"
+    <select id="selectByName" resultMap="BaseResultMap"
         parameterType="java.lang.String">
     select <include refid="Base_Column_List"/> from wm_user where name=#{name}
     </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from wm_user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from wm_user
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="com.tanran.model.media.pojos.WmUser">
+        insert into wm_user (id, ap_user_id, ap_author_id,
+                             name, password, salt,
+                             nickname, image, location,
+                             phone, status, email,
+                             type, score, login_time,
+                             created_time)
+        values (#{id,jdbcType=INTEGER}, #{apUserId,jdbcType=INTEGER}, #{apAuthorId,jdbcType=INTEGER},
+                #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR},
+                #{nickname,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR},
+                #{phone,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{email,jdbcType=VARCHAR},
+                #{type,jdbcType=BIT}, #{score,jdbcType=TINYINT}, #{loginTime,jdbcType=TIMESTAMP},
+                #{createdTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.tanran.model.media.pojos.WmUser">
+        insert into wm_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="apUserId != null">
+                ap_user_id,
+            </if>
+            <if test="apAuthorId != null">
+                ap_author_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+            <if test="image != null">
+                image,
+            </if>
+            <if test="location != null">
+                location,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="loginTime != null">
+                login_time,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="apUserId != null">
+                #{apUserId,jdbcType=INTEGER},
+            </if>
+            <if test="apAuthorId != null">
+                #{apAuthorId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="image != null">
+                #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null">
+                #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=BIT},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=TINYINT},
+            </if>
+            <if test="loginTime != null">
+                #{loginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.media.pojos.WmUser">
+        update wm_user
+        <set>
+            <if test="apUserId != null">
+                ap_user_id = #{apUserId,jdbcType=INTEGER},
+            </if>
+            <if test="apAuthorId != null">
+                ap_author_id = #{apAuthorId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="image != null">
+                image = #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="location != null">
+                location = #{location,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=BIT},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=TINYINT},
+            </if>
+            <if test="loginTime != null">
+                login_time = #{loginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tanran.model.media.pojos.WmUser">
+        update wm_user
+        set ap_user_id = #{apUserId,jdbcType=INTEGER},
+            ap_author_id = #{apAuthorId,jdbcType=INTEGER},
+            name = #{name,jdbcType=VARCHAR},
+            password = #{password,jdbcType=VARCHAR},
+            salt = #{salt,jdbcType=VARCHAR},
+            nickname = #{nickname,jdbcType=VARCHAR},
+            image = #{image,jdbcType=VARCHAR},
+            location = #{location,jdbcType=VARCHAR},
+            phone = #{phone,jdbcType=VARCHAR},
+            status = #{status,jdbcType=TINYINT},
+            email = #{email,jdbcType=VARCHAR},
+            type = #{type,jdbcType=BIT},
+            score = #{score,jdbcType=TINYINT},
+            login_time = #{loginTime,jdbcType=TIMESTAMP},
+            created_time = #{createdTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

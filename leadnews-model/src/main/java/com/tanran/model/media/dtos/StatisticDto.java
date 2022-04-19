@@ -13,5 +13,4 @@ public class StatisticDto {
     private Date etime;
 
     private List<String> time;
-
 }

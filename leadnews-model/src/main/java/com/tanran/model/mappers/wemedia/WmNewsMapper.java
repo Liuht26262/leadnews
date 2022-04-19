@@ -1,5 +1,10 @@
 package com.tanran.model.mappers.wemedia;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.tanran.model.media.dtos.WmNewsPageReqDto;
 import com.tanran.model.media.pojos.WmNews;
 
 /**
@@ -17,10 +22,25 @@ public interface WmNewsMapper {
      * @return
      */
     int updateByPrimaryKey(WmNews record);
+
     /**
      * 添加草稿新闻
      * @param dto
      * @return
      */
     int insertNewsForEdit(WmNews dto);
+
+    List<WmNews> selectAllNews(@Param("dto") WmNewsPageReqDto dto,@Param("uid") Long uid);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insertSelective(WmNews record);
+
+    WmNews selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(WmNews record);
+
+    int updateByPrimaryKeyWithBLOBs(WmNews record);
+
+    int countSelectBySelective(@Param("dto") WmNewsPageReqDto dto,@Param("uid") Long uid);
 }

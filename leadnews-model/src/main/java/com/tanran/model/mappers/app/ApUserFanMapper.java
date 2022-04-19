@@ -1,5 +1,7 @@
 package com.tanran.model.mappers.app;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.tanran.model.user.pojos.ApUserFan;
@@ -18,4 +20,6 @@ public interface ApUserFanMapper {
     int insertUserFan(ApUserFan userFan);
 
     int deleteFan(@Param("followId") Integer followId, @Param("userId") Long userId);
+
+    List<ApUserFan> selectUserFanById(@Param("userId") Integer userId);
 }
