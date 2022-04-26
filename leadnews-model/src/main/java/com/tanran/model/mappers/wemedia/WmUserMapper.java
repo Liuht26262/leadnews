@@ -17,7 +17,7 @@ import com.tanran.model.media.pojos.WmUser;
  */
 public interface WmUserMapper {
 
-    WmUser selectByName(@Param("name") String name);
+    WmUser selectByName(@Param("name") String name,@Param("roleType")String roleType);
 
     int deleteByPrimaryKey(Integer id);
 

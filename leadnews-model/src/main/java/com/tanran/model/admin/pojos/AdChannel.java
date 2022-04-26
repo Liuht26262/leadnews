@@ -1,9 +1,8 @@
 package com.tanran.model.admin.pojos;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Date;
+
+import lombok.Data;
 
 @Data
 public class AdChannel {
@@ -15,7 +14,7 @@ public class AdChannel {
     /**
      * 频道名称
      */
-    private String name;
+    private String channelName;
 
     /**
      * 频道描述

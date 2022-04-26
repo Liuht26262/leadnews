@@ -219,4 +219,14 @@
             parameterType="java.lang.Long">
         select <include refid="Base_Column_List"/> from ap_article where id = #{id}
     </select>
+    <select id="selectArticleByChannelId" resultType="com.tanran.model.article.pojos.ApArticle"
+            parameterType="java.lang.Integer">
+        select <include refid="Base_Column_List"/> from ap_article
+            <where>
+                <if test="dto.channelId != null" >
+                    and channel_id = #{dto.channelId} order by publish_time
+                </if>
+            </where>
+            limit  ${(dto.page - 1) * dto.size}, ${dto.size}
+    </select>
 </mapper>

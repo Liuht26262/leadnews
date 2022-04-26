@@ -2,6 +2,7 @@ package com.tanran.api.service;
 
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
+import com.tanran.model.article.dtos.ArticleRequestDto;
 
 /**
  * TODO
@@ -20,4 +21,5 @@ public interface ArticleHomeService {
      */
     public RespResult load(ArticleHomeDto dto, Short type);
 
+    RespResult loadArticle(ArticleRequestDto dto);
 }

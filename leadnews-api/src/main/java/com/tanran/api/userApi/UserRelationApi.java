@@ -13,5 +13,7 @@ import com.tanran.model.user.dtos.UserRelationDto;
  */
 
 public interface UserRelationApi {
-    public RespResult userFollow(UserRelationDto userRelationDto);
+    RespResult userFollow(UserRelationDto userRelationDto);
+    RespResult selectUserById(Long id);
+    RespResult selectChannelByUser(Long id);
 }

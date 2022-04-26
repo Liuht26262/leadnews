@@ -1,15 +1,25 @@
 package com.tanran.utils.jwt;
 
-
-import io.jsonwebtoken.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.*;
 
-import com.tanran.model.media.pojos.WmUser;
 import com.tanran.model.admin.pojos.AdUser;
+import com.tanran.model.media.pojos.WmUser;
 import com.tanran.model.user.pojos.ApUser;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.CompressionCodecs;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwsHeader;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 public class AppJwtUtil {
 
@@ -59,7 +69,7 @@ public class AppJwtUtil {
                 .setId(UUID.randomUUID().toString())
                 .setIssuedAt(new Date(currentTime))  //签发时间
                 .setSubject("system")  //说明
-                .setIssuer("tanran") //签发者信息
+                .setIssuer("admin") //签发者信息
                 .setAudience("app")  //接收用户
                 .compressWith(CompressionCodecs.GZIP)  //数据压缩方式
                 .signWith(SignatureAlgorithm.HS512, generalKey()) //加密方式

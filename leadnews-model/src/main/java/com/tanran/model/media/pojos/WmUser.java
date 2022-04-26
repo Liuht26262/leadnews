@@ -1,8 +1,8 @@
 package com.tanran.model.media.pojos;
 
-import lombok.Data;
-
 import java.util.Date;
+
+import lombok.Data;
 
 @Data
 public class WmUser {
@@ -71,17 +71,10 @@ public class WmUser {
 
     /**
      * 账号类型
-     0 个人
-     1 企业
-     2 子账号
+     0 管理员
+     1 媒体
      */
-    private Boolean type;
-
-    /**
-     * 运营评分
-     */
-    private Byte score;
-
+    private String roleType;
     /**
      * 最后一次登录时间
      */

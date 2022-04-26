@@ -1,19 +1,19 @@
 package com.tanran.model.article.pojos;
 
 
+import java.util.Date;
+
 import com.tanran.model.annotation.DateConvert;
 import com.tanran.model.annotation.IdEncrypt;
 
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 public class ApArticle {
     private Integer id;
     private String title;
     @IdEncrypt
-    private Long authorId;
+    private Integer authorId;
     private String authorName;
     @IdEncrypt
     private Integer channelId;

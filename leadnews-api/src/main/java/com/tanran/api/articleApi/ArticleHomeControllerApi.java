@@ -2,8 +2,7 @@ package com.tanran.api.articleApi;
 
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
-
-
+import com.tanran.model.article.dtos.ArticleRequestDto;
 
 /**
  * TODO
@@ -35,5 +34,9 @@ public interface ArticleHomeControllerApi {
      */
     public RespResult loadNew(ArticleHomeDto dto);
 
+    /**
+     * 加载文章
+     * */
+    public RespResult loadArticle(ArticleRequestDto dto);
 
 }

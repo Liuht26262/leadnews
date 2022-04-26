@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tanran.model.mappers.app.ApUserChannelMapper">
+  <resultMap id="BaseResultMap" type="com.tanran.model.user.pojos.ApUserChannel">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="channel_id" jdbcType="INTEGER" property="channelId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
+    <result column="ord" jdbcType="TINYINT" property="ord" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, channel_id, user_id, channel_name, ord, created_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ap_user_channel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectChannelsByUser" resultType="com.tanran.model.user.pojos.ApUserChannel"
+            parameterType="java.lang.Long">
+        select <include refid="Base_Column_List"/> from ap_user_channel where user_id = #{id}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ap_user_channel
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tanran.model.user.pojos.ApUserChannel">
+    insert into ap_user_channel (id, channel_id, user_id,
+        channel_name, ord, created_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, #{userId,jdbcType=BIGINT},
+      #{channleName,jdbcType=VARCHAR}, #{ord,jdbcType=TINYINT}, #{createdTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tanran.model.user.pojos.ApUserChannel">
+    insert into ap_user_channel
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="channelId != null">
+        channel_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="channelName != null">
+          channel_name,
+      </if>
+      <if test="ord != null">
+        ord,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="channelId != null">
+        #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="channelName != null">
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="ord != null">
+        #{ord,jdbcType=TINYINT},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.user.pojos.ApUserChannel">
+    update ap_user_channel
+    <set>
+      <if test="channelId != null">
+        channel_id = #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="channelName != null">
+        name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="ord != null">
+        ord = #{ord,jdbcType=TINYINT},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tanran.model.user.pojos.ApUserChannel">
+    update ap_user_channel
+    set channel_id = #{channelId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      ord = #{ord,jdbcType=TINYINT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

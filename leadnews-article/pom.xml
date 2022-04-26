@@ -32,6 +32,7 @@
         <dependency>
             <groupId>com.tanran</groupId>
             <artifactId>leadnews-behavior</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <!-- Spring boot starter -->
         <dependency>

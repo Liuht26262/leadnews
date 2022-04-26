@@ -20,7 +20,6 @@ import com.tanran.model.admin.dtos.CommonDto;
  * @since 2022/4/17 14:01
  */
 
-
 @RestController
 @RequestMapping("/api/v1/admin/common")
 public class CommonController {

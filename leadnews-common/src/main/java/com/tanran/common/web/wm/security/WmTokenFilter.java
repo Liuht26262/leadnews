@@ -1,5 +1,21 @@
 package com.tanran.common.web.wm.security;
 
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
+import org.springframework.web.filter.GenericFilterBean;
+
 import com.alibaba.fastjson.JSON;
 import com.tanran.common.common.contants.Contants;
 import com.tanran.model.common.dtos.ResponseResult;
@@ -9,20 +25,6 @@ import com.tanran.utils.jwt.AppJwtUtil;
 import com.tanran.utils.threadlocal.WmThreadLocalUtils;
 
 import io.jsonwebtoken.Claims;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.Order;
-import org.springframework.web.filter.GenericFilterBean;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Order(2)
 @WebFilter(filterName = "wmTokenFilter" ,urlPatterns = "/*")
@@ -30,13 +32,15 @@ public class WmTokenFilter extends GenericFilterBean {
 
     Logger logger = LoggerFactory.getLogger(WmTokenFilter.class);
 
+    @Override
     public  void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException{
         HttpServletRequest request = (HttpServletRequest)req;
         HttpServletResponse response = (HttpServletResponse)res;
         String uri = request.getRequestURI();
         ResponseResult<?> result = checkToken(request,response);
-        // 测试和开发环境不过滤
-        if(result==null||uri.startsWith("/login")){
+
+        // 测试和开发环境不过滤,登录及客户端获取原始频道也直接放行
+        if(result==null||uri.startsWith("/login")||uri.startsWith("/api/v1/channel")){
             chain.doFilter(req,res);
         }else{
             res.setCharacterEncoding(Contants.CHARTER_NAME);

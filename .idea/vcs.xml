@@ -3,6 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/dummy-lifecycle-mapping-plugin" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/itheima-news-ppt" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/itheima-news-ppt" vcs="" />
   </component>
 </project>

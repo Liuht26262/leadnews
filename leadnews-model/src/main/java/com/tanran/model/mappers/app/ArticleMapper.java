@@ -1,13 +1,14 @@
 package com.tanran.model.mappers.app;
 
 
-import com.tanran.model.article.dtos.ArticleHomeDto;
-import com.tanran.model.article.pojos.ApArticle;
-import com.tanran.model.article.pojos.ApArticleSDto;
-import com.tanran.model.user.pojos.ApUserArticleList;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import com.tanran.model.article.dtos.ArticleHomeDto;
+import com.tanran.model.article.dtos.ArticleRequestDto;
+import com.tanran.model.article.pojos.ApArticle;
+import com.tanran.model.user.pojos.ApUserArticleList;
 
 /**
  * TODO
@@ -41,4 +42,6 @@ public interface ArticleMapper {
     void insert(ApArticle article);
 
     void insertSelective(ApArticle article);
+
+    List<ApArticle> selectArticleByChannelId(@Param("dto") ArticleRequestDto dto);
 }

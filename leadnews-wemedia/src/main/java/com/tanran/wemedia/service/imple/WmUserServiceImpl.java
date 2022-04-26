@@ -36,7 +36,7 @@ public class WmUserServiceImpl implements WmUserService {
             return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"账号及密码不能为空");
         }
 
-        WmUser wmUser = wmUserMapper.selectByName(user.getName());
+        WmUser wmUser = wmUserMapper.selectByName(user.getName(),user.getRoleType());
         System.out.println("******************************************************");
         System.out.println("用户信息:"+wmUser);
         System.out.println("******************************************************");

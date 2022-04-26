@@ -1,8 +1,8 @@
 package com.tanran.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +11,7 @@ import com.tanran.api.service.ArticleHomeService;
 import com.tanran.common.constans.ArticleConstans;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
+import com.tanran.model.article.dtos.ArticleRequestDto;
 
 /**
  * TODO
@@ -44,6 +45,12 @@ public class ArticleHomeController implements ArticleHomeControllerApi {
     @PostMapping("/loadnew")
     public RespResult loadNew(ArticleHomeDto dto) {
         return articleHomeService.load(dto, ArticleConstans.LOADTYPE_LOAD_NEW);
+    }
+
+    @Override
+    @PostMapping("/channel")
+    public RespResult loadArticle(@RequestBody ArticleRequestDto dto) {
+        return articleHomeService.loadArticle(dto);
     }
 
 }

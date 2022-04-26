@@ -3,7 +3,7 @@
 <mapper namespace="com.tanran.model.mappers.wemedia.ChannelMapper">
   <resultMap id="BaseResultMap" type="com.tanran.model.admin.pojos.AdChannel">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="is_default" jdbcType="BIT" property="isDefault" />
     <result column="status" jdbcType="BIT" property="status" />
@@ -11,7 +11,7 @@
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, description, is_default, status, ord, created_time
+    id, channel_name, description, is_default, status, ord, created_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -27,10 +27,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tanran.model.admin.pojos.AdChannel">
-    insert into ad_channel (id, name, description, 
+    insert into ad_channel (id, channel_name, description,
       is_default, status, ord, created_time
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{channelName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
       #{isDefault,jdbcType=BIT}, #{status,jdbcType=BIT}, #{ord,jdbcType=TINYINT}, #{createdTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -40,8 +40,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="name != null">
-        name,
+      <if test="channelName != null">
+        channel_name,
       </if>
       <if test="description != null">
         description,
@@ -63,8 +63,8 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
+      <if test="channelName != null">
+        #{channelName,jdbcType=VARCHAR},
       </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
@@ -86,8 +86,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.admin.pojos.AdChannel">
     update ad_channel
     <set>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+      <if test="channelName != null">
+        channel_name = #{channelName,jdbcType=VARCHAR},
       </if>
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
@@ -109,7 +109,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tanran.model.admin.pojos.AdChannel">
     update ad_channel
-    set name = #{name,jdbcType=VARCHAR},
+    set name = #{channelName,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
       is_default = #{isDefault,jdbcType=BIT},
       status = #{status,jdbcType=BIT},

@@ -14,19 +14,18 @@
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="type" jdbcType="BIT" property="type" />
-    <result column="score" jdbcType="TINYINT" property="score" />
+    <result column="role_type" jdbcType="VARCHAR" property="roleType" />
     <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, ap_user_id, ap_author_id, name, password, salt, nickname, image, location, phone, 
-    status, email, type, score, login_time, created_time
+    status, email, role_type,  login_time, created_time
   </sql>
 
     <select id="selectByName" resultMap="BaseResultMap"
         parameterType="java.lang.String">
-    select <include refid="Base_Column_List"/> from wm_user where name=#{name}
+    select <include refid="Base_Column_List"/> from wm_user where name=#{name} and role_type=#{roleType}
     </select>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -45,13 +44,13 @@
                              name, password, salt,
                              nickname, image, location,
                              phone, status, email,
-                             type, score, login_time,
+                             roleType, score, login_time,
                              created_time)
         values (#{id,jdbcType=INTEGER}, #{apUserId,jdbcType=INTEGER}, #{apAuthorId,jdbcType=INTEGER},
                 #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR},
                 #{nickname,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR},
-                #{phone,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{email,jdbcType=VARCHAR},
-                #{type,jdbcType=BIT}, #{score,jdbcType=TINYINT}, #{loginTime,jdbcType=TIMESTAMP},
+                #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+                #{roleType,jdbcType=VARCHAR}, #{score,jdbcType=TINYINT}, #{loginTime,jdbcType=TIMESTAMP},
                 #{createdTime,jdbcType=TIMESTAMP})
     </insert>
 
@@ -94,11 +93,8 @@
             <if test="email != null">
                 email,
             </if>
-            <if test="type != null">
-                type,
-            </if>
-            <if test="score != null">
-                score,
+            <if test="roleType != null">
+                roleType,
             </if>
             <if test="loginTime != null">
                 login_time,
@@ -144,11 +140,8 @@
             <if test="email != null">
                 #{email,jdbcType=VARCHAR},
             </if>
-            <if test="type != null">
-                #{type,jdbcType=BIT},
-            </if>
-            <if test="score != null">
-                #{score,jdbcType=TINYINT},
+            <if test="roleType != null">
+                #{roleType,jdbcType=VARCHAR},
             </if>
             <if test="loginTime != null">
                 #{loginTime,jdbcType=TIMESTAMP},
@@ -195,12 +188,10 @@
             <if test="email != null">
                 email = #{email,jdbcType=VARCHAR},
             </if>
-            <if test="type != null">
-                type = #{type,jdbcType=BIT},
+            <if test="roleType != null">
+                roleType = #{type,jdbcType=VARCHAR},
             </if>
-            <if test="score != null">
-                score = #{score,jdbcType=TINYINT},
-            </if>
+
             <if test="loginTime != null">
                 login_time = #{loginTime,jdbcType=TIMESTAMP},
             </if>
@@ -223,7 +214,7 @@
             phone = #{phone,jdbcType=VARCHAR},
             status = #{status,jdbcType=TINYINT},
             email = #{email,jdbcType=VARCHAR},
-            type = #{type,jdbcType=BIT},
+            roleType = #{roleType,jdbcType=VARCHAR},
             score = #{score,jdbcType=TINYINT},
             login_time = #{loginTime,jdbcType=TIMESTAMP},
             created_time = #{createdTime,jdbcType=TIMESTAMP}

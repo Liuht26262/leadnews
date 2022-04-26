@@ -5,12 +5,10 @@ import java.util.Map;
 import org.apache.curator.shaded.com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import com.aliyuncs.utils.StringUtils;
 import com.tanran.common.result.RespResult;
 import com.tanran.login.service.LoginService;
-import com.tanran.model.common.dtos.ResponseResult;
 import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.ApUserMapper;
 import com.tanran.model.user.pojos.ApUser;
@@ -31,6 +29,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public RespResult userLogin(ApUser user) {
+        System.out.println("*******************************");
+        System.out.println(user);
+        System.out.println("*******************************");
         //验证参数
         if(StringUtils.isEmpty(user.getPhone()) || StringUtils.isEmpty(user.getPassword())){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
@@ -43,9 +44,11 @@ public class LoginServiceImpl implements LoginService {
 
         // 数据库密码
         String dbpassword = dbUser.getPassword();
-        String newPassword = DigestUtils.md5DigestAsHex((user.getPassword() + user.getSalt()).getBytes());
+        // String newPassword = DigestUtils.md5DigestAsHex((user.getPassword() + user.getSalt()).getBytes());
+        //测试阶段，密码未加密
+        String newPassword = user.getPassword();
         if (!dbpassword.equals(newPassword)) {
-            return RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST, "手机号或密码错误");
+            return RespResult.errorResult(ErrorCodeEnum.LOGIN_PASSWORD_ERROR);
         }
 
         dbUser.setPassword("");
