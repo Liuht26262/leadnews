@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.ObjectUtils;
 
 import com.tanran.article.service.ArticleContentService;
 import com.tanran.article.service.ArticleHomeService;
@@ -89,6 +90,9 @@ public class ArticleJarApplicationTest {
             .content(objectMapper.writeValueAsBytes(dto));
         mockMvc.perform(builder).andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print());
     }
+
+    @Test
+    public void Object(){System.out.println(ObjectUtils.isEmpty(null));}
 
 
 }

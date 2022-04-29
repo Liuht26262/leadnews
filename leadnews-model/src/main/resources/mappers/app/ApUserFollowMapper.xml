@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tanran.model.mappers.app.ApUserFollowMapper">
+    <resultMap id="BaseResultMap" type="com.tanran.model.user.pojos.ApUserFollow">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="follow_id" jdbcType="INTEGER" property="followId" />
+        <result column="follow_name" jdbcType="VARCHAR" property="followName" />
+        <result column="level" jdbcType="BIT" property="level" />
+        <result column="is_notice" jdbcType="BIT" property="isNotice" />
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, user_id, follow_id, follow_name, level, is_notice, created_time
+    </sql>
+    <insert id="insertUserFollow" parameterType="com.tanran.model.user.pojos.ApUserFollow">
+        insert into ap_user_follow(
+            <include refid="Base_Column_List"/>
+        )
+        values (#{id}, #{userId}, #{followId},
+                #{followName}, #{level}, #{isNotice},
+                #{createdTime},#{burst})
+    </insert>
+    <delete id="deleteUserFollow">
+        delete from ap_user_follow where user_id=#{id} and follow_id=#{followId};
+    </delete>
+    <select id="selectUserFollowByFollowId" resultType="com.tanran.model.user.pojos.ApUserFollow">
+        select <include refid="Base_Column_List"/>
+        from ap_user_follow
+        where user_id=#{userId} and follow_id=#{followId}
+    </select>
+</mapper>

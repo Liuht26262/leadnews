@@ -1,6 +1,8 @@
 package com.tanran.article.behaviorApi;
 
 import com.tanran.common.result.RespResult;
+import com.tanran.model.behavior.dtos.LikesBehaviorDto;
+import com.tanran.model.behavior.dtos.ReadBehaviorDto;
 import com.tanran.model.behavior.dtos.ShowBehaviorDto;
 
 /**
@@ -13,4 +15,6 @@ import com.tanran.model.behavior.dtos.ShowBehaviorDto;
  */
 public interface BehaviorControllerApi {
     RespResult saveUserBehavior(ShowBehaviorDto dto);
+    RespResult saveLikeBehavior(LikesBehaviorDto dto);
+    RespResult saveReadBehavior(ReadBehaviorDto dto);
 }

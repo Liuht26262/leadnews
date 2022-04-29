@@ -24,4 +24,5 @@ public class UserRelationDto {
      * 1  取消
      */
     Short operation;
+
 }

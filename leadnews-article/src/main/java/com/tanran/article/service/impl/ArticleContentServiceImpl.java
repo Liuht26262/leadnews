@@ -11,7 +11,6 @@ import com.tanran.common.result.RespResult;
 import com.tanran.model.article.pojos.ApArticleConfig;
 import com.tanran.model.article.pojos.ApArticleContent;
 import com.tanran.model.common.enums.AppHttpCodeEnum;
-import com.tanran.model.crawler.core.parse.ZipUtils;
 import com.tanran.model.mappers.app.ArticleContentConfigMapper;
 import com.tanran.model.mappers.app.ArticleContentMapper;
 

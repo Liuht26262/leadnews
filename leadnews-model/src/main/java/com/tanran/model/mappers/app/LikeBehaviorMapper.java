@@ -1,5 +1,6 @@
 package com.tanran.model.mappers.app;
 
+import com.tanran.model.behavior.dtos.LikesBehaviorDto;
 import com.tanran.model.behavior.pojos.ApLikesBehavior;
 import com.tanran.model.behavior.pojos.ApUnlikesBehavior;
 
@@ -24,5 +25,10 @@ public interface LikeBehaviorMapper {
      * @return
      */
     ApUnlikesBehavior selectLastUnLike(Integer entryId,Integer articleId);
+
+    /**
+     * 存储喜欢数据
+     * */
+    int saveLikeBehavior(ApLikesBehavior likesBehavior);
 
 }

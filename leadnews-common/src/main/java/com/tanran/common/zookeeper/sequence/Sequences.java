@@ -19,7 +19,7 @@ public class Sequences {
     @Autowired
     private ZookeeperClient client;
 
-    public Long sequenceApLikes(){
+    public  Long sequenceApLikes(){
         return this.client.sequence(ZkSequenceEnum.AP_LIKES);
     }
 
@@ -34,5 +34,7 @@ public class Sequences {
     public Long sequenceApUserFollow(){return this.client.sequence(ZkSequenceEnum.AP_USER_FOLLOW);}
 
     public Long sequenceApUserFan(){return this.client.sequence(ZkSequenceEnum.AP_USER_FAN);}
+
+
 
 }

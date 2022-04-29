@@ -1,7 +1,5 @@
 package com.tanran.model.user.pojos;
 
-import javax.persistence.Id;
-
 import lombok.Data;
 
 @Data

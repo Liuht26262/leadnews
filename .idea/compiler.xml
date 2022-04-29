@@ -7,14 +7,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="heima-leadnews-apis" />
-        <module name="leadnews-api" />
         <module name="leadnews-common" />
+        <module name="leadnews-mybatisGenertator" />
+        <module name="leadnews-model" />
+        <module name="leadnews-article" />
+        <module name="leadnews-user" />
+        <module name="leadnews-api" />
         <module name="leadnews-behavior" />
         <module name="leadnews-utils" />
-        <module name="leadnews-model" />
+        <module name="leadnews-login" />
         <module name="heima-leadnews-utils" />
-        <module name="leadnew-user" />
-        <module name="leadnews-article" />
         <module name="heima-leadnews-common" />
         <module name="heima-leadnews-model" />
       </profile>
@@ -22,12 +24,14 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="leadnew-user" options="-parameters" />
       <module name="leadnews-api" options="-parameters" />
       <module name="leadnews-article" options="-parameters" />
       <module name="leadnews-behavior" options="-parameters" />
       <module name="leadnews-common" options="-parameters" />
+      <module name="leadnews-login" options="-parameters" />
       <module name="leadnews-model" options="-parameters" />
+      <module name="leadnews-mybatisGenertator" options="-parameters" />
+      <module name="leadnews-user" options="-parameters" />
       <module name="leadnews-utils" options="-parameters" />
     </option>
   </component>
