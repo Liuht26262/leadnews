@@ -1,6 +1,7 @@
 package com.tanran.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import com.tanran.common.constans.ArticleConstans;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
 import com.tanran.model.article.dtos.ArticleRequestDto;
+import com.tanran.model.common.dtos.PageRequestDto;
 
 /**
  * TODO
@@ -49,8 +51,20 @@ public class ArticleHomeController implements ArticleHomeControllerApi {
 
     @Override
     @PostMapping("/channel")
-    public RespResult loadArticle(@RequestBody ArticleRequestDto dto) {
+    public RespResult loadArticle( @RequestBody ArticleRequestDto dto) {
         return articleHomeService.loadArticle(dto);
+    }
+
+    @Override
+    @PostMapping("/collections")
+    public RespResult userCollection(@RequestBody ArticleRequestDto dto) {
+        return articleHomeService.userCollection(dto);
+    }
+
+    @Override
+    @PostMapping("/histories")
+    public RespResult userReadHistories(@PathVariable("userId") Integer userId, @RequestBody PageRequestDto dto) {
+        return articleHomeService.userReadHistories(userId,dto);
     }
 
 }

@@ -1,8 +1,5 @@
 package com.tanran.model.mappers.app;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-
 import com.tanran.model.user.pojos.ApUser;
 
 /**
@@ -16,5 +13,19 @@ import com.tanran.model.user.pojos.ApUser;
 
 public interface ApUserMapper {
     ApUser selectUserById( Long id);
+
     ApUser selectUserByPhone( String phone);
+
+    int deleteByPrimaryKey(Long id);
+
+    int insert(ApUser record);
+
+    int insertSelective(ApUser record);
+
+    ApUser selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(ApUser record);
+
+    int updateByPrimaryKey(ApUser record);
+
 }

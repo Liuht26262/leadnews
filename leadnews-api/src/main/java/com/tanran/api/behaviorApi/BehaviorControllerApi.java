@@ -17,4 +17,5 @@ public interface BehaviorControllerApi {
     RespResult saveUserBehavior(ShowBehaviorDto dto);
     RespResult saveLikeBehavior(LikesBehaviorDto dto);
     RespResult saveReadBehavior(ReadBehaviorDto dto);
+
 }

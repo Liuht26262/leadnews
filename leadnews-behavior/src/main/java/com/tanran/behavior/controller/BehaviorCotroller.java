@@ -33,7 +33,6 @@ public class BehaviorCotroller implements BehaviorControllerApi {
     @Autowired
     private ReadBehaviorService readBehaviorService;
 
-
     @Override
     @PostMapping("/show_behavior")
     public RespResult saveUserBehavior(@RequestBody ShowBehaviorDto dto) {
@@ -53,4 +52,5 @@ public class BehaviorCotroller implements BehaviorControllerApi {
     public RespResult saveReadBehavior(@RequestBody ReadBehaviorDto dto) {
         return readBehaviorService.saveReadBehavior(dto);
     }
+
 }

@@ -20,7 +20,7 @@
         )
         values (#{id}, #{userId}, #{followId},
                 #{followName}, #{level}, #{isNotice},
-                #{createdTime},#{burst})
+                #{createdTime})
     </insert>
     <delete id="deleteUserFollow">
         delete from ap_user_follow where user_id=#{id} and follow_id=#{followId};

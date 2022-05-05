@@ -2,7 +2,9 @@ package com.tanran.model.article.dtos;
 
 import com.tanran.model.common.dtos.PageRequestDto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * TODO
@@ -13,7 +15,11 @@ import lombok.Data;
  * @since 2022/4/25 17:35
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArticleRequestDto extends PageRequestDto {
+
+    private Integer userId;
     private Integer channelId;
     private String timestamp;
     /**
@@ -21,4 +27,5 @@ public class ArticleRequestDto extends PageRequestDto {
      * */
     private String oldTimestamp;
     private Integer with_top;
+
 }

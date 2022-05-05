@@ -1,9 +1,7 @@
 package com.tanran.model.user.pojos;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tanran.model.annotation.IdEncrypt;
 
 import lombok.Data;
@@ -57,5 +55,7 @@ public class ApUserFollow  {
      * 创建时间
      */
     private Date createdTime;
+
+
 
 }

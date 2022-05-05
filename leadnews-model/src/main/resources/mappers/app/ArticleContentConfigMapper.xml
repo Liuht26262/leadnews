@@ -8,15 +8,47 @@
         <result column="is_forward" property="isForward" />
         <result column="is_down" property="isDown"/>
         <result column="is_delete" property="isDelete"/>
+        <result column="is_collect"  property="isCollect" />
+        <result column="is_follow" property="isFollow" />
+        <result column="is_like"  property="isLike" />
+        <result column="is_unlike" property="isUnlike" />
+        <result column="user_id" property="userId"/>
+        <result column="created_time"  property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
     </resultMap>
     <sql id="Base_Column_List" >
-        id, article_id, is_comment, is_forward, is_down, is_delete
+        id, article_id, is_comment, is_forward, is_down, is_delete, is_collect, is_follow,
+    is_like, is_unlike, user_id, created_time, updated_time
     </sql>
     <!-- 通过文章ID查询文章配置 -->
     <select id="selectArticleContentById" resultMap="BaseResultMap" parameterType="int" >
-        select <include refid="Base_Column_List" /> from ap_article_config where article_id = #{articleId}
+        select <include refid="Base_Column_List" /> from ap_article_config where article_id = #{articleId} and user_id = #{userId}
     </select>
 
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ap_article_config
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="findConfigById" resultType="com.tanran.model.article.pojos.ApArticleConfig">
+        select <include refid="Base_Column_List"/> from ap_article_config where article_id = #{articleId} and user_id = #{userId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from ap_article_config
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insert" parameterType="com.tanran.model.article.pojos.ApArticleConfig">
+        insert into ap_article_config (id, article_id, is_comment,
+                                       is_forward, is_down, is_delete, is_collect,
+                                       is_follow, is_like, is_unlike, user_id,
+                                       created_time, updated_time)
+        values (#{id,jdbcType=INTEGER}, #{articleId,jdbcType=INTEGER}, #{isComment,jdbcType=BIT},
+                #{isForward,jdbcType=BIT}, #{isDown,jdbcType=BIT}, #{isDelete,jdbcType=BIT}, #{isCollect,jdbcType=BIT},
+                #{isFollow,jdbcType=BIT}, #{isLike,jdbcType=BIT}, #{isUnlike,jdbcType=BIT}, #{userId,jdbcType=INTEGER},
+                #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP})
+    </insert>
     <insert id="insertSelective" parameterType="com.tanran.model.article.pojos.ApArticleConfig">
         insert into ap_article_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -38,6 +70,27 @@
             <if test="isDelete != null">
                 is_delete,
             </if>
+            <if test="isCollect != null">
+                is_collect,
+            </if>
+            <if test="isFollow != null">
+                is_follow,
+            </if>
+            <if test="isLike != null">
+                is_like,
+            </if>
+            <if test="isUnlike != null">
+                is_unlike,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+            <if test="updatedTime != null">
+                updated_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -58,6 +111,86 @@
             <if test="isDelete != null">
                 #{isDelete,jdbcType=BIT},
             </if>
+            <if test="isCollect != null">
+                #{isCollect,jdbcType=BIT},
+            </if>
+            <if test="isFollow != null">
+                #{isFollow,jdbcType=BIT},
+            </if>
+            <if test="isLike != null">
+                #{isLike,jdbcType=BIT},
+            </if>
+            <if test="isUnlike != null">
+                #{isUnlike,jdbcType=BIT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedTime != null">
+                #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
         </trim>
     </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.article.pojos.ApArticleConfig">
+        update ap_article_config
+        <set>
+            <if test="articleId != null">
+                article_id = #{articleId,jdbcType=INTEGER},
+            </if>
+            <if test="isComment != null">
+                is_comment = #{isComment,jdbcType=BIT},
+            </if>
+            <if test="isForward != null">
+                is_forward = #{isForward,jdbcType=BIT},
+            </if>
+            <if test="isDown != null">
+                is_down = #{isDown,jdbcType=BIT},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete,jdbcType=BIT},
+            </if>
+            <if test="isCollect != null">
+                is_collect = #{isCollect,jdbcType=BIT},
+            </if>
+            <if test="isFollow != null">
+                is_follow = #{isFollow,jdbcType=BIT},
+            </if>
+            <if test="isLike != null">
+                is_like = #{isLike,jdbcType=BIT},
+            </if>
+            <if test="isUnlike != null">
+                is_unlike = #{isUnlike,jdbcType=BIT},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tanran.model.article.pojos.ApArticleConfig">
+        update ap_article_config
+        set article_id = #{articleId,jdbcType=INTEGER},
+            is_comment = #{isComment,jdbcType=BIT},
+            is_forward = #{isForward,jdbcType=BIT},
+            is_down = #{isDown,jdbcType=BIT},
+            is_delete = #{isDelete,jdbcType=BIT},
+            is_collect = #{isCollect,jdbcType=BIT},
+            is_follow = #{isFollow,jdbcType=BIT},
+            is_like = #{isLike,jdbcType=BIT},
+            is_unlike = #{isUnlike,jdbcType=BIT},
+            user_id = #{userId,jdbcType=INTEGER},
+            created_time = #{createdTime,jdbcType=TIMESTAMP},
+            updated_time = #{updatedTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

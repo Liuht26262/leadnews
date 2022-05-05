@@ -8,8 +8,33 @@ package com.tanran.wemedia;
  * @description
  * @since 2022/4/13 17:08
  */
-import java.net.MalformedURLException;
-import java.util.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import com.alibaba.fastjson.JSON;
 import com.tanran.common.fastdfs.FastDfsClient;
 import com.tanran.model.article.pojos.ApArticle;
@@ -26,27 +51,6 @@ import com.tanran.model.media.pojos.WmUser;
 import com.tanran.utils.common.PictureGetBytesByUrlUtil;
 import com.tanran.utils.threadlocal.WmThreadLocalUtils;
 import com.tanran.wemedia.service.WmNewsService;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 /**
  * 爬取新闻数据  用于app端演示
@@ -205,9 +209,9 @@ public class ReptilesArticleData {
             ApArticleContent apArticleContent = new ApArticleContent();
             ApArticleConfig apArticleConfig = new ApArticleConfig();
             apArticle.setId(i);
-            apArticle.setAuthorId(3L);
+            apArticle.setAuthorId(3);
             apArticle.setChannelId(2);
-            apArticle.setAuthorId(4L);
+            apArticle.setAuthorId(4);
             apArticle.setTitle(title);
             apArticle.setCreatedTime(new Date());
             apArticleContent.setArticleId(apArticle.getId());

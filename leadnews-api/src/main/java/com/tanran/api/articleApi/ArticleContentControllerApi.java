@@ -14,10 +14,10 @@ import com.tanran.model.article.dtos.ArticleInfoDto;
 public interface ArticleContentControllerApi {
     /**
      * 加載首頁详情
-     * @param dto 封装参数对象
+     * @param
      * @return 文章详情
      */
-    RespResult loadArticleContent(ArticleInfoDto dto);
+    RespResult loadArticleContent(Integer articleId,Integer userId);
 
     /**
      * 加载文章详情的行为内容

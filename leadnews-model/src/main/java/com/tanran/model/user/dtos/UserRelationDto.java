@@ -2,9 +2,13 @@ package com.tanran.model.user.dtos;
 
 import com.tanran.model.annotation.IdEncrypt;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRelationDto {
 
     // 文章作者ID

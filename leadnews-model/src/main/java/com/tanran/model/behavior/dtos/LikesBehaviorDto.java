@@ -1,16 +1,16 @@
 package com.tanran.model.behavior.dtos;
 
-import com.tanran.model.annotation.IdEncrypt;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LikesBehaviorDto {
     // 设备ID
-    @IdEncrypt
     Integer equipmentId;
     // 文章、动态、评论等ID
-    @IdEncrypt
     Integer entryId;
     /**
      * 喜欢内容类型

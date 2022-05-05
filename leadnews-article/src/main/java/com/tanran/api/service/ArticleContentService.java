@@ -12,5 +12,5 @@ import com.tanran.common.result.RespResult;
  */
 
 public interface ArticleContentService {
-    RespResult getArticleContent(Integer articleId);
+    RespResult getArticleContent(Integer articleId,Integer userId);
 }

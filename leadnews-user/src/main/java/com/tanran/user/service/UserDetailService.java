@@ -1,6 +1,7 @@
 package com.tanran.user.service;
 
 import com.tanran.common.result.RespResult;
+import com.tanran.model.user.pojos.ApUser;
 
 /**
  * TODO
@@ -14,4 +15,6 @@ public interface UserDetailService {
     RespResult selectUserById(Long id);
 
     RespResult selectChannelByUser(Long id);
+
+    RespResult updateUserProfile(ApUser user);
 }

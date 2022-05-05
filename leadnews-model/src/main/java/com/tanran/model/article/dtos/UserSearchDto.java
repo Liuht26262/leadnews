@@ -1,13 +1,17 @@
 package com.tanran.model.article.dtos;
 
+import java.util.List;
+
 import com.tanran.model.annotation.IdEncrypt;
 import com.tanran.model.user.pojos.ApUserSearch;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserSearchDto {
 
     // 设备ID
@@ -22,8 +26,8 @@ public class UserSearchDto {
     int pageSize;
 
     public int getFromIndex(){
-        if(this.pageNum<1)return 0;
-        if(this.pageSize<1) this.pageSize = 10;
+        if(this.pageNum<1) {return 0;}
+        if(this.pageSize<1) {this.pageSize = 10;}
         return this.pageSize * (pageNum-1);
     }
 }

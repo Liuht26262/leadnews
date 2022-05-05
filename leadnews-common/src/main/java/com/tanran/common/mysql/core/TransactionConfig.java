@@ -1,7 +1,7 @@
 package com.tanran.common.mysql.core;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.sql.DataSource;
+
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
@@ -19,7 +19,8 @@ import org.springframework.transaction.interceptor.DefaultTransactionAttribute;
 import org.springframework.transaction.interceptor.NameMatchTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
-import javax.sql.DataSource;
+import lombok.Getter;
+import lombok.Setter;
 
 @Setter
 @Getter
@@ -62,19 +63,18 @@ public class TransactionConfig {
         queryAttr.setReadOnly(true);
         // 设置拦截的方法
         NameMatchTransactionAttributeSource source = new NameMatchTransactionAttributeSource();
-        source.addTransactionalMethod("save*", defAttr);
-        source.addTransactionalMethod("insert*", defAttr);
-        source.addTransactionalMethod("delete*", defAttr);
-        source.addTransactionalMethod("update*", defAttr);
-        source.addTransactionalMethod("exec*", defAttr);
-        source.addTransactionalMethod("set*", defAttr);
-        source.addTransactionalMethod("add*", defAttr);
-        source.addTransactionalMethod("get*", queryAttr);
-        source.addTransactionalMethod("query*", queryAttr);
-        source.addTransactionalMethod("find*", queryAttr);
-        source.addTransactionalMethod("list*", queryAttr);
-        source.addTransactionalMethod("count*", queryAttr);
-        source.addTransactionalMethod("is*", queryAttr);
+        // source.addTransactionalMethod("save*", defAttr);
+        // // source.addTransactionalMethod("insert*", defAttr);
+        // source.addTransactionalMethod("delete*", defAttr);
+        // source.addTransactionalMethod("update*", defAttr);
+        // source.addTransactionalMethod("exec*", defAttr);
+        // source.addTransactionalMethod("set*", defAttr);
+        // source.addTransactionalMethod("add*", defAttr);
+        // source.addTransactionalMethod("get*", queryAttr);
+        // source.addTransactionalMethod("query*", queryAttr);
+        // source.addTransactionalMethod("find*", queryAttr);
+        // source.addTransactionalMethod("list*", queryAttr);
+        // source.addTransactionalMethod("count*", queryAttr);
 
         return new TransactionInterceptor(dataSourceTransactionManager, source);
     }

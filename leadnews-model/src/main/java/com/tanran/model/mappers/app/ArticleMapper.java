@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Param;
 import com.tanran.model.article.dtos.ArticleHomeDto;
 import com.tanran.model.article.dtos.ArticleRequestDto;
 import com.tanran.model.article.pojos.ApArticle;
-import com.tanran.model.user.pojos.ApUserArticleList;
 
 /**
  * TODO
@@ -35,7 +34,7 @@ public interface ArticleMapper {
      * @param list 文章ID
      * @return
      */
-    List<ApArticle> loadArticleListByIdList(@Param("list") List<ApUserArticleList> list);
+    List<ApArticle> loadArticleListByIdList(@Param("list") List<Integer> list);
 
     ApArticle selectArticleById(Long id);
 

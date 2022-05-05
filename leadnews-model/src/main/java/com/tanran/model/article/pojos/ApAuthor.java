@@ -1,20 +1,41 @@
 package com.tanran.model.article.pojos;
 
+import java.util.Date;
+
 import com.tanran.model.annotation.DateConvert;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class ApAuthor {
+    /**
+     * 主键
+     */
     private Integer id;
+
+    /**
+     * 作者名称
+     */
     private String name;
-    private Integer type;
-    // APP社交账号
-    private Long userId;
-    // 自媒体管理账号
-    private Long wmUserId;
+
+    /**
+     *
+     */
+    private String photo;
+
+    /**
+     * 0 管理员 1 媒体
+     */
+    private Boolean type;
+
+    /**
+     * id
+     */
+    private Integer userId;
+
+    /**
+     * 创建时间
+     */
     @DateConvert("yyyyMMddHHmmss")
     private Date createdTime;
 }

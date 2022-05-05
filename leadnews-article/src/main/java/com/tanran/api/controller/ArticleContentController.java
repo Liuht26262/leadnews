@@ -1,9 +1,10 @@
 package com.tanran.api.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tanran.api.articleApi.ArticleContentControllerApi;
@@ -30,10 +31,10 @@ public class ArticleContentController implements ArticleContentControllerApi {
     private LoadArticleBehaviorService loadArticleBehaviorService;
 
     @Override
-    @PostMapping("/load_article_info")
-    public RespResult loadArticleContent(@RequestBody ArticleInfoDto dto) {
+    @GetMapping("/{articleId}")
+    public RespResult loadArticleContent(@RequestParam("articleId") Integer articleId,@RequestParam("userId") Integer userId) {
 
-        return articleContentService.getArticleContent(dto.getArticleId());
+        return articleContentService.getArticleContent(articleId,userId);
     }
 
     @Override

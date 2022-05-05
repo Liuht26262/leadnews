@@ -8,7 +8,6 @@ import org.springframework.util.ObjectUtils;
 
 import com.tanran.behavior.service.ReadBehaviorService;
 import com.tanran.common.result.RespResult;
-import com.tanran.common.zookeeper.sequence.Sequences;
 import com.tanran.model.behavior.dtos.ReadBehaviorDto;
 import com.tanran.model.behavior.pojos.ApBehaviorEntry;
 import com.tanran.model.behavior.pojos.ApReadBehavior;
@@ -30,8 +29,6 @@ import com.tanran.utils.threadlocal.AppThreadLocalUtils;
 public class ReadBehaviorServiceImpl implements ReadBehaviorService {
     @Autowired
     private BehaviorEntryMapper behaviorEntryMapper;
-    @Autowired
-    private Sequences sequences;
     @Autowired
     private ReadBehaviorMapper readBehaviorMapper;
 
@@ -64,7 +61,7 @@ public class ReadBehaviorServiceImpl implements ReadBehaviorService {
         apReadBehavior.setCount(dto.getCount());
         apReadBehavior.setCreatedTime(new Date());
         apReadBehavior.setEntryId(apBehaviorEntry.getEntryId());
-        apReadBehavior.setId(sequences.sequenceApReadBehavior());
+        // apReadBehavior.setId(sequences.sequenceApReadBehavior());
         apReadBehavior.setCreatedTime(new Date());
         apReadBehavior.setUpdatedTime(new Date());
         if(isInsert){

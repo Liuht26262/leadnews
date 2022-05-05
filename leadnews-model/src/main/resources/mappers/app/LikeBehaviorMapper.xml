@@ -15,8 +15,11 @@
         id, behavior_entry_id, entry_id, type, operation, created_time,burst
     </sql>
     <insert id="saveLikeBehavior" parameterType="com.tanran.model.behavior.dtos.LikesBehaviorDto">
-        insert into ap_like_behavior values(#{id},#{behaviorEntryId},#{entryId},#{type},#{operation},#{createdTime},#{brust})
+        insert into ap_like_behavior values(#{behaviorEntryId},#{entryId},#{type},#{operation},#{createdTime})
     </insert>
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from ap_like_behavior where id=#{id}
+    </delete>
 
     <resultMap id="UnLike_BaseResultMap" type="com.tanran.model.behavior.pojos.ApUnlikesBehavior" >
         <id column="id" property="id"/>
@@ -25,11 +28,10 @@
         <result column="type" property="type"/>
         <result column="created_time" property="createdTime" />
     </resultMap>
+
     <sql id="UnLike_Base_Column_List" >
         id, entry_id, type, created_time
     </sql>
-
-
 
     <select id="selectLastLike" resultMap="Like_BaseResultMap">
         select <include refid="Like_Base_Column_List"/>
@@ -47,5 +49,25 @@
           and article_id=#{articleId}
         order by created_time
         desc limit 1
+    </select>
+
+    <select id="selectLikeBehavior" resultType="com.tanran.model.behavior.pojos.ApLikesBehavior"
+            parameterType="com.tanran.model.behavior.dtos.LikesBehaviorDto">
+        select <include refid="Like_Base_Column_List"/> from ap_likes_behavior
+        <where>
+            1=1
+            <if test="!dto.equipmentId == null">
+              and behavior_entry_id = #{dto.equipMentId}
+            </if>
+            <if test="!dto.entryId == null ">
+                and entry_id = #{dto.entryId}
+            </if>
+            <if test="!dto.type == null">
+                and type = ${dto.type}
+            </if>
+            <if test="!dto.operation == null">
+                and operation = #{dto.operation}
+            </if>
+        </where>
     </select>
 </mapper>

@@ -2,7 +2,9 @@ package com.tanran.model.article.dtos;
 
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * TODO
@@ -13,6 +15,8 @@ import lombok.Data;
  * @since 3.0.x 2022/3/18 15:20
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ArticleHomeDto {
     //市
     Integer provinceId;

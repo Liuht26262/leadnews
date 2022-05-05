@@ -12,4 +12,14 @@ import com.tanran.model.article.pojos.ApAuthor;
  */
 public interface AuthorMapper {
     public ApAuthor selectAuthorById(Integer id);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ApAuthor record);
+
+    int insertSelective(ApAuthor record);
+
+    int updateByPrimaryKeySelective(ApAuthor record);
+
+    int updateByPrimaryKey(ApAuthor record);
 }

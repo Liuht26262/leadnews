@@ -2,14 +2,13 @@ package com.tanran.wemedia.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tanran.api.wmediaApi.FansStatisticsApi;
-import com.tanran.common.result.RespResult;
 import com.tanran.model.common.dtos.PageRequestDto;
 import com.tanran.model.common.dtos.PageResponseResult;
-import com.tanran.model.media.dtos.StatisticDto;
 import com.tanran.wemedia.service.WmStatisticsService;
 
 /**
@@ -29,7 +28,7 @@ public class FanStatisticesController implements FansStatisticsApi{
 
     @PostMapping("/list")
     @Override
-    public PageResponseResult fansStatistics(PageRequestDto dto) {
+    public PageResponseResult fansStatistics(@RequestBody PageRequestDto dto) {
         return wmStatisticsService.fansStatistics(dto);
     }
 }

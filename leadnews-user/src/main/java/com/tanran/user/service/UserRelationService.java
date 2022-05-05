@@ -14,4 +14,6 @@ import com.tanran.model.user.dtos.UserRelationDto;
 public interface UserRelationService {
 
     RespResult userFollow(UserRelationDto userRelationDto);
+
+    RespResult cancelUserFollow(UserRelationDto userRelationDto);
 }

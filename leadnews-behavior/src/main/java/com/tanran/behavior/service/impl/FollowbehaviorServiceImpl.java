@@ -3,7 +3,6 @@ package com.tanran.behavior.service.impl;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.tanran.behavior.service.FollowBehaviorService;
@@ -33,7 +32,6 @@ public class FollowbehaviorServiceImpl implements FollowBehaviorService {
     private BehaviorEntryMapper behaviorEntryMapper;
 
     @Override
-    @Async
     public RespResult save(FollowBehaviorDto dto) {
         ApUser user = AppThreadLocalUtils.getUser();
         if(user==null &&dto.getEquipmentId()==null){
@@ -43,6 +41,7 @@ public class FollowbehaviorServiceImpl implements FollowBehaviorService {
         if(user!=null){
             userId = user.getId();
         }
+
         ApBehaviorEntry apBehaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(userId, dto.getEquipmentId());
         if(apBehaviorEntry==null){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
@@ -55,6 +54,7 @@ public class FollowbehaviorServiceImpl implements FollowBehaviorService {
         alb.setFollowId(dto.getFollowId());
         alb.setCreatedTime(new Date());
         int insert = followBehaviorMapper.save(alb);
+
         return RespResult.okResult(insert);
     }
 }

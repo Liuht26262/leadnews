@@ -1,5 +1,7 @@
 package com.tanran.model.mappers.app;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.tanran.model.behavior.dtos.LikesBehaviorDto;
 import com.tanran.model.behavior.pojos.ApLikesBehavior;
 import com.tanran.model.behavior.pojos.ApUnlikesBehavior;
@@ -31,4 +33,7 @@ public interface LikeBehaviorMapper {
      * */
     int saveLikeBehavior(ApLikesBehavior likesBehavior);
 
+    ApLikesBehavior selectLikeBehavior(@Param("dto") LikesBehaviorDto dto);
+
+    void deleteById(Long id);
 }

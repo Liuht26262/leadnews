@@ -3,6 +3,7 @@ package com.tanran.api.articleApi;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
 import com.tanran.model.article.dtos.ArticleRequestDto;
+import com.tanran.model.common.dtos.PageRequestDto;
 
 /**
  * TODO
@@ -38,5 +39,13 @@ public interface ArticleHomeControllerApi {
      * 加载文章
      * */
     public RespResult loadArticle(ArticleRequestDto dto);
+
+    public RespResult userCollection(ArticleRequestDto dto);
+
+    /**
+     * 加载用户阅读历史
+     * */
+    public RespResult userReadHistories(Integer userId, PageRequestDto dto);
+
 
 }

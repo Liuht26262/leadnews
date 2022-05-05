@@ -1,14 +1,15 @@
 package com.tanran.user.service.impl;
 
 import java.util.Date;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.tanran.behavior.service.impl.FollowbehaviorServiceImpl;
+import com.tanran.behavior.service.FollowBehaviorService;
 import com.tanran.common.result.RespResult;
-import com.tanran.common.zookeeper.sequence.Sequences;
 import com.tanran.model.article.pojos.ApAuthor;
 import com.tanran.model.behavior.dtos.FollowBehaviorDto;
 import com.tanran.model.common.enums.ErrorCodeEnum;
@@ -21,7 +22,6 @@ import com.tanran.model.user.pojos.ApUser;
 import com.tanran.model.user.pojos.ApUserFan;
 import com.tanran.model.user.pojos.ApUserFollow;
 import com.tanran.user.service.UserRelationService;
-import com.tanran.utils.threadlocal.AppThreadLocalUtils;
 
 /**
  * TODO
@@ -44,6 +44,8 @@ public class UserRelationServiceImpl implements UserRelationService {
     private ApUserFollowMapper apUserFollowMapper;
     @Autowired
     private ApUserFanMapper apUserFanMapper;
+    @Qualifier("followBehaviorService")
+    private FollowBehaviorService followBehaviorService;
 
 
     /***
@@ -56,12 +58,12 @@ public class UserRelationServiceImpl implements UserRelationService {
         if(ObjectUtils.isEmpty(userRelationDto)||userRelationDto.getOperation()==null||userRelationDto.getOperation()>1){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"Operation参数错误");
         }
-        Integer authorId = userRelationDto.getAuthorId();
-        Integer followId = userRelationDto.getUserId();
-        if(authorId == null && followId == null){
+        Integer userId = userRelationDto.getUserId();
+        Integer followId = userRelationDto.getAuthorId();
+        if(userId == null && followId == null){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"followId和authorId不能同时为空");
         }else if(followId == null){
-            ApAuthor apAuthor = authorMapper.selectAuthorById(authorId);
+            ApAuthor apAuthor = authorMapper.selectAuthorById(userId);
             if(apAuthor != null){
                 followId = apAuthor.getId();
             }
@@ -70,18 +72,27 @@ public class UserRelationServiceImpl implements UserRelationService {
         if(followId == null){
             RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST,"用户不存在");
         } else{
-            ApUser user = AppThreadLocalUtils.getUser();
+            ApUser user = apUserMapper.selectUserById(userId.longValue());
             if(ObjectUtils.isEmpty(user)){
                 return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"用户不存在或者未登录");
             }else{
                 if (userRelationDto.getOperation() == 0) {
-                    return saveUserFollow(user, authorId, userRelationDto.getArticleId());
+                    return saveUserFollow(user, followId, userRelationDto.getArticleId());
                 } else {
-                    return deleteUserFollow(user, authorId);
+                    return deleteUserFollow(user, followId);
                 }
             }
         }
         return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
+    }
+
+    /*取消用户关注*/
+    @Override
+    public RespResult cancelUserFollow(UserRelationDto userRelationDto) {
+        if(Objects.isNull(userRelationDto)){
+            return RespResult.errorResult(ErrorCodeEnum.SERVER_ERROR);
+        }
+        return null;
     }
 
     /**用户关注*/
@@ -99,7 +110,7 @@ public class UserRelationServiceImpl implements UserRelationService {
             if(ObjectUtils.isEmpty(apUserFan)){
                 ApUserFan userFan = new ApUserFan();
                 /*主键*/
-                userFan.setId(new Sequences().sequenceApUserFan());
+                // userFan.setId(new Sequences().sequenceApUserFan());
                 userFan.setUserId(followId);
                 userFan.setFansId(user.getId());
                 userFan.setFansName(user.getName());
@@ -112,7 +123,7 @@ public class UserRelationServiceImpl implements UserRelationService {
                 apUserFanMapper.insertUserFan(userFan);
             }
             ApUserFollow userFollow = new ApUserFollow();
-            userFollow.setId(new Sequences().sequenceApUserFollow());
+            // userFollow.setId(new Sequences().sequenceApUserFollow());
             userFollow.setFollowId(followId);
             userFollow.setFollowName(apUser.getName());
             userFollow.setUserId(user.getId());
@@ -126,9 +137,8 @@ public class UserRelationServiceImpl implements UserRelationService {
             dto.setFollowId(followId);
             dto.setArticleId(article);
 
-            // followBehaviorService.save(dto);
-            new FollowbehaviorServiceImpl().save(dto);
-            return RespResult.okResult(result);
+            followBehaviorService.save(dto);
+            return RespResult.okResult(dto.getFollowId());
 
         }
         return RespResult.errorResult(ErrorCodeEnum.DATA_EXIST,"用户已经关注");
@@ -145,7 +155,8 @@ public class UserRelationServiceImpl implements UserRelationService {
                 apUserFanMapper.deleteFan(followId,user.getId());
             }
             int result = apUserFollowMapper.deleteUserFollow(user.getId(), followId);
-            return RespResult.okResult(result);
+
+            return RespResult.okResult(ErrorCodeEnum.CANCEL_SUCESS);
         }
 
     }

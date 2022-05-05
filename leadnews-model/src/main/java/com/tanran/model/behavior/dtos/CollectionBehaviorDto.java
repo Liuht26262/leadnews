@@ -1,18 +1,18 @@
 package com.tanran.model.behavior.dtos;
 
-import com.tanran.model.annotation.IdEncrypt;
-
-import lombok.Data;
-
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CollectionBehaviorDto {
     // 设备ID
-    @IdEncrypt
     Integer equipmentId;
     // 文章、动态ID
-    @IdEncrypt
     Integer entryId;
     /**
      * 收藏内容类型
@@ -29,5 +29,4 @@ public class CollectionBehaviorDto {
     Short operation;
 
     Date publishedTime;
-
 }

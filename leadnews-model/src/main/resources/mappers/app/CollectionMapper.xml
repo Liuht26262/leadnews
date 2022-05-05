@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tanran.model.mappers.app.CollectionMapper" >
+    <resultMap id="BaseResultMap" type="com.tanran.model.article.pojos.ApCollection" >
+        <id column="id" property="id" />
+        <result column="behavior_entry_id" property="behaviorEntryId" />
+        <result column="entry_id" property="entryId" />
+        <result column="type" property="type"/>
+        <result column="collection_time" property="collectionTime"  />
+        <result column="published_time" property="publishedTime" />
+        <result column="burst" property="burst" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, behavior_entry_id, entry_id, type, collection_time, published_time
+    </sql>
+    <select id="selectCollectionForEntryId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ap_collection where behavior_entry_id=#{objectId} and entry_id=#{entryId} and type=#{type}
+    </select>
+    <select id="selectCollectionByUser" resultType="com.tanran.model.article.pojos.ApCollection">
+        select <include refid="Base_Column_List"/> from ap_collection where behavior_entry_id=#{userId} and type=#{type} limit  ${(page - 1) * size}, ${size}
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ap_collection
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from ap_collection
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteByArticleAndUser" parameterType="com.tanran.model.behavior.dtos.CollectionBehaviorDto">
+        delete from ap_collection where behavior_entry_id=#{dto.equipmentId} and entry_id = #{dto.entryId} and type=#{dto.type}
+    </delete>
+    <insert id="insert" parameterType="com.tanran.model.article.pojos.ApCollection">
+        insert into ap_collection (id, behavior_entry_id, entry_id,
+                                   type, collection_time, published_time,
+                                   burst)
+        values (#{id,jdbcType=INTEGER}, #{behaviorEntryId,jdbcType=INTEGER}, #{entryId,jdbcType=INTEGER},
+                #{type,jdbcType=BIT}, #{collectionTime,jdbcType=TIMESTAMP}, #{publishedTime,jdbcType=TIMESTAMP},
+                #{burst,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.tanran.model.article.pojos.ApCollection">
+        insert into ap_collection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="behaviorEntryId != null">
+                behavior_entry_id,
+            </if>
+            <if test="entryId != null">
+                entry_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="collectionTime != null">
+                collection_time,
+            </if>
+            <if test="publishedTime != null">
+                published_time,
+            </if>
+            <if test="burst != null">
+                burst,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="behaviorEntryId != null">
+                #{behaviorEntryId,jdbcType=INTEGER},
+            </if>
+            <if test="entryId != null">
+                #{entryId,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=BIT},
+            </if>
+            <if test="collectionTime != null">
+                #{collectionTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="publishedTime != null">
+                #{publishedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="burst != null">
+                #{burst,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.article.pojos.ApCollection">
+        update ap_collection
+        <set>
+            <if test="behaviorEntryId != null">
+                behavior_entry_id = #{behaviorEntryId,jdbcType=INTEGER},
+            </if>
+            <if test="entryId != null">
+                entry_id = #{entryId,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=BIT},
+            </if>
+            <if test="collectionTime != null">
+                collection_time = #{collectionTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="publishedTime != null">
+                published_time = #{publishedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="burst != null">
+                burst = #{burst,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tanran.model.article.pojos.ApCollection">
+        update ap_collection
+        set behavior_entry_id = #{behaviorEntryId,jdbcType=INTEGER},
+            entry_id = #{entryId,jdbcType=INTEGER},
+            type = #{type,jdbcType=BIT},
+            collection_time = #{collectionTime,jdbcType=TIMESTAMP},
+            published_time = #{publishedTime,jdbcType=TIMESTAMP},
+            burst = #{burst,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

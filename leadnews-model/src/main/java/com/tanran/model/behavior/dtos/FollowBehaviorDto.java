@@ -12,6 +12,7 @@ public class FollowBehaviorDto {
     // 文章ID
     @IdEncrypt
     Integer articleId;
+
     @IdEncrypt
     Integer followId;
 }

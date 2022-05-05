@@ -12,5 +12,7 @@ import com.tanran.model.user.pojos.ApUser;
  * @since 2022/3/25 19:13
  */
 public interface LoginService {
+   RespResult userRegister(ApUser user) ;
+
     RespResult userLogin(ApUser user);
 }

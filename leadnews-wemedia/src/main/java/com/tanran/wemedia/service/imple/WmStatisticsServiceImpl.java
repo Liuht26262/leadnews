@@ -72,7 +72,6 @@ public class WmStatisticsServiceImpl implements WmStatisticsService {
 
         WmUser user = WmThreadLocalUtils.getUser();
 
-
         WmUser wmUser = wmUserMapper.selectByPrimaryKey(user.getId());
 
         /**根据作者id来统计粉丝数据*/

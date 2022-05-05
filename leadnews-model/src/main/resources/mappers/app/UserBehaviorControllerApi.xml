@@ -27,7 +27,10 @@
     delete from ap_user_channel
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.tanran.model.user.pojos.ApUserChannel">
+    <delete id="deleteUserChannel">
+        delete from ap_user_channel where user_id = #{userId} and channel_id = #{channelId}
+    </delete>
+    <insert id="insert" parameterType="com.tanran.model.user.pojos.ApUserChannel">
     insert into ap_user_channel (id, channel_id, user_id,
         channel_name, ord, created_time
       )

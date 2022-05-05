@@ -1,5 +1,7 @@
 package com.tanran.model.mappers.app;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.tanran.model.article.pojos.ApArticleConfig;
 
 /**
@@ -11,6 +13,19 @@ import com.tanran.model.article.pojos.ApArticleConfig;
  * @since 3.0.x 2022/3/20 15:00
  */
 public interface ArticleContentConfigMapper {
-    public ApArticleConfig selectArticleContentById(Integer articleId);
+    public ApArticleConfig selectArticleContentById(@Param("articleId") Integer articleId,@Param("userId") Integer userId);
+
     void insertSelective(ApArticleConfig articleConfig);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(ApArticleConfig record);
+
+    ApArticleConfig selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(ApArticleConfig record);
+
+    int updateByPrimaryKey(ApArticleConfig record);
+
+    ApArticleConfig findConfigById(@Param("articleId") Integer articleId, @Param("userId") Integer userId);
 }

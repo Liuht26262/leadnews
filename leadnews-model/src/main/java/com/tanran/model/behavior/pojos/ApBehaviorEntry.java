@@ -1,10 +1,11 @@
 package com.tanran.model.behavior.pojos;
 
-import lombok.Data;
-import lombok.Getter;
+import java.util.Date;
+
 import org.apache.ibatis.type.Alias;
 
-import java.util.Date;
+import lombok.Data;
+import lombok.Getter;
 
 @Data
 public class ApBehaviorEntry {
@@ -12,7 +13,6 @@ public class ApBehaviorEntry {
     private Short type;
     private Integer entryId;
     private Date createdTime;
-    public String burst;
 
     @Alias("ApBehaviorEntryEnumType")
     public enum  Type{

@@ -1,7 +1,9 @@
 package com.tanran.api.userApi;
 
 import com.tanran.common.result.RespResult;
+import com.tanran.model.user.dtos.ChannelReqDto;
 import com.tanran.model.user.dtos.UserRelationDto;
+import com.tanran.model.user.pojos.ApUser;
 
 /**
  * TODO
@@ -14,6 +16,9 @@ import com.tanran.model.user.dtos.UserRelationDto;
 
 public interface UserRelationApi {
     RespResult userFollow(UserRelationDto userRelationDto);
+    RespResult cancelUserFollow(UserRelationDto userRelationDto);
     RespResult selectUserById(Long id);
     RespResult selectChannelByUser(Long id);
+    RespResult userProfile(ApUser user);
+
 }

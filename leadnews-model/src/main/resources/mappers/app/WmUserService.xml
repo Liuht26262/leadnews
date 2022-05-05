@@ -210,7 +210,7 @@
         where id in (
         <trim suffix="" suffixOverrides=",">
             <foreach collection="list" item="item" separator=",">
-                #{item.articleId}
+                #{item}
             </foreach>
         </trim>
         )

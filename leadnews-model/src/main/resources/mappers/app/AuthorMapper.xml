@@ -6,10 +6,11 @@
         <result column="name" property="name"/>
         <result column="type" property="type"/>
         <result column="user_id" property="userId"/>
+        <result column="photo" property="photo" />
         <result column="created_time" property="createdTime"/>
     </resultMap>
     <sql id="Base_Colomun_List">
-        id,name,type ,user_id,create_time,wm_user_id
+        id, name, photo, type, user_id, created_time
     </sql>
 
     <select id="selectAuthorById" resultMap="BaseResultMap">
@@ -17,4 +18,90 @@
         from ap_author
         where id=#{id}
     </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from ap_author
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.tanran.model.article.pojos.ApAuthor">
+        insert into ap_author (id, name, photo,
+                               type, user_id, created_time
+        )
+        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR},
+                #{type,jdbcType=BIT}, #{userId,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}
+               )
+    </insert>
+    <insert id="insertSelective" parameterType="com.tanran.model.article.pojos.ApAuthor">
+        insert into ap_author
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="photo != null">
+                photo,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="photo != null">
+                #{photo,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=BIT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.article.pojos.ApAuthor">
+        update ap_author
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="photo != null">
+                photo = #{photo,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=BIT},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tanran.model.article.pojos.ApAuthor">
+        update ap_author
+        set name = #{name,jdbcType=VARCHAR},
+            photo = #{photo,jdbcType=VARCHAR},
+            type = #{type,jdbcType=BIT},
+            user_id = #{userId,jdbcType=INTEGER},
+            created_time = #{createdTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

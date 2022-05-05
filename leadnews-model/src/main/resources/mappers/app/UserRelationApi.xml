@@ -7,7 +7,6 @@
         <result column="type" property="type"/>
         <result column="entry_id" property="entryId" />
         <result column="created_time" property="createdTime" />
-        <result column="burst" property="burst"/>
     </resultMap>
     <sql id="Base_Column_List" >
         id, type, entry_id, created_time

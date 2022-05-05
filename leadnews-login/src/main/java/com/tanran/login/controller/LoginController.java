@@ -31,4 +31,13 @@ public class LoginController implements LoginControllerApi {
     public RespResult UserLogin(@RequestBody ApUser user) {
         return loginService.userLogin(user);
     }
+
+    /**
+     * 注册*/
+    @Override
+    @PostMapping("/register")
+    public RespResult userregister(@RequestBody ApUser user) {
+        return loginService.userRegister(user);
+    }
+
 }

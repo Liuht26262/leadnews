@@ -13,10 +13,12 @@
         <result column="is_identity_authentication" property="isIdentityAuthentication"/>
         <result column="status" property="status"/>
         <result column="flag" property="flag"/>
+        <result column="created_time"  property="createdTime" />
+        <result column="mail"  property="mail" />
     </resultMap>
     <sql id="Base_Column_List" >
         id, salt, name, password, phone, image, sex, is_certification, is_identity_authentication,
-    status, flag
+    status, flag, created_time, mail
     </sql>
     <select id="selectUserById" resultMap="BaseResultMap">
         select  <include refid="Base_Column_List" /> from ap_user where id = #{id}
@@ -27,5 +29,174 @@
         <include refid="Base_Column_List" />
         from ap_user where phone = #{phone} limit 1;
     </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ap_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from ap_user
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <insert id="insert" parameterType="com.tanran.model.user.pojos.ApUser">
+        insert into ap_user (id, salt, name,
+                             password, phone, image,
+                             sex, is_certification, is_identity_authentication,
+                             status, flag, created_time,
+                             mail)
+        values (#{id,jdbcType=BIGINT}, #{salt,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+                #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR},
+                #{sex,jdbcType=BIT}, #{isCertification,jdbcType=BIT}, #{isIdentityAuthentication,jdbcType=BIT},
+                #{status,jdbcType=BIT}, #{flag,jdbcType=BIT}, #{createdTime,jdbcType=TIMESTAMP},
+                #{mail,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.tanran.model.user.pojos.ApUser">
+        insert into ap_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="image != null">
+                image,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="isCertification != null">
+                is_certification,
+            </if>
+            <if test="isIdentityAuthentication != null">
+                is_identity_authentication,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="flag != null">
+                flag,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+            <if test="mail != null">
+                mail,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="image != null">
+                #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=BIT},
+            </if>
+            <if test="isCertification != null">
+                #{isCertification,jdbcType=BIT},
+            </if>
+            <if test="isIdentityAuthentication != null">
+                #{isIdentityAuthentication,jdbcType=BIT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=BIT},
+            </if>
+            <if test="flag != null">
+                #{flag,jdbcType=BIT},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mail != null">
+                #{mail,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.user.pojos.ApUser">
+        update ap_user
+        <set>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="image != null">
+                image = #{image,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=BIT},
+            </if>
+            <if test="isCertification != null">
+                is_certification = #{isCertification,jdbcType=BIT},
+            </if>
+            <if test="isIdentityAuthentication != null">
+                is_identity_authentication = #{isIdentityAuthentication,jdbcType=BIT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=BIT},
+            </if>
+            <if test="flag != null">
+                flag = #{flag,jdbcType=BIT},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mail != null">
+                mail = #{mail,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tanran.model.user.pojos.ApUser">
+        update ap_user
+        set salt = #{salt,jdbcType=VARCHAR},
+            name = #{name,jdbcType=VARCHAR},
+            password = #{password,jdbcType=VARCHAR},
+            phone = #{phone,jdbcType=VARCHAR},
+            image = #{image,jdbcType=VARCHAR},
+            sex = #{sex,jdbcType=BIT},
+            is_certification = #{isCertification,jdbcType=BIT},
+            is_identity_authentication = #{isIdentityAuthentication,jdbcType=BIT},
+            status = #{status,jdbcType=BIT},
+            flag = #{flag,jdbcType=BIT},
+            created_time = #{createdTime,jdbcType=TIMESTAMP},
+            mail = #{mail,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
 
 </mapper>

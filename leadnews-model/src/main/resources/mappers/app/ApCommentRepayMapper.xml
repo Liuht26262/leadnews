@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tanran.model.mappers.app.ApCommentRepayMapper">
+  <resultMap id="BaseResultMap" type="com.tanran.model.article.pojos.ApCommentRepay">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="author_id" jdbcType="INTEGER" property="authorId" />
+    <result column="author_name" jdbcType="VARCHAR" property="authorName" />
+    <result column="comment_id" jdbcType="INTEGER" property="commentId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="likes" jdbcType="INTEGER" property="likes" />
+    <result column="longitude" jdbcType="DECIMAL" property="longitude" />
+    <result column="latitude" jdbcType="DECIMAL" property="latitude" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="likeCount" jdbcType="INTEGER" property="likecount" />
+    <result column="reply_count" jdbcType="INTEGER" property="replyCount" />
+    <result column="is_liking" jdbcType="TINYINT" property="isLiking" />
+    <result column="article_id" jdbcType="INTEGER" property="articleId" />
+      <result column="image" jdbcType="VARCHAR" property="image" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, author_id, author_name, comment_id, content, likes, longitude, latitude, address, 
+    created_time, updated_time, likeCount, reply_count, is_liking, article_id
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ap_comment_repay
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+    <select id="selectByUser" resultType="com.tanran.model.article.pojos.ApCommentRepay"
+            parameterType="com.tanran.model.article.dtos.ArticleRequestDto">
+        select <include refid="Base_Column_List"/> from ap_comment_repay where comment_id = #{dto.source} order by created_time limit ${(dto.page - 1) * dto.size}, ${dto.size}
+    </select>
+    <select id="countRepay" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select count(author_id) from ap_comment_repay where comment_id = #{commentId}
+    </select>
+    <select id="selectCommentRepay" resultType="com.tanran.model.article.pojos.ApCommentRepay">
+        select <include refid="Base_Column_List"/> from ap_comment_repay where author_id = #{authorId} and created_id = #{date}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ap_comment_repay
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" parameterType="com.tanran.model.article.pojos.ApCommentRepay">
+        insert into ap_comment_repay (id, author_id, author_name,
+                                      comment_id, content, likes,
+                                      longitude, latitude, address,
+                                      created_time, updated_time, likeCount,
+                                      reply_count, is_liking, article_id,
+                                      image)
+        values (#{id,jdbcType=INTEGER}, #{authorId,jdbcType=INTEGER}, #{authorName,jdbcType=VARCHAR},
+                #{commentId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{likes,jdbcType=INTEGER},
+                #{longitude,jdbcType=DECIMAL}, #{latitude,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR},
+                #{createdTime,jdbcType=TIMESTAMP}, #{updatedTime,jdbcType=TIMESTAMP}, #{likecount,jdbcType=INTEGER},
+                #{replyCount,jdbcType=INTEGER}, #{isLiking,jdbcType=TINYINT}, #{articleId,jdbcType=INTEGER},
+                #{image,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.tanran.model.article.pojos.ApCommentRepay">
+        insert into ap_comment_repay
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="authorId != null">
+                author_id,
+            </if>
+            <if test="authorName != null">
+                author_name,
+            </if>
+            <if test="commentId != null">
+                comment_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="likes != null">
+                likes,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="createdTime != null">
+                created_time,
+            </if>
+            <if test="updatedTime != null">
+                updated_time,
+            </if>
+            <if test="likecount != null">
+                likeCount,
+            </if>
+            <if test="replyCount != null">
+                reply_count,
+            </if>
+            <if test="isLiking != null">
+                is_liking,
+            </if>
+            <if test="articleId != null">
+                article_id,
+            </if>
+            <if test="image != null">
+                image,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="authorId != null">
+                #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="authorName != null">
+                #{authorName,jdbcType=VARCHAR},
+            </if>
+            <if test="commentId != null">
+                #{commentId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="likes != null">
+                #{likes,jdbcType=INTEGER},
+            </if>
+            <if test="longitude != null">
+                #{longitude,jdbcType=DECIMAL},
+            </if>
+            <if test="latitude != null">
+                #{latitude,jdbcType=DECIMAL},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="createdTime != null">
+                #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedTime != null">
+                #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="likecount != null">
+                #{likecount,jdbcType=INTEGER},
+            </if>
+            <if test="replyCount != null">
+                #{replyCount,jdbcType=INTEGER},
+            </if>
+            <if test="isLiking != null">
+                #{isLiking,jdbcType=TINYINT},
+            </if>
+            <if test="articleId != null">
+                #{articleId,jdbcType=INTEGER},
+            </if>
+            <if test="image != null">
+                #{image,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.tanran.model.article.pojos.ApCommentRepay">
+        update ap_comment_repay
+        <set>
+            <if test="authorId != null">
+                author_id = #{authorId,jdbcType=INTEGER},
+            </if>
+            <if test="authorName != null">
+                author_name = #{authorName,jdbcType=VARCHAR},
+            </if>
+            <if test="commentId != null">
+                comment_id = #{commentId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="likes != null">
+                likes = #{likes,jdbcType=INTEGER},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude,jdbcType=DECIMAL},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude,jdbcType=DECIMAL},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="createdTime != null">
+                created_time = #{createdTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatedTime != null">
+                updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="likecount != null">
+                likeCount = #{likecount,jdbcType=INTEGER},
+            </if>
+            <if test="replyCount != null">
+                reply_count = #{replyCount,jdbcType=INTEGER},
+            </if>
+            <if test="isLiking != null">
+                is_liking = #{isLiking,jdbcType=TINYINT},
+            </if>
+            <if test="articleId != null">
+                article_id = #{articleId,jdbcType=INTEGER},
+            </if>
+            <if test="image != null">
+                image = #{image,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tanran.model.article.pojos.ApCommentRepay">
+        update ap_comment_repay
+        set author_id = #{authorId,jdbcType=INTEGER},
+            author_name = #{authorName,jdbcType=VARCHAR},
+            comment_id = #{commentId,jdbcType=INTEGER},
+            content = #{content,jdbcType=VARCHAR},
+            likes = #{likes,jdbcType=INTEGER},
+            longitude = #{longitude,jdbcType=DECIMAL},
+            latitude = #{latitude,jdbcType=DECIMAL},
+            address = #{address,jdbcType=VARCHAR},
+            created_time = #{createdTime,jdbcType=TIMESTAMP},
+            updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+            likeCount = #{likecount,jdbcType=INTEGER},
+            reply_count = #{replyCount,jdbcType=INTEGER},
+            is_liking = #{isLiking,jdbcType=TINYINT},
+            article_id = #{articleId,jdbcType=INTEGER},
+            image = #{image,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

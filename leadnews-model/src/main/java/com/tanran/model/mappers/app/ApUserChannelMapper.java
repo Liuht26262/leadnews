@@ -2,6 +2,8 @@ package com.tanran.model.mappers.app;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.tanran.model.user.pojos.ApUserChannel;
 
 public interface ApUserChannelMapper {
@@ -20,4 +22,5 @@ public interface ApUserChannelMapper {
 
     List<ApUserChannel> selectChannelsByUser(Long id);
 
+    int deleteUserChannel(@Param("userId") Integer userId, @Param("channelId") Integer channelId);
 }
