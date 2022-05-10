@@ -45,7 +45,7 @@ public class UserBehaviorController implements UserBehaviorControllerApi {
 
     @PostMapping("/collection")
     @Override
-    public RespResult collectionBehavior(CollectionBehaviorDto dto) {
+    public RespResult collectionBehavior(@RequestBody CollectionBehaviorDto dto) {
         return collectionBehaviorService.collectionBehavior(dto);
     }
 

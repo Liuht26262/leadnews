@@ -1,5 +1,9 @@
 package com.tanran.model.mappers.app;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.tanran.model.user.pojos.ApUser;
 
 /**
@@ -28,4 +32,7 @@ public interface ApUserMapper {
 
     int updateByPrimaryKey(ApUser record);
 
+    List<ApUser> selectApUserByIds(@Param("list") List list,@Param("size")int size,@Param("page") int page);
+
+    ApUser selectApWmUser(Short flag);
 }

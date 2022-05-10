@@ -1,5 +1,7 @@
 package com.tanran.model.mappers.app;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.tanran.model.user.pojos.ApUserFollow;
@@ -17,5 +19,7 @@ public interface ApUserFollowMapper {
 
     int insertUserFollow(ApUserFollow userFollow);
 
-    int deleteUserFollow(@Param("id") Long id, @Param("follow") Integer followId);
+    int deleteUserFollow(@Param("id") Long id, @Param("followId") Integer followId);
+
+    List<ApUserFollow> selectUserFollowByAuthorId(Integer followId);
 }

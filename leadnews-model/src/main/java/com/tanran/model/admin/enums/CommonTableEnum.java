@@ -9,7 +9,8 @@ public enum CommonTableEnum {
     // APP用户端
     AP_ARTICLE("*",true,false,false,false),
     AP_ARTICLE_CONFIG("*",true,false,true,false),
-    AP_USER("*",true,false,true,false);
+    AP_USER("*",true,true,true,false),
+    WM_NEWS("*",true,true,true,true);
 
     String filed;
     boolean list;//开启列表权限？

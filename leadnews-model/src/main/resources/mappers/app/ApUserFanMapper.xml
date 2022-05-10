@@ -28,7 +28,7 @@
                )
     </insert>
     <delete id="deleteFan">
-        delete from ap_user_follow where user_id=#{followId} and fans_id=#{userId}
+        delete from ap_user_follow where follow_id=#{followId} and user_id=#{userId}
     </delete>
     <select id="slectUserFanByFanId" resultType="com.tanran.model.user.pojos.ApUserFan">
         select <include refid="Base_Column_List"/>

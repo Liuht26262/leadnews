@@ -30,4 +30,8 @@
         from ap_user_follow
         where user_id=#{userId} and follow_id=#{followId}
     </select>
+    <select id="selectUserFollowByAuthorId" resultType="com.tanran.model.user.pojos.ApUserFollow"
+            parameterType="java.lang.Integer">
+        select <include refid="Base_Column_List"/> from ap_user_follow where follow_id=#{followId};
+    </select>
 </mapper>

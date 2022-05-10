@@ -28,6 +28,11 @@ public class WmUserServiceImpl implements WmUserService {
     @Autowired
     private WmUserMapper wmUserMapper;
 
+    /**
+     * 获取得到的flag判断身份信息，然后到各自的信息表中进行查询
+     * @param user
+     * @return
+     */
     @Override
     public RespResult LoginWmUser(WmUser user) {
         HashMap<Object, Object> loginMap = new HashMap<>();
@@ -35,14 +40,12 @@ public class WmUserServiceImpl implements WmUserService {
         if(StringUtils.isEmpty(user.getName())&&StringUtils.isEmpty(user.getPassword())){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"账号及密码不能为空");
         }
-
         WmUser wmUser = wmUserMapper.selectByName(user.getName(),user.getRoleType());
-        System.out.println("******************************************************");
-        System.out.println("用户信息:"+wmUser);
-        System.out.println("******************************************************");
+        System.out.println(wmUser);
         if (!Objects.isNull(wmUser)){
            if(user.getPassword().equals(wmUser.getPassword())){
-               System.out.println("已设定用户");
+               WmThreadLocalUtils.setUser(wmUser);
+               System.out.println(WmThreadLocalUtils.getUser());
                //登陆成功后将密码制空返回，保证安全
                wmUser.setPassword("");
                wmUser.setSalt("");

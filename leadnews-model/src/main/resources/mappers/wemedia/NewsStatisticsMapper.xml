@@ -41,6 +41,7 @@
         </if>
         </where>
     </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from wm_news_statistics
     where id = #{id,jdbcType=INTEGER}

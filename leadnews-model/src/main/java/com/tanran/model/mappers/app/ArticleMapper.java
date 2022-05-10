@@ -1,6 +1,7 @@
 package com.tanran.model.mappers.app;
 
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -43,4 +44,8 @@ public interface ArticleMapper {
     void insertSelective(ApArticle article);
 
     List<ApArticle> selectArticleByChannelId(@Param("dto") ArticleRequestDto dto);
+
+    Integer selectByDate(String title, Date createdTime);
+
+    void deleteArticleById(Integer articleId);
 }

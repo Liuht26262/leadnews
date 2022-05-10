@@ -173,6 +173,9 @@
             </if>
         </trim>
     </insert>
+    <delete id="deleteArticleById" parameterType="java.lang.Integer">
+        delete from ap_article where id=#{articleId}
+    </delete>
 
     <select id="loadArticleListByLocation" resultMap="resultMap">
         select <include refid="Base_Column_List"/>
@@ -228,5 +231,8 @@
                 </if>
             </where>
             limit  ${(dto.page - 1) * dto.size}, ${dto.size}
+    </select>
+    <select id="selectByDate" resultType="java.lang.Integer">
+        select id from ap_article where title=#{title} and created_time=#{createdTime}
     </select>
 </mapper>

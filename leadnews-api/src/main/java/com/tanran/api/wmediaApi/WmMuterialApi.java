@@ -3,6 +3,7 @@ package com.tanran.api.wmediaApi;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tanran.common.result.RespResult;
+import com.tanran.model.media.dtos.CollectMaterDto;
 import com.tanran.model.media.dtos.WmMaterialDto;
 import com.tanran.model.media.dtos.WmMaterialListDto;
 
@@ -21,4 +22,6 @@ public interface WmMuterialApi {
     RespResult deletePicture(WmMaterialDto dto);
 
     RespResult loadAllMaterial(WmMaterialListDto ids);
+
+    RespResult collectMaterial(CollectMaterDto dto);
 }

@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 
 import com.tanran.api.service.ArticleSearchService;
 import com.tanran.common.result.RespResult;
+import com.tanran.model.article.dtos.ArticleRespDto;
 import com.tanran.model.article.dtos.UserSearchDto;
 import com.tanran.model.article.pojos.ApArticle;
+import com.tanran.model.article.pojos.ApAssociateWords;
 import com.tanran.model.behavior.pojos.ApBehaviorEntry;
 import com.tanran.model.common.constants.ESIndexConstants;
 import com.tanran.model.common.enums.ErrorCodeEnum;
@@ -33,6 +35,7 @@ import com.tanran.utils.threadlocal.AppThreadLocalUtils;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * TODO
@@ -43,6 +46,7 @@ import io.searchbox.core.SearchResult;
  * @since 2022/3/31 9:21
  */
 @Service
+@Slf4j
 @SuppressWarnings("all")
 public class ArticleSearchServiceImpl implements ArticleSearchService {
     @Autowired
@@ -131,10 +135,11 @@ public class ArticleSearchServiceImpl implements ArticleSearchService {
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
         String s = "%"+dto.getSearchWords()+"%";
-        System.out.println("*****************************************");
-        System.out.println(dto);
-        System.out.println("*****************************************");
-        return RespResult.okResult(associateWordsMapper.selectAssociateWords(s,dto.getPageSize()));
+        List<ApAssociateWords> apAssociateWords = associateWordsMapper.selectAssociateWords(s, dto.getPageSize());
+        List<String> options = apAssociateWords.stream()
+            .map(word -> word.getAssociateWords())
+            .collect(Collectors.toList());
+        return RespResult.okResult(options);
     }
 
     @Override
@@ -169,16 +174,41 @@ public class ArticleSearchServiceImpl implements ArticleSearchService {
         Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex(ESIndexConstants.ARTICLE_INDEX).addType(ESIndexConstants.DEFAULT_DOC).build();
         try {
             SearchResult searchResult = jestClient.execute(search);
-            List<ApArticle> sourceAsObjectList = searchResult.getSourceAsObjectList(ApArticle.class);
-            List<ApArticle> resultList = new ArrayList<>();
-            for (ApArticle apArticle : sourceAsObjectList) {
-                apArticle = articleMapper.selectArticleById(Long.valueOf(apArticle.getId()));
-                if(apArticle==null){
-                    continue;
-                }
-                resultList.add(apArticle);
+            if(Objects.isNull(searchResult)){
+                log.info("===========索引库中没有关于"+dto.getSearchWords()+"的数据=================");
+                return RespResult.okResult(ErrorCodeEnum.SUCCESS);
             }
-            return RespResult.okResult(resultList);
+            System.out.println(searchResult+"***********");
+            List<ApArticle> sourceAsObjectList = searchResult.getSourceAsObjectList(ApArticle.class);
+            List<Integer> collect = sourceAsObjectList.stream()
+                .map(s -> s.getId())
+                .collect(Collectors.toList());
+            List<ApArticle> apArticles = articleMapper.loadArticleListByIdList(collect);
+            List<ArticleRespDto.Results> respResults = new ArrayList<>();
+
+            // 组装响应数据
+            for (ApArticle article : apArticles){
+                String image = article.getImages();
+                ArticleRespDto.Cover cover = null;
+
+                if(image != null){
+                    String[] imags = image.split(",");
+                    cover = new ArticleRespDto.Cover(1,imags);
+                }else{
+                    cover = new ArticleRespDto.Cover(0,null);
+                }
+
+                ArticleRespDto.Results results = new ArticleRespDto.Results(article.getId(), article.getTitle(), article.getAuthorId(),article.getAuthorName(),article.getComment(),
+                    article.getPublishTime().toString(),cover,article.getLikes(),article.getCollection());
+
+                System.out.println(results.toString());
+
+                respResults.add(results);
+            }
+
+            ArticleRespDto respDto = new ArticleRespDto(dto.getFromIndex(), dto.getPageSize(), respResults.size(), respResults);
+
+            return RespResult.okResult(respDto);
         } catch (IOException e) {
             e.printStackTrace();
         }

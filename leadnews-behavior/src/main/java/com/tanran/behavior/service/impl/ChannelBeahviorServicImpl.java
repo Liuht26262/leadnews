@@ -13,6 +13,8 @@ import com.tanran.model.mappers.app.ApUserChannelMapper;
 import com.tanran.model.user.dtos.ChannelReqDto;
 import com.tanran.model.user.pojos.ApUserChannel;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * TODO
  *
@@ -22,6 +24,7 @@ import com.tanran.model.user.pojos.ApUserChannel;
  * @since 2022/5/5 11:17
  */
 @Service
+@Slf4j
 public class ChannelBeahviorServicImpl implements ChannelsBehaviorService {
 
     @Autowired
@@ -40,6 +43,7 @@ public class ChannelBeahviorServicImpl implements ChannelsBehaviorService {
         apUserChannel.setCreatedTime(new Date(System.currentTimeMillis()));
         int i = userChannelMapper.insertSelective(apUserChannel);
         if(i>=0){
+            log.info("===========订阅"+dto.getName()+"频道成功==========");
             return RespResult.okResult(ErrorCodeEnum.SUCCESS);
         }
         return RespResult.errorResult(ErrorCodeEnum.SERVER_ERROR,"操作失败");
@@ -52,6 +56,7 @@ public class ChannelBeahviorServicImpl implements ChannelsBehaviorService {
         }
         int i = userChannelMapper.deleteUserChannel(userId,channelId);
         if(i>=0){
+            log.info("========取消订阅成功===========");
             return RespResult.okResult(ErrorCodeEnum.SUCCESS);
         }
         return RespResult.errorResult(ErrorCodeEnum.SERVER_ERROR,"操作失败");

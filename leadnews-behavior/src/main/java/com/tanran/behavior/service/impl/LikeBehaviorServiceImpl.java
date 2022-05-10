@@ -50,7 +50,7 @@ public class LikeBehaviorServiceImpl implements LikeBehaviorService {
         if(!ObjectUtils.isEmpty(user)){
             id = user.getId();
         }
-        if(dto.getType() == 0){
+        if(dto.getOperation() == 0){
             ApBehaviorEntry apBehaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(dto.getEquipmentId().longValue(),null);
             if(ObjectUtils.isEmpty(apBehaviorEntry)){
                 RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE);
@@ -61,6 +61,7 @@ public class LikeBehaviorServiceImpl implements LikeBehaviorService {
             apLikesBehavior.setEntryId(dto.getEntryId());
             apLikesBehavior.setCreatedTime(new Date());
             apLikesBehavior.setType(dto.getType());
+            apLikesBehavior.setOperation(dto.getOperation());
 
             //记录行为到文章的配置表中
             ApArticleConfig articleConfig = configMapper.findConfigById(dto.getEntryId(),dto.getEquipmentId());
@@ -87,6 +88,7 @@ public class LikeBehaviorServiceImpl implements LikeBehaviorService {
 
             return RespResult.okResult(ErrorCodeEnum.SUCCESS);
         }else {
+            System.out.println("删除喜欢行为数据时的参数"+dto);
             ApLikesBehavior apLikesBehavior = likeBehaviorMapper.selectLikeBehavior(dto);
             if(Objects.isNull(apLikesBehavior)){
                 return RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST,"操作失败");
@@ -98,11 +100,13 @@ public class LikeBehaviorServiceImpl implements LikeBehaviorService {
                 ApArticleConfig articleConfig = configMapper.findConfigById(dto.getEntryId(),dto.getEquipmentId());
                 if(Objects.nonNull(articleConfig)){
                     ApArticleConfig apArticleConfig = new ApArticleConfig();
+                    apArticleConfig.setId(articleConfig.getId());
                     apArticleConfig.setArticleId(dto.getEntryId());
                     apArticleConfig.setIsLike(false);
                     apArticleConfig.setUserId(dto.getEquipmentId());
                     apArticleConfig.setUpdatedTime(new Date(System.currentTimeMillis()));
                     configMapper.updateByPrimaryKeySelective(apArticleConfig);
+                    log.info("************更新取消收藏配置成功*************");
                     return RespResult.okResult(ErrorCodeEnum.SUCCESS);
                 }
                 return RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST);

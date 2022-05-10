@@ -18,6 +18,25 @@
         from ap_author
         where id=#{id}
     </select>
+    <select id="selectAuthorSelective" resultType="com.tanran.model.article.pojos.ApAuthor"
+            parameterType="com.tanran.model.article.pojos.ApAuthor">
+        select <include refid="Base_Colomun_List"/> from ap_author where 1=1
+        <if test="name != null">
+           and name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="photo != null">
+           and  photo = #{photo,jdbcType=VARCHAR}
+        </if>
+        <if test="type != null">
+           and type = #{type,jdbcType=BIT}
+        </if>
+        <if test="userId != null">
+           and user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="createdTime != null">
+           and created_time = #{createdTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from ap_author

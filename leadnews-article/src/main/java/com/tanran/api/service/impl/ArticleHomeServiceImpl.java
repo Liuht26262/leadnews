@@ -189,7 +189,7 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
         ApUser user = AppThreadLocalUtils.getUser();
         System.out.println("***************此时的用户信息*****************");
         System.out.println(user);
-        if(dto.getUserId() == null){
+        if(dto.getUserId() != null){
             dto.setUserId(user.getId().intValue());
         }
 
@@ -247,10 +247,12 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
         List<ApArticle> apArticles = articleMapper.loadArticleListByIdList(articleIds);
 
 
+
         List<ArticleRespDto.Results> respResults = new ArrayList<>();
 
         // 组装响应数据
         for (ApArticle article : apArticles){
+
             String image = article.getImages();
             ArticleRespDto.Cover cover = null;
 

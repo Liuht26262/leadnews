@@ -34,6 +34,10 @@
         from wm_user
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="selectWmUser" resultType="com.tanran.model.media.pojos.WmUser"
+            parameterType="java.lang.String">
+        select <include refid="Base_Column_List"/> from wm_user where role_type=#{roleType} order by created_time desc limit 1
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from wm_user
         where id = #{id,jdbcType=INTEGER}
@@ -94,7 +98,7 @@
                 email,
             </if>
             <if test="roleType != null">
-                roleType,
+                role_type,
             </if>
             <if test="loginTime != null">
                 login_time,
@@ -189,7 +193,7 @@
                 email = #{email,jdbcType=VARCHAR},
             </if>
             <if test="roleType != null">
-                roleType = #{type,jdbcType=VARCHAR},
+                role_type = #{type,jdbcType=VARCHAR},
             </if>
 
             <if test="loginTime != null">
@@ -214,7 +218,7 @@
             phone = #{phone,jdbcType=VARCHAR},
             status = #{status,jdbcType=TINYINT},
             email = #{email,jdbcType=VARCHAR},
-            roleType = #{roleType,jdbcType=VARCHAR},
+            role_type = #{roleType,jdbcType=VARCHAR},
             score = #{score,jdbcType=TINYINT},
             login_time = #{loginTime,jdbcType=TIMESTAMP},
             created_time = #{createdTime,jdbcType=TIMESTAMP}

@@ -43,10 +43,10 @@ public class FollowbehaviorServiceImpl implements FollowBehaviorService {
         }
 
         ApBehaviorEntry apBehaviorEntry = behaviorEntryMapper.selectByUserIdOrEquipment(userId, dto.getEquipmentId());
+
         if(apBehaviorEntry==null){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
-
         //保存行为
         ApFollowBehavior alb = new ApFollowBehavior();
         alb.setEntryId(apBehaviorEntry.getId());

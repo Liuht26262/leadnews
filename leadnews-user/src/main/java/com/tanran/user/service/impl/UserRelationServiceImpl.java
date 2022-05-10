@@ -4,24 +4,27 @@ import java.util.Date;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.tanran.behavior.service.FollowBehaviorService;
+import com.tanran.behavior.service.impl.FollowbehaviorServiceImpl;
 import com.tanran.common.result.RespResult;
+import com.tanran.model.article.pojos.ApArticleConfig;
 import com.tanran.model.article.pojos.ApAuthor;
 import com.tanran.model.behavior.dtos.FollowBehaviorDto;
 import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.ApUserFanMapper;
 import com.tanran.model.mappers.app.ApUserFollowMapper;
 import com.tanran.model.mappers.app.ApUserMapper;
+import com.tanran.model.mappers.app.ArticleContentConfigMapper;
 import com.tanran.model.mappers.app.AuthorMapper;
 import com.tanran.model.user.dtos.UserRelationDto;
 import com.tanran.model.user.pojos.ApUser;
 import com.tanran.model.user.pojos.ApUserFan;
 import com.tanran.model.user.pojos.ApUserFollow;
 import com.tanran.user.service.UserRelationService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * TODO
@@ -35,6 +38,7 @@ import com.tanran.user.service.UserRelationService;
  *
  */
 @Service
+@Slf4j
 public class UserRelationServiceImpl implements UserRelationService {
     @Autowired
     private AuthorMapper authorMapper;
@@ -44,8 +48,9 @@ public class UserRelationServiceImpl implements UserRelationService {
     private ApUserFollowMapper apUserFollowMapper;
     @Autowired
     private ApUserFanMapper apUserFanMapper;
-    @Qualifier("followBehaviorService")
-    private FollowBehaviorService followBehaviorService;
+
+    @Autowired
+    private ArticleContentConfigMapper configMapper;
 
 
     /***
@@ -79,7 +84,7 @@ public class UserRelationServiceImpl implements UserRelationService {
                 if (userRelationDto.getOperation() == 0) {
                     return saveUserFollow(user, followId, userRelationDto.getArticleId());
                 } else {
-                    return deleteUserFollow(user, followId);
+                    return deleteUserFollow(user, followId,userRelationDto.getArticleId());
                 }
             }
         }
@@ -109,8 +114,7 @@ public class UserRelationServiceImpl implements UserRelationService {
             //说明没有关注，那就添加到粉丝
             if(ObjectUtils.isEmpty(apUserFan)){
                 ApUserFan userFan = new ApUserFan();
-                /*主键*/
-                // userFan.setId(new Sequences().sequenceApUserFan());
+
                 userFan.setUserId(followId);
                 userFan.setFansId(user.getId());
                 userFan.setFansName(user.getName());
@@ -123,7 +127,6 @@ public class UserRelationServiceImpl implements UserRelationService {
                 apUserFanMapper.insertUserFan(userFan);
             }
             ApUserFollow userFollow = new ApUserFollow();
-            // userFollow.setId(new Sequences().sequenceApUserFollow());
             userFollow.setFollowId(followId);
             userFollow.setFollowName(apUser.getName());
             userFollow.setUserId(user.getId());
@@ -137,7 +140,28 @@ public class UserRelationServiceImpl implements UserRelationService {
             dto.setFollowId(followId);
             dto.setArticleId(article);
 
-            followBehaviorService.save(dto);
+            new FollowbehaviorServiceImpl().save(dto);
+
+            //更新文章配置表
+            ApArticleConfig articleConfig = configMapper.findConfigById(article,user.getId().intValue());
+            ApArticleConfig apArticleConfig = new ApArticleConfig();
+            apArticleConfig.setArticleId(article);
+            apArticleConfig.setIsFollow(true);
+            apArticleConfig.setUserId(user.getId().intValue());
+            /**
+             * 如果文章配置不存在就添加原始数据，如果存在就更新数据
+             */
+            if(Objects.isNull(articleConfig)){
+                apArticleConfig.setCreatedTime(new Date(System.currentTimeMillis()));
+                apArticleConfig.setUpdatedTime(new Date(System.currentTimeMillis()));
+                configMapper.insertSelective(apArticleConfig);
+                log.info("文章喜欢配置添加成功");
+            }else{
+                apArticleConfig.setId(articleConfig.getId());
+                apArticleConfig.setUpdatedTime(new Date((System.currentTimeMillis())));
+                configMapper.updateByPrimaryKeySelective(apArticleConfig);
+                log.info("文章配置更新成功");
+            }
             return RespResult.okResult(dto.getFollowId());
 
         }
@@ -145,7 +169,7 @@ public class UserRelationServiceImpl implements UserRelationService {
     }
 
     /**取消用户关注*/
-    public RespResult deleteUserFollow(ApUser user,Integer followId){
+    public RespResult deleteUserFollow(ApUser user,Integer followId,Integer articleId){
         ApUserFollow apUserFollow = apUserFollowMapper.selectUserFollowByFollowId(user.getId(),followId);
         if(apUserFollow == null){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_REQUIRE,"未关注");
@@ -156,7 +180,19 @@ public class UserRelationServiceImpl implements UserRelationService {
             }
             int result = apUserFollowMapper.deleteUserFollow(user.getId(), followId);
 
-            return RespResult.okResult(ErrorCodeEnum.CANCEL_SUCESS);
+            ApArticleConfig articleConfig = configMapper.findConfigById(articleId,user.getId().intValue());
+            if(Objects.nonNull(articleConfig)){
+                ApArticleConfig apArticleConfig = new ApArticleConfig();
+                apArticleConfig.setArticleId(articleId);
+                apArticleConfig.setIsFollow(false);
+                apArticleConfig.setUserId(user.getId().intValue());
+                apArticleConfig.setUpdatedTime(new Date(System.currentTimeMillis()));
+                configMapper.updateByPrimaryKeySelective(apArticleConfig);
+                return RespResult.okResult(ErrorCodeEnum.CANCEL_SUCESS);
+            }
+            return RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST);
+
+
         }
 
     }

@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tanran.api.wmediaApi.FansStatisticsApi;
+import com.tanran.common.result.RespResult;
 import com.tanran.model.common.dtos.PageRequestDto;
 import com.tanran.model.common.dtos.PageResponseResult;
+import com.tanran.model.media.dtos.FansReqDto;
 import com.tanran.wemedia.service.WmStatisticsService;
 
 /**
@@ -26,9 +28,30 @@ public class FanStatisticesController implements FansStatisticsApi{
     @Autowired
     private WmStatisticsService wmStatisticsService;
 
-    @PostMapping("/list")
+
     @Override
     public PageResponseResult fansStatistics(@RequestBody PageRequestDto dto) {
         return wmStatisticsService.fansStatistics(dto);
     }
+
+    /**
+     * 获取粉丝列表
+     * */
+    @Override
+    @PostMapping("/list")
+    public RespResult fansList(@RequestBody FansReqDto dto) {
+       return wmStatisticsService.fansList(dto);
+    }
+
+    /**
+     * 拉黑
+     * */
+    @Override
+    @PostMapping("/change_follow_state")
+    public RespResult cancelFollow(@RequestBody FansReqDto dto) {
+        return wmStatisticsService.cancelFollow(dto);
+    }
+
+
+
 }

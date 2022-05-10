@@ -2,6 +2,7 @@ package com.tanran.wemedia.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +28,7 @@ public class WmStatisticsController implements StatisticsApi {
 
     @PostMapping("/news")
     @Override
-    public RespResult newsStatistics(StatisticDto dto) {
+    public RespResult newsStatistics(@RequestBody StatisticDto dto) {
         return wmStatisticsService.newsStatistics(dto);
     }
 

@@ -1,0 +1,5 @@
+server:
+  port: ${port.admin}
+spring:
+  application:
+    name: ${sn.admin}

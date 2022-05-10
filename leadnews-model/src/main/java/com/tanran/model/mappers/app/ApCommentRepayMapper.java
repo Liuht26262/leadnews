@@ -27,4 +27,6 @@ public interface ApCommentRepayMapper {
     Integer countRepay(Integer commentId);
 
     ApCommentRepay selectCommentRepay(int authorId, Date date);
+
+    ApCommentRepay selectLastComments(Integer commentId);
 }

@@ -33,7 +33,7 @@ public class WmLogiController implements WmLogin {
     }
 
     @Override
-    @PostMapping("/profile")
+    @PostMapping("/user/profile")
     public RespResult userProfile() {
         return wmService.getUserFile();
     }

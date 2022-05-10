@@ -1,19 +1,6 @@
 package com.tanran.common.web.admin.security;
 
-import com.alibaba.fastjson.JSON;
-import com.tanran.common.common.contants.Contants;
-import com.tanran.model.common.dtos.ResponseResult;
-import com.tanran.model.common.enums.ErrorCodeEnum;
-import com.tanran.model.admin.pojos.AdUser;
-import com.tanran.utils.jwt.AppJwtUtil;
-import com.tanran.utils.threadlocal.AdminThreadLocalUtils;
-
-import io.jsonwebtoken.Claims;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.Order;
-import org.springframework.web.filter.GenericFilterBean;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,7 +9,22 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
+import org.springframework.web.filter.GenericFilterBean;
+
+import com.alibaba.fastjson.JSON;
+import com.tanran.common.common.contants.Contants;
+import com.tanran.model.admin.pojos.AdUser;
+import com.tanran.model.common.dtos.ResponseResult;
+import com.tanran.model.common.enums.ErrorCodeEnum;
+import com.tanran.utils.jwt.AppJwtUtil;
+import com.tanran.utils.threadlocal.AdminThreadLocalUtils;
+
+import io.jsonwebtoken.Claims;
 
 @Order(2)
 @WebFilter(filterName = "adminTokenFilter" ,urlPatterns = "/*")
@@ -37,7 +39,7 @@ public class AdminTokenFilter extends GenericFilterBean {
         String uri = request.getRequestURI();
         ResponseResult<?> result = checkToken(request,response);
         // 测试和开发环境不过滤
-        if(result==null||uri.startsWith("/login")){
+        if(result==null||uri.startsWith("/login")||uri.startsWith("/api/v1/channel")){
             chain.doFilter(req,res);
         }else{
             res.setCharacterEncoding(Contants.CHARTER_NAME);

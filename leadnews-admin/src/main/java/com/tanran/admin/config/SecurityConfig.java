@@ -1,7 +1,6 @@
 package com.tanran.admin.config;
 
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 /**
  *
@@ -12,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2022/4/17 9:50
  */
 
-@Configuration
+// @Configuration
 @ServletComponentScan("com.tanran.common.web.admin.security")
 public class SecurityConfig {
 }

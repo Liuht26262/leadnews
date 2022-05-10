@@ -59,6 +59,10 @@ public class WmNewsController implements WmNews {
         return RespResult.okResult(wmNewsService.selectNewById(dto.getId()));
     }
 
-
+    @Override
+    @PostMapping("down_or_up")
+    public RespResult articleUpOtDown(@RequestBody WmNewsDto dto) {
+        return wmNewsService.articleUpOtDown(dto);
+    }
 
 }

@@ -1,10 +1,9 @@
 package com.tanran.wemedia.service;
 
-import org.springframework.stereotype.Service;
-
 import com.tanran.common.result.RespResult;
 import com.tanran.model.common.dtos.PageRequestDto;
 import com.tanran.model.common.dtos.PageResponseResult;
+import com.tanran.model.media.dtos.FansReqDto;
 import com.tanran.model.media.dtos.StatisticDto;
 
 /**
@@ -20,4 +19,8 @@ public interface WmStatisticsService {
     RespResult newsStatistics(StatisticDto dto);
 
     PageResponseResult fansStatistics(PageRequestDto dto);
+
+    RespResult fansList(FansReqDto dto);
+
+    RespResult cancelFollow(FansReqDto dto);
 }

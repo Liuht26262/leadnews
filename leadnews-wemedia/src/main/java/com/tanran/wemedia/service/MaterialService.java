@@ -3,6 +3,7 @@ package com.tanran.wemedia.service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tanran.common.result.RespResult;
+import com.tanran.model.media.dtos.CollectMaterDto;
 import com.tanran.model.media.dtos.WmMaterialDto;
 import com.tanran.model.media.dtos.WmMaterialListDto;
 
@@ -20,4 +21,6 @@ public interface MaterialService {
     RespResult deletePicture(WmMaterialDto dto);
 
     RespResult loadAllMaterIal(WmMaterialListDto ids);
+
+    RespResult collectMaterial(CollectMaterDto dto);
 }

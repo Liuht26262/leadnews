@@ -5,7 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.tanran.model.mappers.admin")
+@MapperScan("com.tanran.model.mappers")
+// @ComponentScan("com.tanran.wemedia.service")
 public class AdminJarApplication {
     public static void main(String[] args) {
         SpringApplication.run(AdminJarApplication.class,args);

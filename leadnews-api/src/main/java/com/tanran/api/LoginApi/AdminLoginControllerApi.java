@@ -1,7 +1,7 @@
 package com.tanran.api.LoginApi;
 
 import com.tanran.common.result.RespResult;
-import com.tanran.model.admin.pojos.AdUser;
+import com.tanran.model.media.pojos.WmUser;
 
 /**
  * TODO
@@ -12,5 +12,5 @@ import com.tanran.model.admin.pojos.AdUser;
  * @since 2022/4/17 10:02
  */
 public interface AdminLoginControllerApi {
-    RespResult adminLogin(AdUser user);
+    RespResult adminLogin(WmUser user);
 }

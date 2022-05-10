@@ -40,7 +40,7 @@ public class CollectionBehaviorServiceImpl implements CollectionBehaviorService 
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
 
-        if(dto.getType() == 0){
+        if(dto.getOperation() == 0){
             /**收藏*/
 
             ApCollection apCollection = new ApCollection();
@@ -77,11 +77,13 @@ public class CollectionBehaviorServiceImpl implements CollectionBehaviorService 
             ApArticleConfig articleConfig = configMapper.findConfigById(dto.getEntryId(),dto.getEquipmentId());
             if(Objects.nonNull(articleConfig)){
                 ApArticleConfig apArticleConfig = new ApArticleConfig();
+                apArticleConfig.setId(articleConfig.getId());
                 apArticleConfig.setArticleId(dto.getEntryId());
                 apArticleConfig.setIsCollect(false);
                 apArticleConfig.setUserId(dto.getEquipmentId());
                 apArticleConfig.setUpdatedTime(new Date(System.currentTimeMillis()));
                 configMapper.updateByPrimaryKeySelective(apArticleConfig);
+                log.info("************更新取消收藏配置成功*************");
                 return RespResult.okResult(ErrorCodeEnum.SUCCESS);
             }
             return RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST);

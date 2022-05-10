@@ -1,5 +1,6 @@
 package com.tanran.login.service.impl;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 
@@ -34,6 +35,10 @@ public class LoginServiceImpl implements LoginService {
         if(Objects.isNull(user)){
             RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
+        /**设置用户默认信息*/
+        user.setStatus((short)0);
+        user.setFlag((short)0);
+        user.setCreatedTime(new Date(System.currentTimeMillis()));
 
         int i = apUserMapper.insertSelective(user);
 

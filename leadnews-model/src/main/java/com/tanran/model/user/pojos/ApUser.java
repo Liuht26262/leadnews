@@ -62,14 +62,14 @@ public class ApUser {
      * 0正常
      1锁定
      */
-    private Boolean status;
+    private Short status;
 
     /**
      * 0 普通用户
      1 自媒体人
      2 大V
      */
-    private Boolean flag;
+    private Short flag;
 
     /**
      * 注册时间

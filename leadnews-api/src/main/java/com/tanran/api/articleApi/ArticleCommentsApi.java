@@ -1,9 +1,10 @@
 package com.tanran.api.articleApi;
 
+import java.text.ParseException;
+import java.util.HashMap;
+
 import com.tanran.common.result.RespResult;
-import com.tanran.model.article.dtos.CommentAddDto;
 import com.tanran.model.article.dtos.CommentsReqDto;
-import com.tanran.model.user.pojos.ApUser;
 
 /**
  * TODO
@@ -15,5 +16,5 @@ import com.tanran.model.user.pojos.ApUser;
  */
 public interface ArticleCommentsApi {
     RespResult getComments(CommentsReqDto commentsReqDto);
-    RespResult addComments(ApUser user,CommentAddDto dto);
+    RespResult addComments(HashMap params) throws ParseException;
 }

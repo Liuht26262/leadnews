@@ -1,11 +1,15 @@
 package com.tanran.model.media.dtos;
 
-import lombok.Data;
-
 import java.util.Date;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class StatisticDto {
 
     private Short type;

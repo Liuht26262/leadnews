@@ -36,6 +36,20 @@
         from ap_user
         where id = #{id,jdbcType=BIGINT}
     </select>
+    <select id="selectApUserByIds" resultType="com.tanran.model.user.pojos.ApUser">
+        select <include refid="Base_Column_List"/> from ap_user where id in
+        <foreach
+                collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        limit ${page},${size}
+    </select>
+    <select id="selectApWmUser" resultType="com.tanran.model.user.pojos.ApUser"
+            parameterType="java.lang.Short">
+        select <include refid="Base_Column_List"/> from ap_user where flag=#{flag} order by created_time desc limit 1
+    </select>
+
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete from ap_user
         where id = #{id,jdbcType=BIGINT}

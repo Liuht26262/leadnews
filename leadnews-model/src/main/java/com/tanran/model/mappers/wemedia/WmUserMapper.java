@@ -31,4 +31,5 @@ public interface WmUserMapper {
 
     int updateByPrimaryKey(WmUser record);
 
+    WmUser selectWmUser(String roleType);
 }

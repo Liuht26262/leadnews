@@ -31,7 +31,7 @@ public interface LikeBehaviorMapper {
     /**
      * 存储喜欢数据
      * */
-    int saveLikeBehavior(ApLikesBehavior likesBehavior);
+    int saveLikeBehavior(@Param("likes") ApLikesBehavior likesBehavior);
 
     ApLikesBehavior selectLikeBehavior(@Param("dto") LikesBehaviorDto dto);
 

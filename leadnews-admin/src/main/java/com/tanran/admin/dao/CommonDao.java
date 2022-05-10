@@ -26,7 +26,7 @@ public interface CommonDao {
     @ResultType(HashMap.class)
     List<HashMap> listForWhere(@Param("tableName") String tableName,@Param("where") String where,@Param("start") int start,@Param("size") int size);
 
-    @Select("select * from ${tableName} where 1=1 ${where} ")//where ==> and name = 11  and password = ddd
+    @Select("select count(*) from ${tableName} where 1=1 ${where} ")//where ==> and name = 11  and password = ddd
     @ResultType(Integer.class)
     int listCountForWhere(@Param("tableName") String tableName,@Param("where") String where);
 

@@ -2,7 +2,6 @@ package com.tanran.model.mappers.wemedia;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -35,7 +34,7 @@ public interface WmMaterialMapper {
 
     int updateByPrimaryKey(WmMaterial record);
 
-    List<WmMaterial> findListByUidAndStatus(WmMaterialListDto dto, Long uid);
+    List<WmMaterial> findListByUidAndStatus(@Param("dto") WmMaterialListDto dto, Long uid);
 
     int countListByUidAndStatus(WmMaterialListDto dto, Long uid);
 

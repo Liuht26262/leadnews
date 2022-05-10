@@ -3,7 +3,7 @@ package com.tanran.api.wmediaApi;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.common.dtos.PageRequestDto;
 import com.tanran.model.common.dtos.PageResponseResult;
-import com.tanran.model.media.dtos.StatisticDto;
+import com.tanran.model.media.dtos.FansReqDto;
 
 /**
  * TODO
@@ -15,4 +15,8 @@ import com.tanran.model.media.dtos.StatisticDto;
  */
 public interface FansStatisticsApi {
     PageResponseResult fansStatistics(PageRequestDto dto);
+
+    RespResult fansList(FansReqDto dto);
+
+    RespResult cancelFollow(FansReqDto dto);
 }

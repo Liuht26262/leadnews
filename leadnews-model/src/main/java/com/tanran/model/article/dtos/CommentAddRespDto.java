@@ -22,4 +22,8 @@ public class CommentAddRespDto {
     private Integer target;
     /**文章Id*/
     private Integer articleId;
+    /**评论内容*/
+    private String newComment;
+    /**是否点赞*/
+    private Boolean isLiking;
 }

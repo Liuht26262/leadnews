@@ -43,8 +43,9 @@
     <select id="selectLastComments" resultType="com.tanran.model.article.pojos.ApComment">
         select <include refid="Base_Column_List"/> from ap_comment where article_id = #{articleId} order by created_time desc limit 1;
     </select>
+
     <select id="selectCommentRepay" resultType="com.tanran.model.article.pojos.ApComment">
-        select <include refid="Base_Column_List"/> from ap_comment where author_id = #{authorId} and created_id = #{date}
+        select <include refid="Base_Column_List"/> from ap_comment where author_id = #{authorId} and created_time = #{date}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ap_comment

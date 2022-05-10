@@ -16,10 +16,12 @@ import com.tanran.model.article.pojos.ApAuthor;
 import com.tanran.model.behavior.pojos.ApHistories;
 import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.ApHistoriesMapper;
+import com.tanran.model.mappers.app.ApUserFollowMapper;
 import com.tanran.model.mappers.app.ArticleContentConfigMapper;
 import com.tanran.model.mappers.app.ArticleContentMapper;
 import com.tanran.model.mappers.app.ArticleMapper;
 import com.tanran.model.mappers.app.AuthorMapper;
+import com.tanran.model.user.pojos.ApUserFollow;
 
 /**
  * TODO
@@ -43,6 +45,8 @@ public class ArticleContentServiceImpl implements ArticleContentService {
     private ArticleMapper articleMapper;
     @Autowired
     private ApHistoriesMapper historiesMapper;
+    @Autowired
+    private ApUserFollowMapper apUserFollowMapper;
 
 
 
@@ -54,22 +58,27 @@ public class ArticleContentServiceImpl implements ArticleContentService {
 
         ArticleContentRespDto respDto = new ArticleContentRespDto();
         ApArticleConfig apArticleConfig = articleContentConfigMapper.selectArticleContentById(articleId,userId);
+        System.out.println("此时文章的配置内容为"+apArticleConfig);
         ApArticle article = articleMapper.selectArticleById(articleId.longValue());
         ApAuthor apAuthor = authorMapper.selectAuthorById(article.getAuthorId());
 
         if(article==null||apAuthor==null){
             return null;
         }
-
         if(Objects.isNull(apArticleConfig)){
         //    如果没有关于用户的配置，就设置默认参数
             apArticleConfig = new ApArticleConfig();
+            apArticleConfig.setArticleId(articleId);
             apArticleConfig.setIsForward(false);
             apArticleConfig.setIsFollow(false);
             apArticleConfig.setIsCollect(false);
             apArticleConfig.setIsLike(false);
             apArticleConfig.setIsUnlike(false);
             apArticleConfig.setIsDelete(false);
+            apArticleConfig.setUserId(userId);
+            apArticleConfig.setCreatedTime(new Date(System.currentTimeMillis()));
+            apArticleConfig.setUpdatedTime(new Date(System.currentTimeMillis()));
+            articleContentConfigMapper.insertSelective(apArticleConfig);
         }
 
         /*查询文章状态,只有文章没有被删除才会返回文章详情数据*/
@@ -90,7 +99,14 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             respDto.setAttitude(0);
         }
         respDto.setCollected(apArticleConfig.getIsCollect());
-        respDto.setFollowed(apArticleConfig.getIsFollow());
+
+        ApUserFollow apUserFollow = apUserFollowMapper.selectUserFollowByFollowId(apArticleConfig.getUserId()
+            .longValue(), article.getAuthorId());
+        if(Objects.isNull(apUserFollow)){
+            respDto.setFollowed(false);
+        }else {
+            respDto.setFollowed(true);
+        }
 
         System.out.println(respDto);
         /**
@@ -104,6 +120,8 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         apHistories.setPublishedTime(new Date(System.currentTimeMillis()));
 
         historiesMapper.insertSelective(apHistories);
+
+        System.out.println("*****返回的具体文章内容*******"+respDto);
 
         return RespResult.okResult(respDto);
     }

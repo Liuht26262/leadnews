@@ -1,7 +1,5 @@
 package com.tanran.wemedia.controller;
 
-import java.util.Objects;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,10 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tanran.api.wmediaApi.WmMuterialApi;
 import com.tanran.common.result.RespResult;
-
+import com.tanran.model.media.dtos.CollectMaterDto;
 import com.tanran.model.media.dtos.WmMaterialDto;
 import com.tanran.model.media.dtos.WmMaterialListDto;
-
 import com.tanran.wemedia.service.MaterialService;
 
 /**
@@ -50,4 +47,11 @@ public class WmMuterialController implements WmMuterialApi {
     public RespResult loadAllMaterial(@RequestBody WmMaterialListDto ids) {
         return materialService.loadAllMaterIal(ids);
     }
+
+    @Override
+    @PostMapping("/collect")
+    public RespResult collectMaterial(@RequestBody CollectMaterDto dto) {
+        return materialService.collectMaterial(dto);
+    }
+
 }

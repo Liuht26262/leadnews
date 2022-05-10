@@ -1,7 +1,7 @@
 package com.tanran.utils.threadlocal;
 
-
 import com.tanran.model.media.pojos.WmUser;
+
 
 public class WmThreadLocalUtils {
 
@@ -13,6 +13,7 @@ public class WmThreadLocalUtils {
      * @param user
      */
     public static void setUser(WmUser user){
+        userThreadLocal.remove();
         userThreadLocal.set(user);
     }
 

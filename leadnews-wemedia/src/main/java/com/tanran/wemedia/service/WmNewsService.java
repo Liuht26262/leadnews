@@ -23,4 +23,6 @@ public interface WmNewsService {
     RespResult deleteNews(WmNewsDto dto);
 
     WmNews selectNewById(Integer id);
+
+    RespResult articleUpOtDown(WmNewsDto dto);
 }

@@ -1,8 +1,7 @@
 package com.tanran.admin.service;
 
-
 import com.tanran.common.result.RespResult;
-import com.tanran.model.admin.pojos.AdUser;
+import com.tanran.model.media.pojos.WmUser;
 
 /**
  *
@@ -20,5 +19,5 @@ public interface UserLoginService {
      * @param user
      * @return
      */
-    public RespResult login(AdUser user);
+    public RespResult login(WmUser user);
 }

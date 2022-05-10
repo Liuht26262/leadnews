@@ -55,7 +55,4 @@ public class ApUserFollow  {
      * 创建时间
      */
     private Date createdTime;
-
-
-
 }

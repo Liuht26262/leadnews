@@ -30,6 +30,8 @@ public interface WmNewsMapper {
      */
     int insertNewsForEdit(WmNews dto);
 
+    int insert(WmNews dto);
+
     List<WmNews> selectAllNews(@Param("dto") WmNewsPageReqDto dto,@Param("uid") Long uid);
 
     int deleteByPrimaryKey(Integer id);

@@ -1,11 +1,11 @@
 package com.tanran.model.user.pojos;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tanran.model.annotation.IdEncrypt;
 
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 public class ApUserFan {
@@ -36,8 +36,6 @@ public class ApUserFan {
      0 正常
      1 潜力股
      2 勇士
-     3 铁杆
-     4 老铁
      */
     private short level;
 

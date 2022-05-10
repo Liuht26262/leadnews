@@ -1,15 +1,15 @@
 package com.tanran.admin.controller;
 
-import com.tanran.admin.service.UserLoginService;
-import com.tanran.api.LoginApi.AdminLoginControllerApi;
-import com.tanran.common.result.RespResult;
-import com.tanran.model.admin.pojos.AdUser;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.tanran.admin.service.UserLoginService;
+import com.tanran.api.LoginApi.AdminLoginControllerApi;
+import com.tanran.common.result.RespResult;
+import com.tanran.model.media.pojos.WmUser;
 
 
 /**
@@ -30,7 +30,7 @@ public class LoginController implements AdminLoginControllerApi {
 
     @Override
     @PostMapping("/in")
-    public RespResult adminLogin(@RequestBody AdUser user) {
+    public RespResult adminLogin(@RequestBody WmUser user) {
         return userLoginService.login(user);
     }
 }

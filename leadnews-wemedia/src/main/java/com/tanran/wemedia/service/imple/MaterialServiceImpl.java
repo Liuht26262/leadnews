@@ -7,19 +7,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import com.tanran.common.fastdfs.FastDfsClient;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.wemedia.WmMaterialMapper;
 import com.tanran.model.mappers.wemedia.WmNewsMaterialMapper;
+import com.tanran.model.media.dtos.CollectMaterDto;
 import com.tanran.model.media.dtos.WmMaterialDto;
 import com.tanran.model.media.dtos.WmMaterialListDto;
 import com.tanran.model.media.pojos.WmMaterial;
@@ -128,15 +125,13 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public RespResult loadAllMaterIal(WmMaterialListDto ids) {
+        System.out.println(ids);
         if(Objects.isNull(ids)){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
         ids.checkParam();
         //获取当前用户的信息
         WmUser user = WmThreadLocalUtils.getUser();
-        System.out.println("******************************************************");
-        System.out.println("加载素材时用户信息:"+user);
-        System.out.println("******************************************************");
         List<WmMaterial> listByUidAndStatus = wmMaterialMapper.findListByUidAndStatus(ids, user.getId().longValue());
         if (Collections.isEmpty(listByUidAndStatus)) {
             return null;
@@ -154,4 +149,17 @@ public class MaterialServiceImpl implements MaterialService {
         return RespResult.okResult(respMap);
     }
 
+    @Override
+    public RespResult collectMaterial(CollectMaterDto dto) {
+        System.out.println(dto);
+        if(Objects.isNull(dto)){
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
+        }
+        WmMaterial material = WmMaterial.builder()
+            .id(dto.getId())
+            .isCollection(dto.getIsCollection())
+            .build();
+        int result = wmMaterialMapper.updateByPrimaryKeySelective(material);
+        return RespResult.okResult(result);
+    }
 }

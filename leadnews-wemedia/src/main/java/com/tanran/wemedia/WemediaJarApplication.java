@@ -3,6 +3,7 @@ package com.tanran.wemedia;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * TODO
@@ -13,7 +14,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2022/4/12 11:37
  */
 @SpringBootApplication
-@MapperScan(basePackages = "com.tanran.model.mappers.wemedia")
+@MapperScan(basePackages = {"com.tanran.model.mappers.wemedia"})
+@EnableScheduling
 public class WemediaJarApplication {
     public static void main(String[] args) {
         SpringApplication.run(WemediaJarApplication.class,args);

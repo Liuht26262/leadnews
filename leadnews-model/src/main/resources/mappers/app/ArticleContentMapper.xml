@@ -12,6 +12,9 @@
     <sql id="Blob_Column_List">
         content
     </sql>
+    <delete id="deleteByArticleId" parameterType="java.lang.Integer">
+        delete from ap_article_content where article_id=#{articleId}
+    </delete>
     <select id="selectArticleContentById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>,<include refid="Blob_Column_List"/>

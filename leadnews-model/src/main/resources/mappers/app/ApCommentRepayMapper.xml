@@ -22,7 +22,7 @@
 
   <sql id="Base_Column_List">
     id, author_id, author_name, comment_id, content, likes, longitude, latitude, address, 
-    created_time, updated_time, likeCount, reply_count, is_liking, article_id
+    created_time, updated_time, likeCount, reply_count, is_liking, article_id,image
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -41,7 +41,11 @@
         select count(author_id) from ap_comment_repay where comment_id = #{commentId}
     </select>
     <select id="selectCommentRepay" resultType="com.tanran.model.article.pojos.ApCommentRepay">
-        select <include refid="Base_Column_List"/> from ap_comment_repay where author_id = #{authorId} and created_id = #{date}
+        select <include refid="Base_Column_List"/> from ap_comment_repay where author_id = #{authorId} and created_time = #{date}
+    </select>
+    <select id="selectLastComments" resultType="com.tanran.model.article.pojos.ApCommentRepay"
+            parameterType="java.lang.Integer">
+        select <include refid="Base_Column_List"/> from ap_comment_repay where comment_id = #{commentId} order by created_time desc limit 1;
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ap_comment_repay

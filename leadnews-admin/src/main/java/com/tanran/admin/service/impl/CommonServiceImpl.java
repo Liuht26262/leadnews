@@ -1,15 +1,15 @@
 package com.tanran.admin.service.impl;
 
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 import com.tanran.admin.dao.CommonDao;
 import com.tanran.admin.service.CommonService;
@@ -63,6 +63,7 @@ public class CommonServiceImpl implements CommonService {
             total = commonDao.listCount(tableName);
         }else{
             list = commonDao.listForWhere(tableName,where,start,dto.getSize());
+            System.out.println("这是列表查询返回的数据"+commonDao.listCountForWhere(tableName,where));
             total = commonDao.listCountForWhere(tableName,where);
         }
         Map<String,Object> map = new HashMap<>();
@@ -119,7 +120,7 @@ public class CommonServiceImpl implements CommonService {
                             where.append(" and ").append(tempF).append("=\'").append(tempV).append("\'");
                         }
                         if("like".equals(w.getType())){
-                            where.append(" and ").append(tempF).append("like \'%").append(tempV).append("%\'");
+                            where.append(" and ").append(tempF).append(" ").append("like \'%").append(tempV).append("%\'");
                         }
                         if("between".equals(w.getType())){
                             String[] temp = tempV.split(",");

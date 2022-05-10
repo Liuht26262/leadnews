@@ -26,7 +26,7 @@ public class ApAuthor {
     /**
      * 0 管理员 1 媒体
      */
-    private Boolean type;
+    private Short type;
 
     /**
      * id

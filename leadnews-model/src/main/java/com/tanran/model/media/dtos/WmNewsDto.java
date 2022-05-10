@@ -1,13 +1,17 @@
 package com.tanran.model.media.dtos;
 
-import com.tanran.model.annotation.IdEncrypt;
-
-import lombok.Data;
-
 import java.util.Date;
 import java.util.List;
 
+import com.tanran.model.annotation.IdEncrypt;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class WmNewsDto {
     private Integer id;
     private String title;

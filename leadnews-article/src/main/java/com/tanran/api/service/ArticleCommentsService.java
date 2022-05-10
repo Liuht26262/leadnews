@@ -1,5 +1,7 @@
 package com.tanran.api.service;
 
+import java.text.ParseException;
+
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.CommentAddDto;
 import com.tanran.model.article.dtos.CommentsReqDto;
@@ -16,5 +18,5 @@ import com.tanran.model.user.pojos.ApUser;
 public interface ArticleCommentsService {
     RespResult getComments(CommentsReqDto commentsReqDto);
 
-    RespResult addComments(ApUser user,CommentAddDto dto);
+    RespResult addComments(ApUser user,CommentAddDto dto) throws ParseException;
 }

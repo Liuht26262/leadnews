@@ -1,5 +1,7 @@
 package com.tanran.api.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,12 +9,12 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.google.common.collect.Lists;
 import com.tanran.api.service.ArticleCommentsService;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.CommentAddDto;
-import com.tanran.model.article.dtos.CommentAddRespDto;
 import com.tanran.model.article.dtos.CommentsReqDto;
 import com.tanran.model.article.dtos.CommentsRespDto;
 import com.tanran.model.article.pojos.ApComment;
@@ -84,6 +86,9 @@ public class ArticleCommentsServiceImpl implements ArticleCommentsService {
         }else if("c".equals(dto.getType())){
             /**获取评论的回复*/
             List<ApCommentRepay> apCommentRepays = apCommentRepayMapper.selectByUser(dto);
+            if(CollectionUtils.isEmpty(apCommentRepays)){
+                return RespResult.okResult(ErrorCodeEnum.SUCCESS);
+            }
             apCommentRepays.stream().forEach(s -> {
                 CommentsRespDto.Result result = new CommentsRespDto.Result();
                 result.setAuthorName(s.getAuthorName());
@@ -97,9 +102,10 @@ public class ArticleCommentsServiceImpl implements ArticleCommentsService {
                 result.setLikeCount(count);
                 results.add(result);
             });
+
             respDto.setResults(results);
             respDto.setLastId(results.get(results.size()-1).getAuthorId());
-            respDto.setEndId(apCommentMapper.selectLastComments(dto.getSource()).getId());
+            respDto.setEndId(apCommentRepayMapper.selectLastComments(dto.getSource()).getId());
             respDto.setTotal(results.size());
         }
 
@@ -107,18 +113,21 @@ public class ArticleCommentsServiceImpl implements ArticleCommentsService {
     }
 
     @Override
-    public RespResult addComments(ApUser user,CommentAddDto dto) {
+    public RespResult addComments(ApUser user,CommentAddDto dto) throws ParseException {
         if(Objects.isNull(dto)){
             return RespResult.errorResult(ErrorCodeEnum.SERVER_ERROR);
         }
 
-        CommentAddRespDto respDto = new CommentAddRespDto();
+        CommentsRespDto.Result result = new CommentsRespDto.Result();
 
-        if(dto.getArticleId() == null){
+        if(dto.getArticleId() != null){
             /**说明这是评论的回复
              * 先查询评论表获取所评论的作者信息
              * */
-            Date date = new Date(System.currentTimeMillis());
+            Date time = new Date(System.currentTimeMillis());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            String format = simpleDateFormat.format(time);
+            Date date = simpleDateFormat.parse(format);
             ApComment apComment = apCommentMapper.selectByPrimaryKey(dto.getTarget());
             ApCommentRepay apCommentRepay = new ApCommentRepay();
             apCommentRepay.setContent(dto.getContent());
@@ -139,15 +148,34 @@ public class ArticleCommentsServiceImpl implements ArticleCommentsService {
                 log.error("**************没有获取到评论数据******************");
                 return null;
             }
-            respDto.setArticleId(repay.getArticleId());
-            respDto.setTarget(dto.getTarget());
-            respDto.setCommentId(repay.getId());
+
+
+            result.setAuthorName(repay.getAuthorName());
+            result.setAuthorId(repay.getAuthorId());
+            result.setIsTop(1);
+            result.setAuthorPhoto(repay.getImage());
+            result.setContent(repay.getContent());
+            result.setCommentId(repay.getId());
+            result.setPubdate(repay.getCreatedTime().toString());
+            Integer count = apCommentRepayMapper.countRepay(repay.getAuthorId());
+            result.setLikeCount(count);
+            result.setReplyCount(0);
+
+            // respDto.setArticleId(repay.getArticleId());
+            // respDto.setTarget(dto.getTarget());
+            // respDto.setCommentId(repay.getId());
+            // respDto.setNewComment(repay.getContent());
 
         }else {
-            /**如果articleId有值就说明是文章的id*/
-            Date date = new Date(System.currentTimeMillis());
+            /**如果articleId没有值就说明是文章的id*/
+
+            Date time = new Date(System.currentTimeMillis());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+            String format = simpleDateFormat.format(time);
+            Date date = simpleDateFormat.parse(format);
+
             ApComment apComment = new ApComment();
-            apComment.setArticleId(dto.getArticleId());
+            apComment.setArticleId(dto.getTarget());
             apComment.setContent(dto.getContent());
             apComment.setEntryId(user.getId().intValue());
             apComment.setCreatedTime(date);
@@ -158,6 +186,9 @@ public class ArticleCommentsServiceImpl implements ArticleCommentsService {
             apComment.setAuthorName(user.getName());
             apComment.setImage(user.getImage());
             apComment.setType("a");
+            apComment.setFlag((byte)0);
+            apComment.setUpdatedTime(date);
+
 
             apCommentMapper.insert(apComment);
             ApComment comment = apCommentMapper.selectCommentRepay(user.getId().intValue(),date);
@@ -166,10 +197,19 @@ public class ArticleCommentsServiceImpl implements ArticleCommentsService {
                 log.error("**************没有获取到评论数据******************");
                 return null;
             }
-            respDto.setArticleId(comment.getArticleId());
-            respDto.setTarget(dto.getTarget());
-            respDto.setCommentId(comment.getId());
+
+
+            result.setAuthorName(comment.getAuthorName());
+            result.setAuthorId(comment.getAuthorId());
+            result.setIsTop(comment.getFlag() == 3 ? 0 : 1);
+            result.setAuthorPhoto(comment.getImage());
+            result.setContent(comment.getContent());
+            result.setCommentId(comment.getId());
+            result.setPubdate(comment.getCreatedTime().toString());
+            Integer count = apCommentRepayMapper.countRepay(comment.getAuthorId());
+            result.setLikeCount(count);
+            result.setReplyCount(0);
         }
-        return RespResult.okResult(respDto);
+        return RespResult.okResult(result);
     }
 }
