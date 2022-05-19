@@ -23,4 +23,6 @@ public interface ApUserChannelMapper {
     List<ApUserChannel> selectChannelsByUser(Long id);
 
     int deleteUserChannel(@Param("userId") Integer userId, @Param("channelId") Integer channelId);
+
+    List<ApUserChannel> selectByChannelId(Integer channelId);
 }

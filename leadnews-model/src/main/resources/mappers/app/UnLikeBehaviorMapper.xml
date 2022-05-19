@@ -17,10 +17,10 @@
             values (#{entryId}, #{articleId},#{type,jdbcType=TINYINT}, #{createdTime})
     </insert>
     <delete id="deleteUnLikeBehaviorMapper">
-        delete  from ap_unlike_behavior where entry_id=#{entryId} and article_id=#{article}
+        delete  from ap_unlikes_behavior where entry_id=#{entryId} and article_id=#{article}
     </delete>
     <select id="selectUnLikeByEntryId" resultType="com.tanran.model.behavior.pojos.ApUnlikesBehavior">
-        slelect <include refid="Base_column_list"/> from ap_unlike_behavior where entry_id=#{entryId} and article_id=#{article}
+        slelect <include refid="Base_column_list"/> from ap_unlikes_behavior where entry_id=#{entryId} and article_id=#{article}
     </select>
 
 

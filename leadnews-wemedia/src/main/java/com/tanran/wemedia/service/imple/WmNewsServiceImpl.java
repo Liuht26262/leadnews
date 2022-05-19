@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,10 +26,14 @@ import com.tanran.model.article.pojos.ApAuthor;
 import com.tanran.model.common.constants.WmMediaConstans;
 import com.tanran.model.common.dtos.PageResponseResult;
 import com.tanran.model.common.enums.ErrorCodeEnum;
+import com.tanran.model.mappers.app.ApUserChannelMapper;
+import com.tanran.model.mappers.app.ApUserFollowMapper;
+import com.tanran.model.mappers.app.ApUserMapper;
 import com.tanran.model.mappers.app.ArticleContentConfigMapper;
 import com.tanran.model.mappers.app.ArticleContentMapper;
 import com.tanran.model.mappers.app.ArticleMapper;
 import com.tanran.model.mappers.app.AuthorMapper;
+import com.tanran.model.mappers.wemedia.AdSensitiveMapper;
 import com.tanran.model.mappers.wemedia.WmMaterialMapper;
 import com.tanran.model.mappers.wemedia.WmNewsMapper;
 import com.tanran.model.mappers.wemedia.WmNewsMaterialMapper;
@@ -39,6 +44,7 @@ import com.tanran.model.media.pojos.WmMaterial;
 import com.tanran.model.media.pojos.WmNews;
 import com.tanran.model.media.pojos.WmUser;
 import com.tanran.utils.threadlocal.WmThreadLocalUtils;
+import com.tanran.wemedia.config.EmailUtils;
 import com.tanran.wemedia.service.WmNewsService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -65,15 +71,30 @@ public class WmNewsServiceImpl implements WmNewsService {
     @Autowired
     private ArticleMapper articleMapper;
     @Autowired
+    private AdSensitiveMapper adSensitiveMapper;
+    @Autowired
     private ArticleContentConfigMapper ConfigMapper;
     @Autowired
     private ArticleContentMapper articleContentMapper;
     @Autowired
     private AuthorMapper authorMapper;
     @Autowired
+    private ApUserMapper apUserMapper;
+    @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private ApUserChannelMapper apUserChannelMapper;
+    @Autowired
+    private ApUserFollowMapper apUserFollowMapper;
+    @Autowired
+    private EmailUtils emailUtils;
+    @Autowired
+    private AsyncTaskExecutor taskExecutor;
+    @Autowired
+    private EmailTask emailTask;
     @Value("${FILE_SERVER_URL}")
     private String fileServerUrl;
+
 
     /**- 如果用户传递参数为空或文章内容为空返回PARAM_REQUIRE错误
      - 如果用户本次为修改操作那么先删除数据库中的信息
@@ -98,6 +119,12 @@ public class WmNewsServiceImpl implements WmNewsService {
         //解析文章类容，进行图文素材关联
         String content = dto.getContent();
 
+        //进行敏感词扫描
+        String sentsitive = sensitiveFilter(content);
+        if(StringUtils.isNotBlank(sentsitive)){
+            log.error("查询到有敏感词"+sentsitive);
+            return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID,"文章中存在敏感词"+sentsitive+",请修改后提交");
+        }
         //Map<图片排序号， dfs文件id>
         Map<String, Object> materials;
         try {
@@ -137,6 +164,22 @@ public class WmNewsServiceImpl implements WmNewsService {
         return RespResult.okResult(ErrorCodeEnum.SUCCESS);
     }
 
+    private String sensitiveFilter(String content) {
+        List<String> sensitives = adSensitiveMapper.selectAllSensitive();
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i=0;i<sensitives.size();i++){
+            String sensitive = sensitives.get(i);
+            if(content.contains(sensitive)){
+                if (i == sensitives.size() - 1) {
+                    stringBuilder.append(sensitive);
+                    return stringBuilder.toString();
+                } else {
+                    stringBuilder.append(sensitive + ",");
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * 封面图片关联
@@ -279,7 +322,7 @@ public class WmNewsServiceImpl implements WmNewsService {
     private void saveWmNews(WmNews wmNews, int countImageNum, Short type) {
         WmUser user = WmThreadLocalUtils.getUser();
         System.out.println(user);
-        //保存提交文章数据
+        //保存文章数据
         if (countImageNum == WmMediaConstans.WM_NEWS_SINGLE_IMAGE) {
             wmNews.setType(WmMediaConstans.WM_NEWS_SINGLE_IMAGE);
         } else if (countImageNum >= WmMediaConstans.WM_NEWS_MANY_IMAGE) {
@@ -397,6 +440,8 @@ public class WmNewsServiceImpl implements WmNewsService {
                 wmNews.setArticleId(articleId);
                 wmNews.setEnable(dto.getType());
                 wmNewsMapper.updateByPrimaryKeySelective(wmNews);
+                /**异步进行邮件推送*/
+                emailTask.sendMaile(article);
                 return RespResult.okResult(ErrorCodeEnum.SUCCESS);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -421,6 +466,8 @@ public class WmNewsServiceImpl implements WmNewsService {
         }
         return RespResult.errorResult(ErrorCodeEnum.SERVER_ERROR);
     }
+
+
 
 }
 

@@ -10,7 +10,6 @@ package com.tanran.wemedia;
  */
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -45,6 +44,7 @@ import com.tanran.model.mappers.app.ArticleContentConfigMapper;
 import com.tanran.model.mappers.app.ArticleContentMapper;
 import com.tanran.model.mappers.app.ArticleMapper;
 import com.tanran.model.mappers.wemedia.WmMaterialMapper;
+import com.tanran.model.mappers.wemedia.WmUserMapper;
 import com.tanran.model.media.dtos.WmNewsDto;
 import com.tanran.model.media.pojos.WmMaterial;
 import com.tanran.model.media.pojos.WmUser;
@@ -70,6 +70,8 @@ public class ReptilesArticleData {
     ArticleContentMapper articleContentMapper;
     @Autowired
     ArticleContentConfigMapper articleContentConfigMapper;
+    @Autowired
+    WmUserMapper wmUserMapper;
     @Qualifier("fastDfsClient")
     private FastDfsClient fastDfsClient;
 
@@ -79,12 +81,11 @@ public class ReptilesArticleData {
     @Test
     public void reptilesData() throws Exception {
         // 模拟当前自媒体登录用户
-        WmUser wmUser = new WmUser();
-        wmUser.setId(1102);
+        WmUser wmUser = wmUserMapper.selectByPrimaryKey(1);
         WmThreadLocalUtils.setUser(wmUser);
 
         // 获取网易新闻数据
-        String url = "https://3g.163.com/touch/news/sub/history/?ver=c&clickfrom=index2018_header_main";
+        String url = "https://3g.163.com/touch/news/sub/international/?ver=c&clickfrom=index2018_header_main";
 
         // 获取该网页document文档数据
         Document document = Jsoup.connect(url)
@@ -102,50 +103,60 @@ public class ReptilesArticleData {
             Element aElement = article.getElementsByTag("a").get(0);
             String href = aElement.attr("href");
             System.out.println("新闻的url路径: "+href);
+            // 封装WmNewsDto对象
+            WmNewsDto wmNewsDto = new WmNewsDto();
+            if(aElement.getElementsByClass("title").size()>0){
+
+            }
             Element titleEle = aElement.getElementsByClass("title").get(0);
             String title = titleEle.text();
             System.out.println("新闻的文章标题:"+title);
-            Element newsPic = aElement.getElementsByClass("news-pic").get(0);
-            // 获取封面图片元素集合
-            Elements imgList = newsPic.getElementsByTag("img");
-            System.out.println("******************************************");
-            System.out.println(imgList);
-            System.out.println("******************************************");
-            // 封装WmNewsDto对象
-            WmNewsDto wmNewsDto = new WmNewsDto();
+            if(aElement.getElementsByClass("news-pic").size()>0){
+                Element newsPic = aElement.getElementsByClass("news-pic").get(0);
+                // 获取封面图片元素集合
+                Elements imgList = newsPic.getElementsByTag("img");
+
+                System.out.println("******************************************");
+                System.out.println(imgList);
+                System.out.println("******************************************");
+                // 封面图片集合
+                List<String> urlList = new ArrayList<>();
+
+                for (Element imgEle : imgList) {
+                    String src = imgEle.attr("src");
+                    System.out.println("封面图片url==>" + src);
+
+                    if (!StringUtils.isEmpty(src)) {
+                        String fileName = uploadPic(src);
+                        if (StringUtils.isNotBlank(fileName)) {
+                            // 如果上传图片路径不为空  创建素材信息
+                            WmMaterial wmMaterial = WmMaterial.builder()
+                                .build();
+                            wmMaterial.setUserId(WmThreadLocalUtils.getUser()
+                                .getId());
+                            wmMaterial.setUrl(fileName);
+                            wmMaterial.setType((short) 0);
+                            wmMaterial.setIsCollection((short) 0);
+                            wmMaterial.setCreatedTime(new Date());
+                            wmMaterialMapper.insert(wmMaterial);
+                            urlList.add(fileName);
+                        }
+                    }
+                }
+                wmNewsDto.setType((short) urlList.size());
+                if(urlList.size()>0){
+                    wmNewsDto.setImages(urlList);
+                }
+            }else{
+                wmNewsDto.setType((short)-1);
+            }
+
             // 解析单个文章详情
             List<Map> contentMap = parseContent(href);
             wmNewsDto.setContent(JSON.toJSONString(contentMap));
             int i = 0;
-            // 封面图片集合
-            List<String> urlList = new ArrayList<>();
-
-            for (Element imgEle : imgList) {
-                String src = imgEle.attr("src");
-                System.out.println("封面图片url==>" + src);
-
-                if (!StringUtils.isEmpty(src)) {
-                    String fileName = uploadPic(src);
-                    if (StringUtils.isNotBlank(fileName)) {
-                        // 如果上传图片路径不为空  创建素材信息
-                        WmMaterial wmMaterial = WmMaterial.builder()
-                            .build();
-                        wmMaterial.setUserId(WmThreadLocalUtils.getUser()
-                            .getId());
-                        wmMaterial.setUrl(fileName);
-                        wmMaterial.setType((short) 0);
-                        wmMaterial.setIsCollection((short) 0);
-                        wmMaterial.setCreatedTime(new Date());
-                        wmMaterialMapper.insert(wmMaterial);
-                        urlList.add(fileName);
-                    }
-                }
-            }
             wmNewsDto.setTitle(title);
-            wmNewsDto.setType((short) urlList.size());
-            if(urlList.size()>0){
-                wmNewsDto.setImages(urlList);
-            }
+
             wmNewsDto.setChannelId(6);
             try {
                 Thread.sleep(1000); // 睡眠1秒 让发布时间不一致
@@ -154,13 +165,14 @@ public class ReptilesArticleData {
             }
             wmNewsDto.setPublishTime(new Date());
             wmNewsDto.setStatus((short)1); // 待审核状态
-            wmNewsDto.setLabels("爬虫");
+            wmNewsDto.setLabels("国际新闻");
+            wmNewsDto.setChannelId(5);
             System.out.println("-----------------------------------------------------------");
             System.out.println(wmNewsDto);
             System.out.println("-----------------------------------------------------------");
             wmNewsService.saveNews(wmNewsDto, WmMediaConstans.WM_NEWS_SUMMIT_STATUS);
             //控制爬取的文章数据
-            if(i == 10){
+            if(i == 50){
                 return;
             }
             i++;
@@ -169,7 +181,7 @@ public class ReptilesArticleData {
 
     //直接存入数据库
     @Test
-    public void reptilesData2() throws IOException {
+    public void reptilesData2() throws Exception {
         // 模拟当前自媒体登录用户
         WmUser wmUser = new WmUser();
         wmUser.setId(1102);
@@ -226,22 +238,22 @@ public class ReptilesArticleData {
             apArticleConfig.setIsForward(true);
             // 封面图片集合
             List<String> urlList = new ArrayList<>();
-            // for (Element imgEle : imgList) {
-            //     String src = imgEle.attr("src");
-            //     System.out.println("封面图片url==>"+src);
-            //     String fileName = uploadPic(src);
-            //     if(StringUtils.isNotBlank(fileName)){
-            //         // 如果上传图片路径不为空  创建素材信息
-            //         WmMaterial wmMaterial = new WmMaterial();
-            //         wmMaterial.setUserId(WmThreadLocalUtils.getUser().getId());
-            //         wmMaterial.setUrl(fileName);
-            //         wmMaterial.setType((short)0);
-            //         wmMaterial.setIsCollection((short)0);
-            //         wmMaterial.setCreatedTime(new Date());
-            //         wmMaterialMapper.insert(wmMaterial);
-            //         urlList.add(fileName);
-            //     }
-            // }
+            for (Element imgEle : imgList) {
+                String src = imgEle.attr("src");
+                System.out.println("封面图片url==>"+src);
+                String fileName = uploadPic(src);
+                if(StringUtils.isNotBlank(fileName)){
+                    // 如果上传图片路径不为空  创建素材信息
+                    WmMaterial wmMaterial = WmMaterial.builder().build();
+                    wmMaterial.setUserId(WmThreadLocalUtils.getUser().getId());
+                    wmMaterial.setUrl(fileName);
+                    wmMaterial.setType((short)0);
+                    wmMaterial.setIsCollection((short)0);
+                    wmMaterial.setCreatedTime(new Date());
+                    wmMaterialMapper.insert(wmMaterial);
+                    urlList.add(fileName);
+                }
+            }
             wmNewsDto.setTitle(title);
             wmNewsDto.setType((short) urlList.size());
             if(urlList.size()>0){

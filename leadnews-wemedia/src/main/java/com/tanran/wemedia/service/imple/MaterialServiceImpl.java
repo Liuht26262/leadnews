@@ -134,9 +134,8 @@ public class MaterialServiceImpl implements MaterialService {
         WmUser user = WmThreadLocalUtils.getUser();
         List<WmMaterial> listByUidAndStatus = wmMaterialMapper.findListByUidAndStatus(ids, user.getId().longValue());
         if (Collections.isEmpty(listByUidAndStatus)) {
-            return null;
+            return RespResult.okResult(0);
         }
-
         //拼接图片地址
         listByUidAndStatus.stream().forEach(s -> s.setUrl(pictureUrlServer+s.getUrl()));
 

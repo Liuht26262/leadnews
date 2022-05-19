@@ -2,9 +2,15 @@ package com.tanran.utils.threadlocal;
 
 import com.tanran.model.media.pojos.WmUser;
 
-
-public class WmThreadLocalUtils extends ThreadLocal{
-
+/**
+ * TODO
+ *
+ * @author liuht26262@yunrong.cn
+ * @version V3.0
+ * @description
+ * @since 2022/5/12 9:52
+ */
+public class WmUserThreadLocalUtil {
     private final  static ThreadLocal<WmUser> userThreadLocal = new ThreadLocal<>();
 
 
@@ -13,7 +19,7 @@ public class WmThreadLocalUtils extends ThreadLocal{
      * @param user
      */
     public static void setUser(WmUser user){
-        System.out.println("set线程"+Thread.currentThread().getName());
+        userThreadLocal.remove();
         userThreadLocal.set(user);
     }
 
@@ -22,14 +28,6 @@ public class WmThreadLocalUtils extends ThreadLocal{
      * @return
      */
     public static WmUser getUser( ){
-        System.out.println("get线程"+Thread.currentThread().getName());
         return userThreadLocal.get();
     }
-
-    @Override
-    protected WmUser initialValue() {
-        return new WmUser();
-    }
-
-
 }

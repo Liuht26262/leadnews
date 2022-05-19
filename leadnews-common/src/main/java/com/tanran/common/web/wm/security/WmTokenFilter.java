@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.tanran.common.common.contants.Contants;
 import com.tanran.model.common.dtos.ResponseResult;
 import com.tanran.model.common.enums.ErrorCodeEnum;
+import com.tanran.model.mappers.wemedia.WmUserMapper;
 import com.tanran.model.media.pojos.WmUser;
 import com.tanran.utils.jwt.AppJwtUtil;
 import com.tanran.utils.threadlocal.WmThreadLocalUtils;
@@ -29,7 +31,8 @@ import io.jsonwebtoken.Claims;
 @Order(2)
 @WebFilter(filterName = "wmTokenFilter" ,urlPatterns = "/*")
 public class WmTokenFilter extends GenericFilterBean {
-
+    @Autowired
+        private WmUserMapper wmUserMapper;
     Logger logger = LoggerFactory.getLogger(WmTokenFilter.class);
 
     @Override
@@ -61,6 +64,7 @@ public class WmTokenFilter extends GenericFilterBean {
         if(StringUtils.isNotEmpty(token)) {
             Claims claims = AppJwtUtil.getClaimsBody(token);
             int result = AppJwtUtil.verifyToken(claims);
+            logger.info("验证token有效性"+result);
             // 有效的token
             if (result == 0||result==-1) {
                 WmUser user = new WmUser();
@@ -90,8 +94,10 @@ public class WmTokenFilter extends GenericFilterBean {
     }
 
     public WmUser findUser(WmUser user){
-        user.setName("test");
+        // user.setName("test");
+        user = wmUserMapper.selectByPrimaryKey(user.getId());
         return user;
+
     }
 
 }

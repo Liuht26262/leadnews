@@ -51,9 +51,13 @@ public class userTask {
         if(Objects.isNull(apUser)||!user.getId().equals(apUser.getId())){
             apUser = user;
         }
+        System.out.println("数据库中的最新apUser"+user);
+        System.out.println("数据库的最新wmUser"+wm);
         if(Objects.nonNull(wmUser)&&Objects.nonNull(apUser)){
             /**进行数据的比较,如果数据不一致就进行同步*/
             if(!apUser.getId().equals(wmUser.getApUserId().longValue())){
+                System.out.println("user"+apUser);
+                System.out.println("wm"+wmUser);
                 WmUser newWmUser = new WmUser();
                 newWmUser.setPassword(apUser.getPassword());
                 newWmUser.setPhone(apUser.getPhone());

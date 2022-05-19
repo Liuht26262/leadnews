@@ -42,7 +42,6 @@ public class CollectionBehaviorServiceImpl implements CollectionBehaviorService 
 
         if(dto.getOperation() == 0){
             /**收藏*/
-
             ApCollection apCollection = new ApCollection();
             apCollection.setBehaviorEntryId(dto.getEntryId());
             apCollection.setCollectionTime(new Date(System.currentTimeMillis()));

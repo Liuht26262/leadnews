@@ -91,6 +91,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         respDto.setAuthorName(article.getAuthorName());
         respDto.setAuthorPhoto(apAuthor.getPhoto());
         respDto.setTitle(article.getTitle());
+        respDto.setIsUnlike(apArticleConfig.getIsUnlike());
         //暂时不做推荐算法
         respDto.setRecomments(null);
         if(apArticleConfig.getIsLike()){

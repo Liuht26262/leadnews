@@ -13,6 +13,7 @@ import com.tanran.model.mappers.wemedia.WmUserMapper;
 import com.tanran.model.media.pojos.WmUser;
 import com.tanran.utils.jwt.AppJwtUtil;
 import com.tanran.utils.threadlocal.WmThreadLocalUtils;
+import com.tanran.utils.threadlocal.WmUserThreadLocalUtil;
 import com.tanran.wemedia.service.WmUserService;
 
 /**
@@ -45,6 +46,7 @@ public class WmUserServiceImpl implements WmUserService {
         if (!Objects.isNull(wmUser)){
            if(user.getPassword().equals(wmUser.getPassword())){
                WmThreadLocalUtils.setUser(wmUser);
+               WmUserThreadLocalUtil.setUser(wmUser);
                System.out.println(WmThreadLocalUtils.getUser());
                //登陆成功后将密码制空返回，保证安全
                wmUser.setPassword("");
