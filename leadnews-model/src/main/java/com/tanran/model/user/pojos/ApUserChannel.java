@@ -12,12 +12,12 @@ public class ApUserChannel {
     private Integer id;
 
     /**
-     * 用户ID
+     * 频道ID
      */
     private Integer channelId;
 
     /**
-     * 文章ID
+     * 用户ID
      */
     private Integer userId;
 
