@@ -20,21 +20,8 @@ import com.tanran.model.article.pojos.ApArticle;
 
 public interface ArticleMapper {
 
-    /**
-     * 照用户地理位置，加载文章
-     *
-     * @param dto  参数封装对象
-     * @param type 加载方向
-     * @return
-     */
     List<ApArticle> loadArticleListByLocation(@Param("dto") ArticleHomeDto dto, @Param("type") Short type);
 
-    /**
-     * 依据文章IDS来获取文章详细内容
-     *
-     * @param list 文章ID
-     * @return
-     */
     List<ApArticle> loadArticleListByIdList(@Param("list") List<Integer> list);
 
     ApArticle selectArticleById(Long id);
@@ -48,4 +35,12 @@ public interface ArticleMapper {
     Integer selectByDate(String title, Date createdTime);
 
     void deleteArticleById(Integer articleId);
+
+    List<ApArticle> selectArticleByLables(@Param("lables") List lables);
+
+    List<ApArticle> selectArticleByReadCount();
+
+    void updateViews(@Param("articleId") Long articleTd,@Param("views") Integer views);
+
+    List<ApArticle> selectArticle(String searchWords);
 }

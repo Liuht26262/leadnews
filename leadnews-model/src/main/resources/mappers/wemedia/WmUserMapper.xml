@@ -38,6 +38,10 @@
             parameterType="java.lang.String">
         select <include refid="Base_Column_List"/> from wm_user where role_type=#{roleType} order by created_time desc limit 1
     </select>
+    <select id="selectByUserId" resultType="com.tanran.model.media.pojos.WmUser"
+            parameterType="java.lang.Integer">
+        select <include refid="Base_Column_List"/> from wm_user where ap_user_id=#{userId}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from wm_user
         where id = #{id,jdbcType=INTEGER}

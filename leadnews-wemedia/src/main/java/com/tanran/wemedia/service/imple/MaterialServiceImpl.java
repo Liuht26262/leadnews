@@ -87,7 +87,7 @@ public class MaterialServiceImpl implements MaterialService {
             .userId(user.getId())
             .type((short) 0)
             .isCollection((short) 0)
-            .url(url)
+            .url(pictureUrlServer+url)
             .createdTime(new Date())
             .build();
 
@@ -137,7 +137,7 @@ public class MaterialServiceImpl implements MaterialService {
             return RespResult.okResult(0);
         }
         //拼接图片地址
-        listByUidAndStatus.stream().forEach(s -> s.setUrl(pictureUrlServer+s.getUrl()));
+        listByUidAndStatus.stream().forEach(s -> s.setUrl(s.getUrl()));
 
         Map<Object, Object> respMap = new HashMap<>();
 

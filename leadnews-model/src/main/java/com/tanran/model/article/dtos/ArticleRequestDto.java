@@ -1,7 +1,5 @@
 package com.tanran.model.article.dtos;
 
-import com.tanran.model.common.dtos.PageRequestDto;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleRequestDto extends PageRequestDto {
+public class ArticleRequestDto {
 
     private Integer userId;
     private Integer channelId;
@@ -27,5 +25,19 @@ public class ArticleRequestDto extends PageRequestDto {
      * */
     private String oldTimestamp;
     private Integer with_top;
+
+    protected Integer size;
+    protected Integer page;
+    protected Integer total;
+
+
+    public void checkParam() {
+        if (this.page == null || this.page < 0) {
+            setPage(1);
+        }
+        if (this.size == null || this.size < 0 || this.size > 100) {
+            setSize(10);
+        }
+    }
 
 }

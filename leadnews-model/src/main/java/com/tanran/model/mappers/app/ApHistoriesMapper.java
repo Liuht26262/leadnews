@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.tanran.model.article.dtos.ArticleRequestDto;
 import com.tanran.model.behavior.pojos.ApHistories;
-import com.tanran.model.common.dtos.PageRequestDto;
 
 public interface ApHistoriesMapper {
 
@@ -21,5 +21,5 @@ public interface ApHistoriesMapper {
 
     int updateByPrimaryKey(ApHistories record);
 
-    List<ApHistories> selectArticleList(@Param("userId") Integer userId, @Param("dto") PageRequestDto dto);
+    List<ApHistories> selectArticleList( @Param("dto") ArticleRequestDto dto);
 }

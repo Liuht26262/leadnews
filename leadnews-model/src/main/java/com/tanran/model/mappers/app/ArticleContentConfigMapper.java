@@ -1,5 +1,7 @@
 package com.tanran.model.mappers.app;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.tanran.model.article.pojos.ApArticleConfig;
@@ -28,4 +30,8 @@ public interface ArticleContentConfigMapper {
     int updateByPrimaryKey(ApArticleConfig record);
 
     ApArticleConfig findConfigById(@Param("articleId") Integer articleId, @Param("userId") Integer userId);
+
+    List<Integer> selectLikesArticleByUserId(Integer userId);
+
+    List<Integer> selectUnLikeArticleByUserId(Integer userId);
 }

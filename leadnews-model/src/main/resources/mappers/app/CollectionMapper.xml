@@ -28,6 +28,10 @@
         from ap_collection
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="selectCollectionByUserId" resultType="com.tanran.model.article.pojos.ApCollection"
+            parameterType="java.lang.Integer">
+        select <include refid="Base_Column_List"/> from ap_collection where behavior_entry_id = #{userId};
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from ap_collection
         where id = #{id,jdbcType=INTEGER}

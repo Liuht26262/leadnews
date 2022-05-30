@@ -34,6 +34,13 @@
     <select id="findConfigById" resultType="com.tanran.model.article.pojos.ApArticleConfig">
         select <include refid="Base_Column_List"/> from ap_article_config where article_id = #{articleId} and user_id = #{userId}
     </select>
+    <select id="selectLikesArticleByUserId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select article_id from ap_article_config where user_id = #{userId} and is_like = 0
+    </select>
+    <select id="selectUnLikeArticleByUserId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select article_id from ap_article_config where user_id = #{userId} and is_unlike = 0
+
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete from ap_article_config
         where id = #{id,jdbcType=INTEGER}

@@ -81,6 +81,7 @@ public class ArticleContentServiceImpl implements ArticleContentService {
             articleContentConfigMapper.insertSelective(apArticleConfig);
         }
 
+
         /*查询文章状态,只有文章没有被删除才会返回文章详情数据*/
         ApArticleContent apArticleContent = articleContentMapper.selectArticleContentById(articleId);
 
@@ -108,8 +109,13 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         }else {
             respDto.setFollowed(true);
         }
+        /**
+         *更新阅读数量
+         */
+        ApArticle apArticle = articleMapper.selectArticleById(articleId.longValue());
+        apArticle.setViews(apArticle.getViews()+1);
+        articleMapper.updateViews(articleId.longValue(),apArticle.getViews());
 
-        System.out.println(respDto);
         /**
          * 添加数据到用户阅读历史表中
          * */
@@ -121,8 +127,6 @@ public class ArticleContentServiceImpl implements ArticleContentService {
         apHistories.setPublishedTime(new Date(System.currentTimeMillis()));
 
         historiesMapper.insertSelective(apHistories);
-
-        System.out.println("*****返回的具体文章内容*******"+respDto);
 
         return RespResult.okResult(respDto);
     }

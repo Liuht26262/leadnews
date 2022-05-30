@@ -18,7 +18,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
     <select id="selectArticleList" resultType="com.tanran.model.behavior.pojos.ApHistories">
-        select <include refid="Base_Column_List"/> from ap_histories where behavior_entry_id=#{userId} limit (#{dto.page}-1) * #{dto.size},#{dto.size}
+        select <include refid="Base_Column_List"/> from ap_histories where behavior_entry_id=#{dto.userId} order by created_time desc limit ${(dto.page-1)*dto.size},${dto.size}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ap_histories

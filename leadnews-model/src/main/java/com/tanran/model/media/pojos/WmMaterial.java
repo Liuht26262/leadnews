@@ -1,11 +1,11 @@
 package com.tanran.model.media.pojos;
 
+import java.util.Date;
+
 import com.tanran.model.annotation.IdEncrypt;
 
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 @Builder

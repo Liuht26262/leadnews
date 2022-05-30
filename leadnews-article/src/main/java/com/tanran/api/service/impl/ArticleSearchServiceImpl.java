@@ -158,6 +158,37 @@ public class ArticleSearchServiceImpl implements ArticleSearchService {
 
     @Override
     public RespResult articleSearch(UserSearchDto dto) {
+        List<ApArticle> apArticles = articleMapper.selectArticle(dto.getSearchWords());
+        List<ArticleRespDto.Results> respResults = new ArrayList<>();
+
+        // 组装响应数据
+        for (ApArticle article : apArticles){
+
+            String image = article.getImages();
+            ArticleRespDto.Cover cover = null;
+
+            if(image != null){
+                String[] imags = image.split(",");
+                cover = new ArticleRespDto.Cover(1,imags);
+            }else{
+                cover = new ArticleRespDto.Cover(0,null);
+            }
+
+            ArticleRespDto.Results results = new ArticleRespDto.Results(article.getId(), article.getTitle(), article.getAuthorId(),article.getAuthorName(),article.getComment(),
+                article.getPublishTime().toString(),cover,article.getLikes(),article.getCollection());
+
+            System.out.println(results.toString());
+
+            respResults.add(results);
+        }
+
+        ArticleRespDto respDto = new ArticleRespDto(dto.getPageSize(), dto.getPageNum(), respResults.size(), respResults);
+
+        return RespResult.okResult(respDto);
+    }
+
+    @Override
+    public RespResult articleSearchBydto(UserSearchDto dto) {
         //如果是第一页就保存搜索记录
         if(dto.getFromIndex() == 0){
             RespResult result = getEntryId(dto);

@@ -1,17 +1,12 @@
 package com.tanran.utils.threadlocal;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-
 import com.tanran.model.user.pojos.ApUser;
 
-public class AppThreadLocalUtils {
+public class AppThreadLocalUtils extends ThreadLocal{
 
-    private final  static ThreadLocal userThreadLocal = new ThreadLocal<>();
+    private final  static ThreadLocal<ApUser> userThreadLocal = new ThreadLocal<>();
     private static ApUser user;
 
-    @Autowired
-    private static RedisTemplate redisTemplate;
 
     /**
      * 将此时的用户信息存到缓存中
@@ -32,7 +27,7 @@ public class AppThreadLocalUtils {
      * @return
      */
     public static ApUser getUser( ){
-        return user;
+        return userThreadLocal.get();
     }
 
 }

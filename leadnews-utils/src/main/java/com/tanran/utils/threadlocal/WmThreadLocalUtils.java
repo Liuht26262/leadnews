@@ -22,7 +22,6 @@ public class WmThreadLocalUtils extends ThreadLocal{
      * @return
      */
     public static WmUser getUser( ){
-        System.out.println("get线程"+Thread.currentThread().getName());
         return userThreadLocal.get();
     }
 

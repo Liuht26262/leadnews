@@ -83,6 +83,9 @@ public class CollectionBehaviorServiceImpl implements CollectionBehaviorService 
                 apArticleConfig.setUpdatedTime(new Date(System.currentTimeMillis()));
                 configMapper.updateByPrimaryKeySelective(apArticleConfig);
                 log.info("************更新取消收藏配置成功*************");
+
+                //删除文章收藏表中的数据
+                collectionMapper.deleteByArticleAndUser(dto);
                 return RespResult.okResult(ErrorCodeEnum.SUCCESS);
             }
             return RespResult.errorResult(ErrorCodeEnum.DATA_NOT_EXIST);

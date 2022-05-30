@@ -19,4 +19,6 @@ public interface FansStatisticsApi {
     RespResult fansList(FansReqDto dto);
 
     RespResult cancelFollow(FansReqDto dto);
+
+    RespResult loadFansInfo(String fansId);
 }

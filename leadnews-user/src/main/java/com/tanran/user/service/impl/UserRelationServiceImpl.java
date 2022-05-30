@@ -52,6 +52,8 @@ public class UserRelationServiceImpl implements UserRelationService {
     @Autowired
     private ArticleContentConfigMapper configMapper;
 
+   /* @Autowired
+    private FollowBehaviorService followBehaviorService;*/
 
     /***
      *

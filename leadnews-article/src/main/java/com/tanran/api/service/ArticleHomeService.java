@@ -3,7 +3,6 @@ package com.tanran.api.service;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
 import com.tanran.model.article.dtos.ArticleRequestDto;
-import com.tanran.model.common.dtos.PageRequestDto;
 
 /**
  * TODO
@@ -26,5 +25,5 @@ public interface ArticleHomeService {
 
     RespResult userCollection(ArticleRequestDto dto);
 
-    RespResult userReadHistories(Integer userId, PageRequestDto dto);
+    RespResult userReadHistories(ArticleRequestDto dto);
 }

@@ -33,4 +33,6 @@ public interface CollectionMapper {
     int updateByPrimaryKey(ApCollection record);
 
     void deleteByArticleAndUser(@Param("dto") CollectionBehaviorDto dto);
+
+    List<ApCollection> selectCollectionByUserId(Integer userId);
 }

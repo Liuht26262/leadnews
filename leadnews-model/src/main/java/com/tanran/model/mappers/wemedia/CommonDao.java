@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Update;
 
 public interface CommonDao {
 
-    @Select("select * from ${tableName} limit #{start},#{size}")
+    @Select("select * from ${tableName} order by created_time desc limit #{start},#{size}")
     @ResultType(HashMap.class)
     List<HashMap> list(@Param("tableName") String tableName,@Param("start") int start,@Param("size") int size);
 
@@ -20,7 +20,7 @@ public interface CommonDao {
     @ResultType(Integer.class)
     int listCount(@Param("tableName") String tableName);
 
-    @Select("select * from ${tableName} where 1=1 ${where} limit #{start},#{size} ")//where ==> and name = 11  and password = ddd
+    @Select("select * from ${tableName} where 1=1 ${where} order by created_time desc limit #{start},#{size} ")//where ==> and name = 11  and password = ddd
     @ResultType(HashMap.class)
     List<HashMap> listForWhere(@Param("tableName") String tableName,@Param("where") String where,@Param("start") int start,@Param("size") int size);
 

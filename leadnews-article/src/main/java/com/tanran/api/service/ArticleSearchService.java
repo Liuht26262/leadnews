@@ -21,6 +21,8 @@ public interface ArticleSearchService {
 
     RespResult clearUserSearch(UserSearchDto dto);
 
+    RespResult articleSearchBydto(UserSearchDto dto);
+
     RespResult loadHotKeyWords(UserSearchDto dto);
 
     RespResult selectAssociateWords(UserSearchDto dto);
@@ -28,4 +30,6 @@ public interface ArticleSearchService {
     RespResult saveUserSearch(Integer entryId,String keyWords);
 
     RespResult articleSearch(UserSearchDto dto);
+
+
 }

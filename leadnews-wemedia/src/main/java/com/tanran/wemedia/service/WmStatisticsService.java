@@ -23,4 +23,6 @@ public interface WmStatisticsService {
     RespResult fansList(FansReqDto dto);
 
     RespResult cancelFollow(FansReqDto dto);
+
+    RespResult loadFansInfo(Integer fansId);
 }

@@ -4,12 +4,11 @@ import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.tanran.model.media.pojos.WmMaterial;
+import com.tanran.common.redis.RedisUtils;
+import com.tanran.model.article.pojos.ApArticleContent;
 
 /**
  * TODO
@@ -24,16 +23,18 @@ import com.tanran.model.media.pojos.WmMaterial;
 public class redisTest {
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisUtils redis;
 
     @Test
     public void contextLoads() {
-        WmMaterial material = WmMaterial.builder()
-            .build();
+        ApArticleContent apArticleContent = new ApArticleContent();
+        apArticleContent.setContent("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+        apArticleContent.setArticleId(212);
+        apArticleContent.setId(1);
 
-        material.setUrl("OOOOOOO");
+        redis.setCacheObject("content",apArticleContent);
+        System.out.println((ApArticleContent)redis.getCacheObject("content"));
 
-        redisTemplate.opsForValue().set("material",material);
     }
 
 }

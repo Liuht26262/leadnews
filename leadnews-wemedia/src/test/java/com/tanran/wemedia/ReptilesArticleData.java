@@ -8,19 +8,19 @@ package com.tanran.wemedia;
  * @description
  * @since 2022/4/13 17:08
  */
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,16 +29,13 @@ import org.jsoup.select.Elements;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSON;
 import com.tanran.common.fastdfs.FastDfsClient;
-import com.tanran.model.article.pojos.ApArticle;
-import com.tanran.model.article.pojos.ApArticleConfig;
-import com.tanran.model.article.pojos.ApArticleContent;
 import com.tanran.model.common.constants.WmMediaConstans;
 import com.tanran.model.mappers.app.ArticleContentConfigMapper;
 import com.tanran.model.mappers.app.ArticleContentMapper;
@@ -59,6 +56,7 @@ import com.tanran.wemedia.service.WmNewsService;
  **/
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@ComponentScan("com.tanran.common.fastdfs")
 public class ReptilesArticleData {
     @Autowired
     WmNewsService wmNewsService;
@@ -72,7 +70,7 @@ public class ReptilesArticleData {
     ArticleContentConfigMapper articleContentConfigMapper;
     @Autowired
     WmUserMapper wmUserMapper;
-    @Qualifier("fastDfsClient")
+    @Autowired
     private FastDfsClient fastDfsClient;
 
     @Value("${FILE_SERVER_URL}")
@@ -81,11 +79,11 @@ public class ReptilesArticleData {
     @Test
     public void reptilesData() throws Exception {
         // 模拟当前自媒体登录用户
-        WmUser wmUser = wmUserMapper.selectByPrimaryKey(1);
+        WmUser wmUser = wmUserMapper.selectByPrimaryKey(12);
         WmThreadLocalUtils.setUser(wmUser);
 
         // 获取网易新闻数据
-        String url = "https://3g.163.com/touch/news/sub/international/?ver=c&clickfrom=index2018_header_main";
+        String url = "https://3g.163.com/touch/news/sub/history/?ver=c&clickfrom=index2018_header_main";
 
         // 获取该网页document文档数据
         Document document = Jsoup.connect(url)
@@ -111,7 +109,7 @@ public class ReptilesArticleData {
             Element titleEle = aElement.getElementsByClass("title").get(0);
             String title = titleEle.text();
             System.out.println("新闻的文章标题:"+title);
-            if(aElement.getElementsByClass("news-pic").size()>0){
+            /*if(aElement.getElementsByClass("news-pic").size()>0){
                 Element newsPic = aElement.getElementsByClass("news-pic").get(0);
                 // 获取封面图片元素集合
                 Elements imgList = newsPic.getElementsByTag("img");
@@ -121,9 +119,11 @@ public class ReptilesArticleData {
                 System.out.println("******************************************");
                 // 封面图片集合
                 List<String> urlList = new ArrayList<>();
-
+                if(urlList.size()==0){
+                    wmNewsDto.setType((short)0);
+                }
                 for (Element imgEle : imgList) {
-                    String src = imgEle.attr("src");
+                    String src = imgEle.attr("data-src");
                     System.out.println("封面图片url==>" + src);
 
                     if (!StringUtils.isEmpty(src)) {
@@ -149,27 +149,43 @@ public class ReptilesArticleData {
                 }
             }else{
                 wmNewsDto.setType((short)-1);
-            }
+            }*/
 
             // 解析单个文章详情
             List<Map> contentMap = parseContent(href);
             wmNewsDto.setContent(JSON.toJSONString(contentMap));
+            contentMap.stream().forEach(map -> {
+                Collection values = map.values();
+                values.forEach(s->{
+                    if("http://47.243.173.194".equals(s)){
+                        System.out.println("封面："+s);
+                        WmMaterial wmMaterial = WmMaterial.builder()
+                            .build();
+                        wmMaterial.setUserId(WmThreadLocalUtils.getUser()
+                            .getApAuthorId());
+                        wmMaterial.setUrl((String)s);
+                        wmMaterial.setType((short) 0);
+                        wmMaterial.setIsCollection((short) 0);
+                        wmMaterial.setCreatedTime(new Date());
+                        wmMaterialMapper.insert(wmMaterial);
+                    }
+                    return;
+                });
+            });
             int i = 0;
             wmNewsDto.setTitle(title);
 
-            wmNewsDto.setChannelId(6);
             try {
-                Thread.sleep(1000); // 睡眠1秒 让发布时间不一致
+                Thread.sleep(300); // 睡眠1秒 让发布时间不一致
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             wmNewsDto.setPublishTime(new Date());
             wmNewsDto.setStatus((short)1); // 待审核状态
-            wmNewsDto.setLabels("国际新闻");
-            wmNewsDto.setChannelId(5);
-            System.out.println("-----------------------------------------------------------");
-            System.out.println(wmNewsDto);
-            System.out.println("-----------------------------------------------------------");
+            wmNewsDto.setLabels("国内");
+            wmNewsDto.setChannelId(6);
+            wmNewsDto.setAuthorName("星途娱乐");
+            wmNewsDto.setType((short)-1);
             wmNewsService.saveNews(wmNewsDto, WmMediaConstans.WM_NEWS_SUMMIT_STATUS);
             //控制爬取的文章数据
             if(i == 50){
@@ -179,108 +195,6 @@ public class ReptilesArticleData {
         }
     }
 
-    //直接存入数据库
-    @Test
-    public void reptilesData2() throws Exception {
-        // 模拟当前自媒体登录用户
-        WmUser wmUser = new WmUser();
-        wmUser.setId(1102);
-        WmThreadLocalUtils.setUser(wmUser);
-
-        // 获取网易新闻数据
-        String url = "https://3g.163.com/touch/news/sub/history/?ver=c&clickfrom=index2018_header_main";
-
-        // 获取该网页document文档数据
-        Document document = Jsoup.connect(url)
-            .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36")
-            .get();
-
-        // 找到指定class的所有元素
-        Elements elementsByClass = document.getElementsByClass("tab-content");
-        System.out.println("div元素个数:  " + elementsByClass.size());
-        Element element = elementsByClass.get(0);
-
-        // 找到所有article标签页面元素
-        Elements articleList = element.getElementsByTag("article");
-        int i = 1;
-        for (Element article : articleList) {
-            Element aElement = article.getElementsByTag("a").get(0);
-            String href = aElement.attr("href");
-            System.out.println("新闻的url路径: "+href);
-            Element titleEle = aElement.getElementsByClass("title").get(0);
-            String title = titleEle.text();
-            System.out.println("新闻的文章标题:"+title);
-            Element newsPic = aElement.getElementsByClass("news-pic").get(0);
-            // 获取封面图片元素集合
-            Elements imgList = newsPic.getElementsByTag("img");
-            // 封装WmNewsDto对象
-            WmNewsDto wmNewsDto = new WmNewsDto();
-            // 解析单个文章详情
-            List<Map> contentMap = parseContent(href);
-            ApArticle apArticle = new ApArticle();
-            ApArticleContent apArticleContent = new ApArticleContent();
-            ApArticleConfig apArticleConfig = new ApArticleConfig();
-            apArticle.setId(i);
-            apArticle.setAuthorId(3);
-            apArticle.setChannelId(2);
-            apArticle.setAuthorId(4);
-            apArticle.setTitle(title);
-            apArticle.setCreatedTime(new Date());
-            apArticleContent.setArticleId(apArticle.getId());
-            apArticleContent.setContent(JSON.toJSONString(contentMap));
-            apArticleContent.setId(i);
-
-
-            apArticleConfig.setArticleId(apArticle.getId());
-            apArticleConfig.setIsComment(false);
-            apArticleConfig.setIsDelete(false);
-            apArticleConfig.setIsDown(false);
-            apArticleConfig.setIsForward(true);
-            // 封面图片集合
-            List<String> urlList = new ArrayList<>();
-            for (Element imgEle : imgList) {
-                String src = imgEle.attr("src");
-                System.out.println("封面图片url==>"+src);
-                String fileName = uploadPic(src);
-                if(StringUtils.isNotBlank(fileName)){
-                    // 如果上传图片路径不为空  创建素材信息
-                    WmMaterial wmMaterial = WmMaterial.builder().build();
-                    wmMaterial.setUserId(WmThreadLocalUtils.getUser().getId());
-                    wmMaterial.setUrl(fileName);
-                    wmMaterial.setType((short)0);
-                    wmMaterial.setIsCollection((short)0);
-                    wmMaterial.setCreatedTime(new Date());
-                    wmMaterialMapper.insert(wmMaterial);
-                    urlList.add(fileName);
-                }
-            }
-            wmNewsDto.setTitle(title);
-            wmNewsDto.setType((short) urlList.size());
-            if(urlList.size()>0){
-                wmNewsDto.setImages(urlList);
-            }
-            wmNewsDto.setChannelId(6);
-            try {
-                Thread.sleep(1000); // 睡眠1秒 让发布时间不一致
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-
-            System.out.println("-----------------------------------------------------------");
-            System.out.println(apArticleContent);
-            System.out.println("-----------------------------------------------------------");
-            articleContentMapper.insertSelective(apArticleContent);
-            articleMapper.insertSelective(apArticle);
-            articleContentConfigMapper.insertSelective(apArticleConfig);
-            //控制爬取的文章数据
-            if(i == 10){
-                return;
-            }
-
-            i++;
-        }
-    }
 
 
 
@@ -288,13 +202,13 @@ public class ReptilesArticleData {
         System.out.println("*****************************************************");
         System.out.println(imgUrl);
         System.out.println("*****************************************************");
-        String url = imgUrl.split("\\?")[0];
-        String uuid = UUID.randomUUID().toString().replace("-", "");
-        String suffix = url.substring(url.lastIndexOf("."));
-        InputStream in = getInputStreamByUrl("http:" + url);
-        byte[] imgBytes = PictureGetBytesByUrlUtil.getImageFromURL("http" + imgUrl);
+        // String url = imgUrl.split("\\?")[0];
+        // String uuid = UUID.randomUUID().toString().replace("-", "");
+        // String suffix = url.substring(url.lastIndexOf("."));
+        // InputStream in = getInputStreamByUrl("http:" + url);
+        byte[] imgBytes = PictureGetBytesByUrlUtil.getImageFromURL("http:" + imgUrl);
         if(imgBytes.length!=0){
-            String fileName = fastDfsClient.uploadFile(imgBytes);
+            String fileName = fastDfsClient.uploadFile(imgBytes,"jpg");
             System.out.println("上传文件名称: "+fileName);
             return fileName;
         }
@@ -357,7 +271,16 @@ public class ReptilesArticleData {
                     System.out.println("文本内容: " + subElement.text());
                 }
                 if("div".equalsIgnoreCase(tagName)&&"photo".equalsIgnoreCase(className)){
-                    System.out.println("图片内容: " + subElement.text());
+                    System.out.println(subElement.getElementsByTag("img"));
+                    String img = subElement.getElementsByTag("img")
+                        .attr("data-src");
+                    String pic = "http://47.243.173.194:1234/"+uploadPic(img);
+                    System.out.println("上传图片"+pic);
+                    HashMap map = new HashMap<>();
+                    map.put("type","image");
+                    map.put("value",pic);
+                    contentMap.add(map);
+                    System.out.println("图片内容: " + subElement.getElementsByTag("img").attr("data-src"));
                 }
 
             }
@@ -372,21 +295,4 @@ public class ReptilesArticleData {
     }
 
 
-
-
-    @Test
-    public void test(){
-        ArrayList<Map> maps = new ArrayList<>();
-        for(int i = 0;i<5;i++){
-            Map<String, String> map = new HashMap<>();
-            map.put("1","答辩");
-            map.put("2","小白");
-            maps.add(map);
-        }
-        for(Map map:maps){
-            Object o = map.get("2");
-            System.out.println(o);
-        }
-
-    }
 }

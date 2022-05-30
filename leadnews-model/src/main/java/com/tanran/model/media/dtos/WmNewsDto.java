@@ -25,4 +25,6 @@ public class WmNewsDto {
     private Short status;
     private String reason;
     private List<String> images;
+    private String channleName;
+    private String authorName;
 }

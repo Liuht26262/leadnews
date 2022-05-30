@@ -173,6 +173,10 @@
             </if>
         </trim>
     </insert>
+    <update id="updateViews">
+        update ap_article set views = #{views} where id=#{articleId}
+    </update>
+
     <delete id="deleteArticleById" parameterType="java.lang.Integer">
         delete from ap_article where id=#{articleId}
     </delete>
@@ -230,9 +234,28 @@
                     and channel_id = #{dto.channelId} order by publish_time
                 </if>
             </where>
-            limit  ${(dto.page - 1) * dto.size}, ${dto.size}
     </select>
     <select id="selectByDate" resultType="java.lang.Integer">
         select id from ap_article where title=#{title} and created_time=#{createdTime}
+    </select>
+    <select id="selectArticleByLables" resultType="com.tanran.model.article.pojos.ApArticle"
+            parameterType="java.util.List">
+        select
+        <include refid="Base_Column_List" />
+        from ap_article
+        where labels in (
+        <trim suffix="" suffixOverrides=",">
+            <foreach collection="lables" item="item" separator=",">
+                #{item}
+            </foreach>
+        </trim>
+        )
+    </select>
+    <select id="selectArticleByReadCount" resultType="com.tanran.model.article.pojos.ApArticle">
+        select <include refid="Base_Column_List"/> from ap_article order by views limit 50;
+    </select>
+    <select id="selectArticle" resultType="com.tanran.model.article.pojos.ApArticle"
+            parameterType="java.lang.String">
+        select <include refid="Base_Column_List"/> from ap_article where title like concat('%',#{searchWords},'%')
     </select>
 </mapper>

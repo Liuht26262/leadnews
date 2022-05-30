@@ -15,21 +15,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tanran.common.redis.RedisTask;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.pojos.ApArticle;
 import com.tanran.model.article.pojos.ApArticleContent;
+import com.tanran.model.article.pojos.ApAssociateWords;
 import com.tanran.model.article.pojos.ApAuthor;
 import com.tanran.model.common.constants.WmMediaConstans;
 import com.tanran.model.common.dtos.PageResponseResult;
 import com.tanran.model.common.enums.ErrorCodeEnum;
-import com.tanran.model.mappers.app.ApUserChannelMapper;
-import com.tanran.model.mappers.app.ApUserFollowMapper;
-import com.tanran.model.mappers.app.ApUserMapper;
-import com.tanran.model.mappers.app.ArticleContentConfigMapper;
+import com.tanran.model.mappers.app.ApAssociateWordsMapper;
 import com.tanran.model.mappers.app.ArticleContentMapper;
 import com.tanran.model.mappers.app.ArticleMapper;
 import com.tanran.model.mappers.app.AuthorMapper;
@@ -44,8 +43,8 @@ import com.tanran.model.media.pojos.WmMaterial;
 import com.tanran.model.media.pojos.WmNews;
 import com.tanran.model.media.pojos.WmUser;
 import com.tanran.utils.threadlocal.WmThreadLocalUtils;
-import com.tanran.wemedia.config.EmailUtils;
 import com.tanran.wemedia.service.WmNewsService;
+import com.tanran.wemedia.service.imple.task.EmailTask;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,6 +58,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
+@ComponentScan("com.tanran.common.redis")
 public class WmNewsServiceImpl implements WmNewsService {
     @Autowired
     private WmNewsMapper wmNewsMapper;
@@ -73,25 +73,17 @@ public class WmNewsServiceImpl implements WmNewsService {
     @Autowired
     private AdSensitiveMapper adSensitiveMapper;
     @Autowired
-    private ArticleContentConfigMapper ConfigMapper;
-    @Autowired
     private ArticleContentMapper articleContentMapper;
     @Autowired
     private AuthorMapper authorMapper;
     @Autowired
-    private ApUserMapper apUserMapper;
-    @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private ApUserChannelMapper apUserChannelMapper;
-    @Autowired
-    private ApUserFollowMapper apUserFollowMapper;
-    @Autowired
-    private EmailUtils emailUtils;
-    @Autowired
-    private AsyncTaskExecutor taskExecutor;
-    @Autowired
     private EmailTask emailTask;
+    @Autowired
+    private ApAssociateWordsMapper apAssociateWordsMapper;
+    @Autowired
+    private RedisTask redisTask;
     @Value("${FILE_SERVER_URL}")
     private String fileServerUrl;
 
@@ -131,26 +123,35 @@ public class WmNewsServiceImpl implements WmNewsService {
             List<Map> list = objectMapper.readValue(content, List.class);
             //抽取信息
             Map<String, Object> extractInfo = extractUrlInfo(list);
+
             materials = (Map<String, Object>) extractInfo.get("materials");
+            System.out.println("Map:"+materials);
+            String img = (String) materials.get(String.valueOf(1));
+            System.out.println("封面列表"+img);
             //文章图片总数量
             int countImageNum = (int) extractInfo.get("countImageNum");
             //保存发布文章信息
             WmNews wmNews = new WmNews();
             //复制类信息
             BeanUtils.copyProperties(dto, wmNews);
+            wmNews.setImages(img);
+            wmNews.setLabels(dto.getLabels());
 
             if (dto.getType().equals(WmMediaConstans.WM_NEWS_TYPE_AUTO)){
                 saveWmNews(wmNews, countImageNum, type);
             }else{
                 saveWmNews(wmNews, dto.getType(), type);
             }
+            System.out.println("materials1"+materials);
             //保存内容中的图片和当前文章的关系
             if (materials.keySet().size() != 0) {
+                System.out.println("1111111111"+materials);
                 RespResult respResult = saveRelativeInfoForContent(materials, wmNews.getId());
                 if (respResult != null) {
                     return respResult;
                 }
             }
+            materials = (Map<String, Object>) extractInfo.get("materials");
             //封面图片关联
             RespResult respResult = coverImagesRelation(dto, materials, wmNews, countImageNum);
             if (respResult != null) {
@@ -190,6 +191,7 @@ public class WmNewsServiceImpl implements WmNewsService {
      * @return
      */
     private RespResult coverImagesRelation(WmNewsDto dto, Map<String, Object> materials, WmNews wmNews, int countImageNum) {
+        System.out.println(materials);
         if (dto.getImages() == null){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
@@ -227,7 +229,7 @@ public class WmNewsServiceImpl implements WmNewsService {
         if (images != null) {
             wmNews.setImages(
                 StringUtils.join(
-                    images.stream().map(s -> s.replace(fileServerUrl, "")).collect(Collectors.toList()),
+                    images.stream().map(s -> s.replace(fileServerUrl, "http://47.243.173.194")).collect(Collectors.toList()),
                     WmMediaConstans.WM_NEWS_IMAGES_SWPARATOR
                 )
             );
@@ -253,7 +255,7 @@ public class WmNewsServiceImpl implements WmNewsService {
                 countImageNum++;
                 String imgUrl = String.valueOf(map.get("value"));
                 if(imgUrl.startsWith(fileServerUrl)) {
-                    materials.put(String.valueOf(order), imgUrl.replace(fileServerUrl, ""));
+                    materials.put(String.valueOf(countImageNum), imgUrl.replace(fileServerUrl, "http://47.243.173.194"));
                 }
             }
         }
@@ -271,6 +273,7 @@ public class WmNewsServiceImpl implements WmNewsService {
         WmUser user = WmThreadLocalUtils.getUser();
         //收集数据库中的素材信息
         List<WmMaterial> dbMaterialInfos = wmMaterialMapper.findMaterialByUidAndimgUrls(user.getId().longValue(), materials.values());
+        System.out.println(dbMaterialInfos);
         if (dbMaterialInfos != null && dbMaterialInfos.size() != 0) {
             Map<String, Object> urlIdMap = dbMaterialInfos.stream().collect(
                 Collectors.toMap(WmMaterial::getUrl, WmMaterial::getId));
@@ -297,7 +300,7 @@ public class WmNewsServiceImpl implements WmNewsService {
         Map<String, Object> materials = new HashMap<>();
         for (int i = 0; i < images.size(); i++) {
             String s = images.get(i);
-            s = s.replace(fileServerUrl, "");
+            s = s.replace(fileServerUrl, "http://47.243.173.194");
             materials.put(String.valueOf(i), s);
         }
         return saveRelativeInfo(materials, newsId, WmMediaConstans.WM_IMAGE_REFERENCE);
@@ -310,6 +313,7 @@ public class WmNewsServiceImpl implements WmNewsService {
      * @param newsId
      */
     private RespResult saveRelativeInfoForContent(Map<String, Object> materials, Integer newsId) {
+        System.out.println("materials"+materials);
         return saveRelativeInfo(materials, newsId, WmMediaConstans.WM_CONTENT_REFERENCE);
     }
 
@@ -321,7 +325,6 @@ public class WmNewsServiceImpl implements WmNewsService {
      */
     private void saveWmNews(WmNews wmNews, int countImageNum, Short type) {
         WmUser user = WmThreadLocalUtils.getUser();
-        System.out.println(user);
         //保存文章数据
         if (countImageNum == WmMediaConstans.WM_NEWS_SINGLE_IMAGE) {
             wmNews.setType(WmMediaConstans.WM_NEWS_SINGLE_IMAGE);
@@ -332,12 +335,15 @@ public class WmNewsServiceImpl implements WmNewsService {
         }
         ApAuthor apAuthor = authorMapper.selectAuthorById(user.getApAuthorId());
         wmNews.setType(type);
-        wmNews.setUserId(user.getId());
-        wmNews.setCreatedTime(new Date());
-        wmNews.setSubmitedTime(new Date());
+        wmNews.setLabels(wmNews.getLabels());
+        wmNews.setUserId(user.getApAuthorId());
+        wmNews.setCreatedTime(new Date(System.currentTimeMillis()));
+        wmNews.setSubmitedTime(new Date(System.currentTimeMillis()));
         wmNews.setEnable((short)0);
+        wmNews.setImages(wmNews.getImages());
         wmNews.setAuthorName(apAuthor.getName());
         wmNews.setEnable((short)0);
+        System.out.println("存入数据库的信息"+wmNews);
         if (wmNews.getId() == null) {
             wmNewsMapper.insertNewsForEdit(wmNews);
         }else {
@@ -360,10 +366,9 @@ public class WmNewsServiceImpl implements WmNewsService {
 
         WmUser user = WmThreadLocalUtils.getUser();
 
-        System.out.println(user);
 
-        List <WmNews> wmNewsList = wmNewsMapper.selectAllNews(dto,user.getId().longValue());
-        int total = wmNewsMapper.countSelectBySelective(dto, user.getId().longValue());
+        List <WmNews> wmNewsList = wmNewsMapper.selectAllNews(dto,user.getApAuthorId().longValue());
+        int total = wmNewsMapper.countSelectBySelective(dto, user.getApAuthorId().longValue());
         PageResponseResult result = new PageResponseResult(dto.getPage(), dto.getSize(), total);
         result.setData(wmNewsList);
         result.setHost(null);
@@ -409,7 +414,7 @@ public class WmNewsServiceImpl implements WmNewsService {
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
         WmNews wmNews = wmNewsMapper.selectByPrimaryKey(dto.getId());
-        WmUser wmUser = wmUserMapper.selectByPrimaryKey(wmNews.getUserId());
+        WmUser wmUser = wmUserMapper.selectByUserId(wmNews.getUserId());
 
         if(dto.getType() == 1){
             /**发布文章*/
@@ -424,7 +429,7 @@ public class WmNewsServiceImpl implements WmNewsService {
                 article.setImages(wmNews.getImages());
                 article.setCreatedTime(date);
                 article.setPublishTime(date);
-                article.setAuthorId(wmUser.getApAuthorId());
+                article.setAuthorId(wmNews.getUserId());
                 article.setLabels(wmNews.getLabels());
                 article.setSyncStatus(true);
                 article.setFlag((byte)0);
@@ -440,8 +445,15 @@ public class WmNewsServiceImpl implements WmNewsService {
                 wmNews.setArticleId(articleId);
                 wmNews.setEnable(dto.getType());
                 wmNewsMapper.updateByPrimaryKeySelective(wmNews);
+                /**添加标题关键词*/
+                ApAssociateWords apAssociateWords = new ApAssociateWords();
+                apAssociateWords.setAssociateWords(wmNews.getTitle());
+                apAssociateWords.setCreatedTime(new Date(System.currentTimeMillis()));
+                apAssociateWordsMapper.insertSelective(apAssociateWords);
                 /**异步进行邮件推送*/
                 emailTask.sendMaile(article);
+                /**异步更新缓存*/
+                redisTask.rennewRedis(article.getChannelId());
                 return RespResult.okResult(ErrorCodeEnum.SUCCESS);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -449,19 +461,24 @@ public class WmNewsServiceImpl implements WmNewsService {
         }else{
             /**下架文章
              * 改变文章发布状态
+             * 删除搜索关键词
              * 删除客户端文章等信息
              * */
             wmNews.setEnable((short)0);
             wmNewsMapper.updateByPrimaryKeySelective(wmNews);
-            ApArticle apArticle = articleMapper.selectArticleById(wmNews.getId()
+            ApArticle apArticle = articleMapper.selectArticleById(wmNews.getArticleId()
                 .longValue());
-            if(Objects.isNull(apArticle)){
+            if(Objects.nonNull(apArticle)){
                 articleMapper.deleteArticleById(wmNews.getArticleId());
             }
+            apAssociateWordsMapper.deleteByKeyWords(wmNews.getTitle());
             ApArticleContent apArticleContent = articleContentMapper.selectArticleContentById(wmNews.getArticleId());
-            if(Objects.isNull(apArticleContent)){
+            if(Objects.nonNull(apArticleContent)){
                 articleContentMapper.deleteByArticleId(wmNews.getArticleId());
             }
+            /**异步更新缓存*/
+            redisTask.rennewRedis(wmNews.getChannelId());
+
             return RespResult.okResult(ErrorCodeEnum.SUCCESS);
         }
         return RespResult.errorResult(ErrorCodeEnum.SERVER_ERROR);

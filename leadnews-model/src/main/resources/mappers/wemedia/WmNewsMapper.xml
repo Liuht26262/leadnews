@@ -86,16 +86,17 @@
                 and publish_time <![CDATA[<]]> #{dto.endPubdate}
             </if>
         </where>
+        order by created_time desc
         limit  ${(dto.page - 1) * dto.size}, ${dto.size}
     </select>
     <insert id="insertNewsForEdit" useGeneratedKeys="true" keyProperty="id">
         insert  into wm_news(
-            user_id, title, type, channel_id, labels, created_time, submited_time, status,
-            publish_time,content
+            author_name,user_id, title, type, channel_id, labels, created_time, submited_time, status,
+            publish_time,content,images,enable
         )
         values (
-                   #{userId},#{title},#{type},#{channelId},#{labels},#{createdTime},
-                   #{submitedTime},#{status},#{publishTime}, #{content}
+                   #{authorName},#{userId},#{title},#{type},#{channelId},#{labels},#{createdTime},
+                   #{submitedTime},#{status},#{publishTime}, #{content},#{images},#{enable}
                )
     </insert>
 

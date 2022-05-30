@@ -100,7 +100,6 @@ public class WmStatisticsServiceImpl implements WmStatisticsService {
         }
         dto.checkParam();
         WmUser wmUser = wmUserMapper.selectByPrimaryKey(dto.getId());
-        System.out.println(dto);
         List<ApUserFollow> userFollowList = apUserFollowMapper.selectUserFollowByAuthorId(wmUser.getApAuthorId());
         if(Collections.isEmpty(userFollowList)){
             return RespResult.OkResult(0,"该作者还没有粉丝");
@@ -116,6 +115,7 @@ public class WmStatisticsServiceImpl implements WmStatisticsService {
 
     @Override
     public RespResult cancelFollow(FansReqDto dto) {
+        System.out.println(dto);
         if(Objects.isNull(dto)){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
@@ -125,6 +125,13 @@ public class WmStatisticsServiceImpl implements WmStatisticsService {
             apUserFollowMapper.deleteUserFollow(dto.getUserId().longValue(),dto.getId());
         }
         return RespResult.OkResult(0,"成功");
+    }
+
+    @Override
+    public RespResult loadFansInfo(Integer fansId) {
+        ApUser apUser = apUserMapper.selectUserById(fansId.longValue());
+        apUser.setPassword("");
+        return RespResult.okResult(apUser);
     }
 
     /**

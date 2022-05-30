@@ -1,18 +1,27 @@
 package com.tanran.api.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.aliyuncs.utils.StringUtils;
+import com.google.common.collect.Lists;
 import com.tanran.api.service.ArticleHomeService;
 import com.tanran.common.constans.ArticleConstans;
+import com.tanran.common.redis.RedisUtils;
 import com.tanran.common.result.RespResult;
 import com.tanran.model.article.dtos.ArticleHomeDto;
 import com.tanran.model.article.dtos.ArticleRequestDto;
@@ -20,15 +29,18 @@ import com.tanran.model.article.dtos.ArticleRespDto;
 import com.tanran.model.article.pojos.ApArticle;
 import com.tanran.model.article.pojos.ApCollection;
 import com.tanran.model.behavior.pojos.ApHistories;
-import com.tanran.model.common.dtos.PageRequestDto;
 import com.tanran.model.common.enums.ErrorCodeEnum;
 import com.tanran.model.mappers.app.ApHistoriesMapper;
+import com.tanran.model.mappers.app.ArticleContentConfigMapper;
 import com.tanran.model.mappers.app.ArticleMapper;
 import com.tanran.model.mappers.app.CollectionMapper;
 import com.tanran.model.mappers.app.UserArticleListMapper;
 import com.tanran.model.user.pojos.ApUser;
 import com.tanran.model.user.pojos.ApUserArticleList;
 import com.tanran.utils.threadlocal.AppThreadLocalUtils;
+
+import io.jsonwebtoken.lang.Collections;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * TODO
@@ -39,6 +51,8 @@ import com.tanran.utils.threadlocal.AppThreadLocalUtils;
  * @since 3.0.x 2022/3/18 11:25
  */
 @Service
+@Slf4j
+@ComponentScan("com.tanran.common.redis")
 public class ArticleHomeServiceImpl implements ArticleHomeService {
 
     // 单页最大加载的数字
@@ -52,7 +66,10 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
     private CollectionMapper collectionMapper;
     @Autowired
     private ApHistoriesMapper historiesMapper;
-
+    @Autowired
+    private ArticleContentConfigMapper articleContentConfigMapper;
+    @Resource
+    private RedisUtils redisUtils;
 
 
     /**
@@ -106,17 +123,32 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
     @Override
     public RespResult loadArticle(ArticleRequestDto dto) {
 
-        System.out.println("传入的数据"+dto);
-
         if (Objects.isNull(dto)) {
             return RespResult.errorResult(ErrorCodeEnum.SERVER_ERROR);
         }
 
         dto.checkParam();
 
-        List<ApArticle> apArticles = articleMapper.selectArticleByChannelId(dto);
+        List<ApArticle> apArticles = null;
+        //加载推荐栏
+        if(dto.getChannelId() == 0){
+            return getRecommendArticle(dto);
+        }
 
-        System.out.println(apArticles);
+        /** 先加载redis中的数据 */
+        apArticles = redisUtils.getCacheList("channnel:"+dto.getChannelId());
+        System.out.println("redis查出来的频道数据"+apArticles);
+        if(Objects.isNull(apArticles)||apArticles.size()==0){
+            apArticles = articleMapper.selectArticleByChannelId(dto);
+            /** 将加载出来的数据放到缓存中 */
+            if(apArticles.size()>0){
+                String key = "channnel:"+dto.getChannelId();
+                redisUtils.setCacheList(key,apArticles);
+                /**设置过期时间为一天*/
+                redisUtils.expire(key,1, TimeUnit.DAYS);
+                log.info("==================频道数据添加成功===================");
+            }
+        }
 
         List<ArticleRespDto.Results> respResults = new ArrayList<>();
 
@@ -135,7 +167,87 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
             ArticleRespDto.Results results = new ArticleRespDto.Results(article.getId(), article.getTitle(), article.getAuthorId(),article.getAuthorName(),article.getComment(),
                 article.getPublishTime().toString(),cover,article.getLikes(),article.getCollection());
 
-            System.out.println(results.toString());
+            respResults.add(results);
+        }
+
+        ArticleRespDto respDto = new ArticleRespDto(dto.getSize(), dto.getPage(), respResults.size(), respResults);
+
+        return RespResult.okResult(respDto);
+    }
+
+    private RespResult getRecommendArticle(ArticleRequestDto dto) {
+        /**
+         * 根据用户点赞及收藏的标签进行搜索，去除不喜欢的文章
+         * 如果用户没有点赞及收藏的文章，就按浏览量进行排序向用户推送
+         */
+        List<ApCollection> apCollections = collectionMapper.selectCollectionByUserId(dto.getUserId());
+        List<Integer> articleIds = articleContentConfigMapper.selectLikesArticleByUserId(dto.getUserId());
+        ArrayList<String> lablesList = Lists.newArrayList();
+        ArrayList<ApArticle> articles = Lists.newArrayList();
+        ArrayList<ArticleRespDto.Results> respResults = Lists.newArrayList();
+        if(!Collections.isEmpty(apCollections)){
+            List<Integer> collections = apCollections.stream()
+                .map(collection -> collection.getEntryId())
+                .collect(Collectors.toList());
+            List<ApArticle> apCollectionArticles = articleMapper.loadArticleListByIdList(collections);
+            apCollectionArticles.stream().map(article -> {
+                String[] array = article.getLabels()
+                    .split(",");
+                List<String> lables = Arrays.asList(array);
+                lablesList.addAll(lables);
+                return lablesList;
+            });
+        }
+        if(!Collections.isEmpty(articleIds)){
+            List<ApArticle> apLikesArticles = articleMapper.loadArticleListByIdList(articleIds);
+            apLikesArticles.stream().forEach(article -> {
+                String[] array = article.getLabels()
+                    .split(",");
+                List<String> lables = Arrays.asList(array);
+                lablesList.addAll(lables);
+            });
+        }
+        //获取重复度最高的前三个标签
+        if(!Collections.isEmpty(lablesList)){
+            List<String> lables = lablesList.stream()
+                .collect(Collectors.toMap(e -> e, e -> 1, (a, b) -> a + b))
+                .entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+            System.out.println("排序后"+lables);
+            if(lables.size()>=3){
+                lables = lables.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList()).subList(0,3);
+            }
+            System.out.println("查询标签"+lables);
+            articles = (ArrayList)articleMapper.selectArticleByLables(lables);
+            //查询用户不喜欢的文章
+            List<Integer> unLikes = articleContentConfigMapper.selectUnLikeArticleByUserId(dto.getUserId());
+            articles = (ArrayList)articles.stream().filter(article -> !unLikes.contains(article.getId())).collect(Collectors.toList());
+        }
+
+        List<ApArticle> apArticles = articleMapper.selectArticleByReadCount();
+        apArticles.addAll(articles);
+        apArticles = apArticles.stream().distinct().collect(Collectors.toList());
+
+        // 组装响应数据
+        for (ApArticle article : apArticles){
+            String image = article.getImages();
+            ArticleRespDto.Cover cover = null;
+
+            if(image != null){
+                String[] imags = image.split(",");
+                if(image.length()>=1){
+                    cover = new ArticleRespDto.Cover(1,imags);
+                }
+            }else{
+                cover = new ArticleRespDto.Cover(0,null);
+            }
+
+            ArticleRespDto.Results results = new ArticleRespDto.Results(article.getId(), article.getTitle(), article.getAuthorId(),article.getAuthorName(),article.getComment(),
+                article.getPublishTime().toString(),cover,article.getLikes(),article.getCollection());
+
 
             respResults.add(results);
         }
@@ -145,9 +257,8 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
         return RespResult.okResult(respDto);
     }
 
-
     /**
-     * 加载默认的文章信息
+     *
      * @param dto
      * @param type
      * @return
@@ -157,7 +268,7 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
     }
 
     /**
-     * 先从用户的推荐表中查找文章信息，如果没有再从默认文章信息获取数据
+     *
      * @param user
      * @param dto
      * @param type
@@ -185,20 +296,25 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
      */
     @Override
     public RespResult userCollection(ArticleRequestDto dto) {
+        System.out.println("用户收藏文章传过来的参数"+dto);
         dto.checkParam();
         ApUser user = AppThreadLocalUtils.getUser();
         System.out.println("***************此时的用户信息*****************");
         System.out.println(user);
-        if(dto.getUserId() != null){
+        if(Objects.nonNull(user)){
             dto.setUserId(user.getId().intValue());
         }
 
-        List<ApCollection> apCollections = collectionMapper.selectCollectionByUser(dto.getUserId(), (short) 1, dto.getPage(), dto.getSize());
+        List<ApCollection> apCollections = collectionMapper.selectCollectionByUser(dto.getUserId(), (short) 0, dto.getPage(), dto.getSize());
 
         /**获取收藏文章编号集合*/
         List<Integer> articleIds = apCollections.stream()
             .map(s -> s.getEntryId())
             .collect(Collectors.toList());
+
+        if(Collections.isEmpty(articleIds)){
+            return null;
+        }
 
         List<ApArticle> apArticles = articleMapper.loadArticleListByIdList(articleIds);
 
@@ -212,7 +328,9 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
 
             if(image != null){
                 String[] imags = image.split(",");
-                cover = new ArticleRespDto.Cover(1,imags);
+                if(image.length()>=1){
+                    cover = new ArticleRespDto.Cover(1,imags);
+                }
             }else{
                 cover = new ArticleRespDto.Cover(0,null);
             }
@@ -231,23 +349,26 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
     }
 
     @Override
-    public RespResult userReadHistories(Integer userId, PageRequestDto dto) {
+    public RespResult userReadHistories(ArticleRequestDto dto) {
 
         dto.checkParam();
-        if(userId == null){
+        if(dto.getUserId() == null){
             return RespResult.errorResult(ErrorCodeEnum.PARAM_INVALID);
         }
 
-        List<ApHistories> list = historiesMapper.selectArticleList(userId,dto);
+        List<ApHistories> list = historiesMapper.selectArticleList(dto);
 
         List<Integer> articleIds = list.stream()
             .map(s -> s.getEntryId())
             .collect(Collectors.toList());
-
+        if(Objects.isNull(articleIds)||articleIds.size()==0){
+            return RespResult.okResult(ErrorCodeEnum.SUCCESS);
+        }
         List<ApArticle> apArticles = articleMapper.loadArticleListByIdList(articleIds);
-
-
-
+        System.out.println("按时间排序前："+apArticles);
+        apArticles = apArticles.stream().sorted(Comparator.comparing(ApArticle::getCreatedTime).reversed()).collect(
+            Collectors.toList());
+        System.out.println("按时间排序后："+apArticles);
         List<ArticleRespDto.Results> respResults = new ArrayList<>();
 
         // 组装响应数据
@@ -258,7 +379,10 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
 
             if(image != null){
                 String[] imags = image.split(",");
-                cover = new ArticleRespDto.Cover(1,imags);
+                System.out.println(image);
+                if(image.length()>=1){
+                    cover = new ArticleRespDto.Cover(1,imags);
+                }
             }else{
                 cover = new ArticleRespDto.Cover(0,null);
             }
@@ -266,7 +390,6 @@ public class ArticleHomeServiceImpl implements ArticleHomeService {
             ArticleRespDto.Results results = new ArticleRespDto.Results(article.getId(), article.getTitle(), article.getAuthorId(),article.getAuthorName(),article.getComment(),
                 article.getPublishTime().toString(),cover,article.getLikes(),article.getCollection());
 
-            System.out.println(results.toString());
 
             respResults.add(results);
         }
